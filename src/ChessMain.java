@@ -1,17 +1,23 @@
 import processing.core.PApplet;
+import processing.core.PImage;
+
 
 public class ChessMain extends PApplet {
-    private final int windowWidth = 640;
-    private final int windowHeight = 640;
-    //git test 2
+    private final int windowWidth = 800;
+    private final int windowHeight = 800;
+    private PImage king;
 
     public void settings(){
         size(windowWidth, windowHeight);
+        king = loadImage("BlackKing2.png");
     }
+
 
     public void draw(){
         background(64);
         drawBoard();
+
+        image(king, 0, 0, 100, 100 );
     }
 
     public void drawBoard(){
@@ -33,10 +39,9 @@ public class ChessMain extends PApplet {
             }
         }
     }
+
     public static void main(String[] args){
         String[] appletArgs = new String[] {"ChessMain"};
         PApplet.main(appletArgs);
-
     }
-
 }
