@@ -3,7 +3,7 @@ import processing.core.PApplet;
 public class ChessMain extends PApplet {
     private final int windowWidth = 640;
     private final int windowHeight = 640;
-    //git test
+    //git test 2
 
     public void settings(){
         size(windowWidth, windowHeight);
