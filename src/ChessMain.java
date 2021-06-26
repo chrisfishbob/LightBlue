@@ -3,6 +3,7 @@ import processing.core.PApplet;
 public class ChessMain extends PApplet {
     private final int windowWidth = 640;
     private final int windowHeight = 640;
+    //git test
 
     public void settings(){
         size(windowWidth, windowHeight);
@@ -23,10 +24,10 @@ public class ChessMain extends PApplet {
                 if (!isLightSquare){
                     fill(238, 237, 213);
                 }
-
                 else{
                     fill(124, 148, 93);
                 }
+
                 rect(rank * (float) (windowWidth / 8),
                         file * (float) (windowHeight / 8), (float) windowWidth / 8, (float) windowHeight / 8);
             }

@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="processing-experimental1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/src/processing-experimental.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
