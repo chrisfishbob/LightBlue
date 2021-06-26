@@ -2,7 +2,7 @@ import processing.core.PApplet;
 import processing.core.PImage;
 
 
-public class ChessMain extends PApplet {
+public class  ChessMain extends PApplet {
     private final int windowWidth = 800;
     private final int windowHeight = 800;
     private PImage king;
@@ -14,9 +14,9 @@ public class ChessMain extends PApplet {
 
 
     public void draw(){
+
         background(64);
         drawBoard();
-
         image(king, 0, 0, 100, 100 );
     }
 
