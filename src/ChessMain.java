@@ -18,6 +18,7 @@ public class  ChessMain extends PApplet {
         background(64);
         drawBoard();
         image(king, 0, 0, 100, 100 );
+        System.out.println("Bruh");
     }
 
     public void drawBoard(){
