@@ -28,24 +28,25 @@ public class ChessMain extends PApplet {
     public void setup(){
         loadImages();
         board = new Piece[64];
-        board[0] = new Bishop("white", 0);
+        board[0] = new Knight("white", 0);
     }
 
 
     public void draw(){
-
         background(64);
         drawBoard();
+
         for (Piece piece: board){
             if (piece != null) {
-                image(piece.getImage(), 0, 0, 100, 100);
-
+                //noinspection IntegerDivisionInFloatingPointContext
+                image(piece.getImage(), 0, 0, windowWidth / 8, windowWidth / 8);
             }
         }
-
     }
 
     public void drawBoard(){
+        // Called for every frame, this method draws an empty board.
+
         noStroke();
 
         for (int file = 0; file < 8; file++){
@@ -65,7 +66,10 @@ public class ChessMain extends PApplet {
         }
     }
 
+
     public void loadImages(){
+        // Called by setup method. This method loads all the images used
+
         blackKing = loadImage("BlackKing.png");
         whiteKing = loadImage("WhiteKing.png");
         blackQueen = loadImage("BlackQueen.png");
@@ -80,9 +84,9 @@ public class ChessMain extends PApplet {
         whitePawn = loadImage("WhitePawn.png");
     }
 
+
     public static void main(String[] args){
         String[] appletArgs = new String[] {"ChessMain"};
         PApplet.main(appletArgs);
-
     }
 }
