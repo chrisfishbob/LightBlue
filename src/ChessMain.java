@@ -2,14 +2,26 @@ import processing.core.PApplet;
 import processing.core.PImage;
 
 
-public class  ChessMain extends PApplet {
+public class ChessMain extends PApplet {
     private final int windowWidth = 800;
     private final int windowHeight = 800;
-    private PImage king;
+    public static PImage blackKing;
+    public static PImage whiteKing;
+    public static PImage blackQueen;
+    public static PImage whiteQueen;
+    public static PImage blackRook;
+    public static PImage whiteRook;
+    public static PImage blackBishop;
+    public static PImage whiteBishop;
+    public static PImage blackKnight;
+    public static PImage whiteKnight;
+    public static PImage blackPawn;
+    public static PImage whitePawn;
 
     public void settings(){
         size(windowWidth, windowHeight);
-        king = loadImage("BlackKing2.png");
+        loadImages();
+
     }
 
 
@@ -17,8 +29,8 @@ public class  ChessMain extends PApplet {
 
         background(64);
         drawBoard();
-        image(king, 0, 0, 100, 100 );
-        System.out.println("Bruh");
+        Piece piece = new Piece("blackKing", "Black", 0);
+        image(piece.getPieceImage(), 0, 0, 100, 100 );
     }
 
     public void drawBoard(){
@@ -41,8 +53,24 @@ public class  ChessMain extends PApplet {
         }
     }
 
+    public void loadImages(){
+        blackKing = loadImage("BlackKing.png");
+        whiteKing = loadImage("WhiteKing.png");
+        blackQueen = loadImage("BlackQueen.png");
+        whiteQueen = loadImage("WhiteQueen.png");
+        blackRook = loadImage("BlackRook.png");
+        whiteRook = loadImage("WhiteRook.png");
+        blackBishop = loadImage("BlackBishop.png");
+        whiteBishop = loadImage("WhiteBishop.png");
+        blackKnight = loadImage("BlackKnight.png");
+        whiteKnight = loadImage("WhiteKnight.png");
+        blackPawn = loadImage("BlackPawn.png");
+        whitePawn = loadImage("WhitePawn.png");
+    }
+
     public static void main(String[] args){
         String[] appletArgs = new String[] {"ChessMain"};
         PApplet.main(appletArgs);
+
     }
 }
