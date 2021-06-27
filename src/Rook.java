@@ -13,4 +13,8 @@ public class Rook extends Piece{
             image = ChessMain.blackRook;
         }
     }
+
+    public PImage getImage() {
+        return image;
+    }
 }

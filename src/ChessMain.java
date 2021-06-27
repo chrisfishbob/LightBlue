@@ -1,8 +1,11 @@
 import processing.core.PApplet;
 import processing.core.PImage;
 
+import java.util.ArrayList;
+
 
 public class ChessMain extends PApplet {
+    Piece[] board;
     private final int windowWidth = 800;
     private final int windowHeight = 800;
     public static PImage blackKing;
@@ -20,8 +23,12 @@ public class ChessMain extends PApplet {
 
     public void settings(){
         size(windowWidth, windowHeight);
-        loadImages();
+    }
 
+    public void setup(){
+        loadImages();
+        board = new Piece[64];
+        board[0] = new Bishop("white", 0);
     }
 
 
@@ -29,8 +36,13 @@ public class ChessMain extends PApplet {
 
         background(64);
         drawBoard();
-        King king = new King("white", 0);
-        image(king.getImage(), 0, 0, 100, 100 );
+        for (Piece piece: board){
+            if (piece != null) {
+                image(piece.getImage(), 0, 0, 100, 100);
+
+            }
+        }
+
     }
 
     public void drawBoard(){

@@ -13,4 +13,8 @@ public class Pawn extends Piece{
             image = ChessMain.blackPawn;
         }
     }
+
+    public PImage getImage() {
+        return image;
+    }
 }

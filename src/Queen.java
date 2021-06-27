@@ -13,4 +13,8 @@ public class Queen extends Piece{
             image = ChessMain.blackQueen;
         }
     }
+
+    public PImage getImage() {
+        return image;
+    }
 }

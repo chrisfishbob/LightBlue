@@ -1,4 +1,3 @@
-import processing.core.PApplet;
 import processing.core.PImage;
 
 public abstract class Piece {
@@ -10,12 +9,5 @@ public abstract class Piece {
         this.location = location;
     }
 
-
-    public String getColor(){
-        return this.color;
-    }
-
-    public int getLocation(){
-        return this.location;
-    }
+    public abstract PImage getImage();
 }

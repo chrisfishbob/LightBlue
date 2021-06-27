@@ -13,4 +13,8 @@ public class Bishop extends Piece{
             image = ChessMain.blackBishop;
         }
     }
+
+    public PImage getImage() {
+        return image;
+    }
 }

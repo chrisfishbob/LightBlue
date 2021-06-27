@@ -13,4 +13,8 @@ public class Knight extends Piece{
             image = ChessMain.blackKnight;
         }
     }
+
+    public PImage getImage() {
+        return image;
+    }
 }
