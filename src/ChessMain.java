@@ -29,8 +29,8 @@ public class ChessMain extends PApplet {
 
         background(64);
         drawBoard();
-        Piece piece = new Piece("blackKing", "Black", 0);
-        image(piece.getPieceImage(), 0, 0, 100, 100 );
+        King king = new King("white", 0);
+        image(king.getImage(), 0, 0, 100, 100 );
     }
 
     public void drawBoard(){
