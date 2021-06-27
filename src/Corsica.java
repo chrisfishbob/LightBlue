@@ -1,10 +1,8 @@
 import processing.core.PApplet;
 import processing.core.PImage;
 
-import java.util.ArrayList;
 
-
-public class ChessMain extends PApplet {
+public class Corsica extends PApplet {
     Piece[] board;
     private final int windowWidth = 800;
     private final int windowHeight = 800;
@@ -91,13 +89,9 @@ public class ChessMain extends PApplet {
         whitePawn = loadImage("WhitePawn.png");
     }
 
-    public void keyPressed(){
-        board[0] = null;
-    }
-
 
     public static void main(String[] args){
-        String[] appletArgs = new String[] {"ChessMain"};
+        String[] appletArgs = new String[] {"Corsica"};
         PApplet.main(appletArgs);
     }
 }

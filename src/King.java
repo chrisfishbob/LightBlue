@@ -7,10 +7,10 @@ public class King extends Piece{
         super(color, location);
 
         if (color.equals("white")){
-            image = ChessMain.whiteKing;
+            image = Corsica.whiteKing;
         }
         else{
-            image = ChessMain.blackKing;
+            image = Corsica.blackKing;
         }
     }
 

@@ -7,10 +7,10 @@ public class Rook extends Piece{
         super(color, location);
 
         if (color.equals("white")){
-            image = ChessMain.whiteRook;
+            image = Corsica.whiteRook;
         }
         else{
-            image = ChessMain.blackRook;
+            image = Corsica.blackRook;
         }
     }
 

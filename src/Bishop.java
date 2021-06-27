@@ -7,10 +7,10 @@ public class Bishop extends Piece{
         super(color, location);
 
         if (color.equals("white")){
-            image = ChessMain.whiteBishop;
+            image = Corsica.whiteBishop;
         }
         else{
-            image = ChessMain.blackBishop;
+            image = Corsica.blackBishop;
         }
     }
 

@@ -7,10 +7,10 @@ public class Pawn extends Piece{
         super(color, location);
 
         if (color.equals("white")){
-            image = ChessMain.whitePawn;
+            image = Corsica.whitePawn;
         }
         else{
-            image = ChessMain.blackPawn;
+            image = Corsica.blackPawn;
         }
     }
 

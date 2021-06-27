@@ -7,10 +7,10 @@ public class Knight extends Piece{
         super(color, location);
 
         if (color.equals("white")){
-            image = ChessMain.whiteKnight;
+            image = Corsica.whiteKnight;
         }
         else{
-            image = ChessMain.blackKnight;
+            image = Corsica.blackKnight;
         }
     }
 
