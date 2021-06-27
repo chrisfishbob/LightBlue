@@ -29,7 +29,7 @@ public class ChessMain extends PApplet {
         loadImages();
         board = new Piece[64];
         board[0] = new Knight("white", 0);
-        board[1] = new Pawn("black", 1);
+        board[1] = new Pawn("black", 63);
     }
 
 
@@ -43,7 +43,10 @@ public class ChessMain extends PApplet {
                 int row = piece.getLocation() / 8;
                 int column = piece.getLocation() % 8;
                 int squareSize = windowWidth / 8;
-                image(piece.getImage(), column * squareSize, row * squareSize, squareSize, squareSize);
+                // yOffset is used so that bottom left corner of the board is at index 0
+                int yOffset = windowWidth - squareSize - row * squareSize;
+
+                image(piece.getImage(), column * squareSize, yOffset, squareSize, squareSize);
             }
         }
     }
