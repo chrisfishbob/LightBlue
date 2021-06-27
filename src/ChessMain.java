@@ -29,17 +29,21 @@ public class ChessMain extends PApplet {
         loadImages();
         board = new Piece[64];
         board[0] = new Knight("white", 0);
+        board[1] = new Pawn("black", 1);
     }
 
 
     public void draw(){
+        // Main loop of the program
         background(64);
         drawBoard();
 
         for (Piece piece: board){
             if (piece != null) {
-                //noinspection IntegerDivisionInFloatingPointContext
-                image(piece.getImage(), 0, 0, windowWidth / 8, windowWidth / 8);
+                int row = piece.getLocation() / 8;
+                int column = piece.getLocation() % 8;
+                int squareSize = windowWidth / 8;
+                image(piece.getImage(), column * squareSize, row * squareSize, squareSize, squareSize);
             }
         }
     }
@@ -82,6 +86,10 @@ public class ChessMain extends PApplet {
         whiteKnight = loadImage("WhiteKnight.png");
         blackPawn = loadImage("BlackPawn.png");
         whitePawn = loadImage("WhitePawn.png");
+    }
+
+    public void keyPressed(){
+        board[0] = null;
     }
 
 

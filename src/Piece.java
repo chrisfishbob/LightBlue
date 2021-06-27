@@ -9,5 +9,11 @@ public abstract class Piece {
         this.location = location;
     }
 
+    public int getLocation(){
+        return location;
+    }
+
     public abstract PImage getImage();
+
+
 }
