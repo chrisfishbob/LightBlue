@@ -3,6 +3,8 @@ import processing.core.PImage;
 public abstract class Piece {
     private final String color;
     private int location;
+    private PImage image;
+
 
     public Piece(String color, int location){
         this.color = color;
@@ -13,7 +15,13 @@ public abstract class Piece {
         return location;
     }
 
-    public abstract PImage getImage();
+    public void setImage(PImage image){
+        this.image = image;
+    }
+
+    public PImage getImage(){
+        return this.image;
+    }
 
 
 }
