@@ -31,7 +31,7 @@ public class Corsica extends PApplet {
 //        putPiece(new Knight("white", 0));
 //        putPiece(new Pawn ("black", 3));
 //        removePieceAt(0);
-        loadFromFen("rRBpPQnN");
+        loadFromFen("r1RBpPQnN");
 
     }
 
@@ -83,9 +83,14 @@ public class Corsica extends PApplet {
                 Piece piece = pieceHashMap.get(chr);
                 piece.setLocation(location);
                 putPiece(piece);
+                location ++;
             }
 
-                location ++;
+            else if (Character.isDigit(chr)){
+                location += Character.getNumericValue(chr);
+            }
+
+
         }
     }
 
