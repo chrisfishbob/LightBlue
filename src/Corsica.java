@@ -26,8 +26,8 @@ public class Corsica extends PApplet {
     public void setup(){
         loadImages();
         board = new Piece[64];
-        board[0] = new Knight("white", 0);
-        board[1] = new Pawn("black", 63);
+        putPiece(new Knight("white", 0));
+        putPiece(new Pawn ("black", 3));
     }
 
 
@@ -41,10 +41,8 @@ public class Corsica extends PApplet {
                 int row = piece.getLocation() / 8;
                 int column = piece.getLocation() % 8;
                 int squareSize = windowWidth / 8;
-                // yOffset is used so that bottom left corner of the board is at index 0
-                int yOffset = windowWidth - squareSize - row * squareSize;
 
-                image(piece.getImage(), column * squareSize, yOffset, squareSize, squareSize);
+                image(piece.getImage(), column * squareSize, row * squareSize, squareSize, squareSize);
             }
         }
     }
@@ -69,6 +67,14 @@ public class Corsica extends PApplet {
                         file * (float) (windowHeight / 8), (float) windowWidth / 8, (float) windowHeight / 8);
             }
         }
+    }
+
+    public void putPiece(Piece piece){
+        board[piece.getLocation()] = piece;
+    }
+
+    public void removePiece(Piece piece){
+        board[piece.getLocation()] = null;
     }
 
 
