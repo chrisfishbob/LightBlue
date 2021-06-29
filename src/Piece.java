@@ -11,6 +11,12 @@ public abstract class Piece {
         this.location = location;
     }
 
+    public Piece(Piece clone){
+        this.color = clone.color;
+        this.location = clone.location;
+        this.image = clone.image;
+    }
+
     public int getLocation(){
         return location;
     }
@@ -25,6 +31,12 @@ public abstract class Piece {
 
     public PImage getImage(){
         return this.image;
+    }
+
+
+
+    public String toString(){
+        return "Piece at " + location;
     }
 
 

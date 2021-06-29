@@ -1,6 +1,7 @@
 import processing.core.PApplet;
 import processing.core.PImage;
 import java.lang.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 
@@ -31,7 +32,8 @@ public class Corsica extends PApplet {
 //        putPiece(new Knight("white", 0));
 //        putPiece(new Pawn ("black", 3));
 //        removePieceAt(0);
-        loadFromFen("r1RBpPQnN");
+        loadFromFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
+//        loadFromFen("rr");
 
     }
 
@@ -75,25 +77,31 @@ public class Corsica extends PApplet {
     }
 
     public void loadFromFen(String fen){
-        int location = 0;
         HashMap<Character, Piece> pieceHashMap = generatePieceHashMap();
+        int rank = 0;
+        int file = 0;
+
 
         for (char chr : fen.toCharArray()){
             if (Character.isLetter(chr)){
                 Piece piece = pieceHashMap.get(chr);
-                piece.setLocation(location);
+                // replaces the Piece object in the hashMap with a clone so we can modify the original
+                pieceHashMap.replace(chr, new Piece(piece) {});
+                piece.setLocation(rank * 8 + file);
                 putPiece(piece);
-                location ++;
+                file ++;
             }
 
             else if (Character.isDigit(chr)){
-                location += Character.getNumericValue(chr);
+                file += Character.getNumericValue(chr);
             }
 
-
+            else if (chr == '/'){
+                rank ++;
+                file = 0;
+            }
         }
     }
-
 
     public void putPiece(Piece piece){
         board[piece.getLocation()] = piece;
