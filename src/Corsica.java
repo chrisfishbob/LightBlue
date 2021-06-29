@@ -1,5 +1,7 @@
 import processing.core.PApplet;
 import processing.core.PImage;
+import java.lang.*;
+import java.util.HashMap;
 
 
 public class Corsica extends PApplet {
@@ -26,8 +28,11 @@ public class Corsica extends PApplet {
     public void setup(){
         loadImages();
         board = new Piece[64];
-        putPiece(new Knight("white", 0));
-        putPiece(new Pawn ("black", 3));
+//        putPiece(new Knight("white", 0));
+//        putPiece(new Pawn ("black", 3));
+//        removePieceAt(0);
+        loadFromFen("rRBpPQnN");
+
     }
 
 
@@ -69,6 +74,22 @@ public class Corsica extends PApplet {
         }
     }
 
+    public void loadFromFen(String fen){
+        int location = 0;
+        HashMap<Character, Piece> pieceHashMap = generatePieceHashMap();
+
+        for (char chr : fen.toCharArray()){
+            if (Character.isLetter(chr)){
+                Piece piece = pieceHashMap.get(chr);
+                piece.setLocation(location);
+                putPiece(piece);
+            }
+
+                location ++;
+        }
+    }
+
+
     public void putPiece(Piece piece){
         board[piece.getLocation()] = piece;
     }
@@ -77,6 +98,27 @@ public class Corsica extends PApplet {
         board[piece.getLocation()] = null;
     }
 
+    public void removePieceAt(int location){
+        board[location] = null;
+    }
+
+    public HashMap<Character, Piece> generatePieceHashMap(){
+        HashMap<Character, Piece> pieceHashMap = new HashMap<>();
+        pieceHashMap.put('r', new Rook("black", 0));
+        pieceHashMap.put('b', new Bishop("black", 0));
+        pieceHashMap.put('R', new Rook("white", 0));
+        pieceHashMap.put('B', new Bishop("white", 0));
+        pieceHashMap.put('p', new Pawn("black", 0));
+        pieceHashMap.put('P', new Pawn("white", 0));
+        pieceHashMap.put('k', new King("black", 0));
+        pieceHashMap.put('K', new King("white", 0));
+        pieceHashMap.put('q', new Queen("black", 0 ));
+        pieceHashMap.put('Q', new Queen("white", 0 ));
+        pieceHashMap.put('n', new Knight("black", 0 ));
+        pieceHashMap.put('N', new Knight("white", 0 ));
+
+        return pieceHashMap;
+    }
 
     public void loadImages(){
         // Called by setup method. This method loads all the images used

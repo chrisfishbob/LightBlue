@@ -15,6 +15,10 @@ public abstract class Piece {
         return location;
     }
 
+    public void setLocation(int location){
+        this.location = location;
+    }
+
     public void setImage(PImage image){
         this.image = image;
     }
