@@ -214,12 +214,13 @@ public class Corsica extends PApplet {
     }
 
     public void processHighlighting(){
-        // If the player clicks on an empty square, deselect all squares
         int file = mouseX / squareSize;
         int rank = mouseY / squareSize;
         selectedSquare = rank * 8 + file;
 
+        // If the player clicks on an empty square, deselect all squares
         if (board[selectedSquare] == null){
+            selectedSquare = 99;
             for (Piece pc : board){
                 if (pc != null){
                     if (pc.isSelected()){
@@ -230,6 +231,7 @@ public class Corsica extends PApplet {
             }
         }
 
+        // Loops through the board and make the selected piece highlighted if not already highlighted
         for (Piece piece : board){
             // Null check: We only allow the play to select pieces, not empty squares
             if (piece != null){
