@@ -24,6 +24,7 @@ public class Corsica extends PApplet {
     public static PImage whitePawn;
 
     private int selectedSquare = 99;
+    private int releasedSquare = 99;
     private boolean pieceAlreadySelected = false;
 
     public void settings(){
@@ -41,7 +42,6 @@ public class Corsica extends PApplet {
         // Main loop of the program
         background(64);
         drawBoard();
-        System.out.println(selectedSquare);
 
         for (Piece piece: board){
             if (piece != null) {
@@ -194,6 +194,21 @@ public class Corsica extends PApplet {
 
     public void mousePressed(){
         processMouseClick();
+    }
+
+    public void mouseDragged(){
+        System.out.println("x: " + mouseX + "y: " + mouseY);
+    }
+
+    public void mouseReleased(){
+        if (mouseX >= 0 && mouseY >= 0){
+            int file = mouseX / squareSize;
+            int rank = mouseY / squareSize;
+            releasedSquare = rank * 8 + file;
+            System.out.println("Mouse released at :" + releasedSquare);
+            Move move = new Move(selectedSquare, releasedSquare);
+            movePiece(move);
+        }
     }
 
 
