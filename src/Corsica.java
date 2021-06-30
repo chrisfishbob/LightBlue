@@ -41,10 +41,6 @@ public class Corsica extends PApplet {
         background(64);
         drawBoard();
 
-        if (selectedSquare == 0){
-            System.out.println("selected square is 0");
-        }
-
         for (Piece piece: board){
             if (piece != null) {
                 int row = piece.getLocation() / 8;
@@ -200,7 +196,6 @@ public class Corsica extends PApplet {
     public void processMouseClick(){
         int file = mouseX / squareSize;
         int rank = mouseY / squareSize;
-        System.out.println(rank * 8 + file);
 //        removePieceAt(rank * 8 + file);
         selectedSquare = rank * 8 + file;
     }
