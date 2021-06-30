@@ -23,6 +23,8 @@ public class Corsica extends PApplet {
     public static PImage blackPawn;
     public static PImage whitePawn;
 
+    public int selectedSquare = 99;
+
     public void settings(){
         size(windowWidth, windowHeight);
     }
@@ -38,6 +40,10 @@ public class Corsica extends PApplet {
         // Main loop of the program
         background(64);
         drawBoard();
+
+        if (selectedSquare == 0){
+            System.out.println("selected square is 0");
+        }
 
         for (Piece piece: board){
             if (piece != null) {
@@ -57,17 +63,26 @@ public class Corsica extends PApplet {
 
         for (int file = 0; file < 8; file++){
             for (int rank = 0; rank < 8; rank++){
-                boolean isLightSquare = (file + rank) % 2 != 0;
+                if (file * 8 + rank != selectedSquare){
+                    boolean isLightSquare = (file + rank) % 2 != 0;
+                    if (!isLightSquare){
+                        fill(238, 237, 213);
+                    }
+                    else{
+                        fill(124, 148, 93);
+                    }
+                    rect(rank * (float) (windowWidth / 8),
+                            file * (float) (windowHeight / 8), (float) windowWidth / 8, (float) windowHeight / 8);
+                }
 
-                if (!isLightSquare){
-                    fill(238, 237, 213);
+                else {
+                    fill (226, 226, 64);
                 }
-                else{
-                    fill(124, 148, 93);
-                }
+
 
                 rect(rank * (float) (windowWidth / 8),
                         file * (float) (windowHeight / 8), (float) windowWidth / 8, (float) windowHeight / 8);
+
             }
         }
     }
@@ -153,12 +168,18 @@ public class Corsica extends PApplet {
         whitePawn = loadImage("WhitePawn.png");
     }
 
+
     public void mousePressed(){
+        processMouseClick();
+    }
+
+
+    public void processMouseClick(){
         int file = mouseX / squareSize;
         int rank = mouseY / squareSize;
         System.out.println(rank * 8 + file);
-        removePieceAt(rank * 8 + file);
-
+//        removePieceAt(rank * 8 + file);
+        selectedSquare = rank * 8 + file;
     }
 
 
