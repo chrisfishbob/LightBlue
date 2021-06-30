@@ -41,6 +41,7 @@ public class Corsica extends PApplet {
         // Main loop of the program
         background(64);
         drawBoard();
+        System.out.println(selectedSquare);
 
         for (Piece piece: board){
             if (piece != null) {
@@ -78,13 +79,12 @@ public class Corsica extends PApplet {
                         rank * (float) (windowHeight / 8),
                         (float) windowWidth / 8, (float) windowHeight / 8);
 
-                if (board[rank * 8 + file] != null){
-                    if (board[rank * 8 + file].isSelected()){
-                        fill (226, 226, 64);
-                        rect(file * (float) (windowWidth / 8),
-                                rank * (float) (windowHeight / 8),
-                                (float) windowWidth / 8, (float) windowHeight / 8);
-                    }
+                // Draw a yellow square if the square is selected
+                if (rank * 8 + file == selectedSquare){
+                    fill (226, 226, 64);
+                    rect(file * (float) (windowWidth / 8),
+                            rank * (float) (windowHeight / 8),
+                            (float) windowWidth / 8, (float) windowHeight / 8);
                 }
             }
         }
@@ -179,11 +179,13 @@ public class Corsica extends PApplet {
 
     public void movePiece(Move move){
         if (board[move.getStartSquare()] != null){
+            board[move.getStartSquare()].setSelected(false);
             Piece piece = board[move.getStartSquare()];
             piece.setLocation(move.getTargetSquare());
             board[move.getTargetSquare()] = piece;
             board[move.getStartSquare()] = null;
         }
+
         else{
             System.out.println("Invalid move: start square has no piece object");
         }
@@ -208,19 +210,53 @@ public class Corsica extends PApplet {
 
 
     public void processMouseClick(){
+        processHighlighting();
+    }
+
+    public void processHighlighting(){
+        // If the player clicks on an empty square, deselect all squares
         int file = mouseX / squareSize;
         int rank = mouseY / squareSize;
         selectedSquare = rank * 8 + file;
 
+        if (board[selectedSquare] == null){
+            for (Piece pc : board){
+                if (pc != null){
+                    if (pc.isSelected()){
+                        pc.setSelected(false);
+                        pieceAlreadySelected = false;
+                    }
+                }
+            }
+        }
+
         for (Piece piece : board){
+            // Null check: We only allow the play to select pieces, not empty squares
             if (piece != null){
                 // Case where the piece is already selected, we unselect it
                 if (piece.isSelected() && piece.getLocation() == selectedSquare){
                     piece.setSelected(false);
                     pieceAlreadySelected = false;
+                    selectedSquare = 99;
                 }
 
+                // Case where the piece is not selected and there are no pieces selected on the board
                 else if (!piece.isSelected() && piece.getLocation() == selectedSquare && !pieceAlreadySelected){
+                    piece.setSelected(true);
+                    pieceAlreadySelected = true;
+                }
+
+                // Case where the piece is not selected but one piece is already selected on the board
+                else if (!piece.isSelected() && piece.getLocation() == selectedSquare && pieceAlreadySelected){
+                    for (Piece pc : board){
+                        if (pc != null){
+                            if (pc.isSelected()){
+                                pc.setSelected(false);
+                                pieceAlreadySelected = false;
+                            }
+                        }
+                    }
+
                     piece.setSelected(true);
                     pieceAlreadySelected = true;
                 }
