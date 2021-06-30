@@ -168,11 +168,17 @@ public class Corsica extends PApplet {
         whitePawn = loadImage("WhitePawn.png");
     }
 
-    public void movePiece(Piece piece, int target){
-        int originalLocation = piece.getLocation();
-        piece.setLocation(target) ;
-        board[target] = piece;
-        board[originalLocation] = null;
+    public void movePiece(Move move){
+        if (board[move.getStartSquare()] != null){
+            Piece piece = board[move.getStartSquare()];
+            piece.setLocation(move.getTargetSquare());
+            board[move.getTargetSquare()] = piece;
+            board[move.getStartSquare()] = null;
+        }
+        else{
+            System.out.println("Invalid move: start square has no piece object");
+        }
+
     }
 
 
@@ -181,7 +187,7 @@ public class Corsica extends PApplet {
     }
 
     public void keyPressed(){
-        movePiece(board[0], 20);
+        movePiece(new Move(52, 36));
     }
 
 
