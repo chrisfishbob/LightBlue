@@ -9,6 +9,7 @@ public class Corsica extends PApplet {
     Piece[] board;
     private final int windowWidth = 800;
     private final int windowHeight = 800;
+    private final int squareSize = windowWidth / 8;
     public static PImage blackKing;
     public static PImage whiteKing;
     public static PImage blackQueen;
@@ -29,12 +30,7 @@ public class Corsica extends PApplet {
     public void setup(){
         loadImages();
         board = new Piece[64];
-//        putPiece(new Knight("white", 0));
-//        putPiece(new Pawn ("black", 3));
-//        removePieceAt(0);
         loadFromFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
-//        loadFromFen("rr");
-
     }
 
 
@@ -82,6 +78,7 @@ public class Corsica extends PApplet {
         int file = 0;
 
 
+        clearBoard();
         for (char chr : fen.toCharArray()){
             if (Character.isLetter(chr)){
                 Piece piece = pieceHashMap.get(chr);
@@ -113,6 +110,12 @@ public class Corsica extends PApplet {
 
     public void removePieceAt(int location){
         board[location] = null;
+    }
+
+    public void clearBoard(){
+        for (int i = 0; i < 64 ; i ++){
+            board[i] = null;
+        }
     }
 
     public HashMap<Character, Piece> generatePieceHashMap(){
@@ -148,6 +151,14 @@ public class Corsica extends PApplet {
         whiteKnight = loadImage("WhiteKnight.png");
         blackPawn = loadImage("BlackPawn.png");
         whitePawn = loadImage("WhitePawn.png");
+    }
+
+    public void mousePressed(){
+        int file = mouseX / squareSize;
+        int rank = mouseY / squareSize;
+        System.out.println(rank * 8 + file);
+        removePieceAt(rank * 8 + file);
+
     }
 
 
