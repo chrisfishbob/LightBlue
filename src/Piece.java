@@ -4,6 +4,7 @@ public abstract class Piece {
     private final String color;
     private int location;
     private PImage image;
+    private boolean isSelected = false;
 
 
     public Piece(String color, int location){
@@ -15,6 +16,7 @@ public abstract class Piece {
         this.color = clone.color;
         this.location = clone.location;
         this.image = clone.image;
+        this.isSelected = clone.isSelected;
     }
 
     public int getLocation(){
@@ -33,10 +35,16 @@ public abstract class Piece {
         return this.image;
     }
 
-
-
     public String toString(){
         return "Piece at " + location;
+    }
+
+    public void setSelected(boolean bool){
+        this.isSelected = bool;
+    }
+
+    public boolean isSelected(){
+        return this.isSelected;
     }
 
 

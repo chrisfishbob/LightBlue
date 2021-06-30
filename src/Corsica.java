@@ -23,7 +23,8 @@ public class Corsica extends PApplet {
     public static PImage blackPawn;
     public static PImage whitePawn;
 
-    public int selectedSquare = 99;
+    private int selectedSquare = 99;
+    private boolean pieceAlreadySelected = false;
 
     public void settings(){
         size(windowWidth, windowHeight);
@@ -47,7 +48,14 @@ public class Corsica extends PApplet {
                 int column = piece.getLocation() % 8;
                 int squareSize = windowWidth / 8;
 
-                image(piece.getImage(), column * squareSize, row * squareSize, squareSize, squareSize);
+                if (!piece.isSelected())
+                {
+                    image(piece.getImage(), column * squareSize, row * squareSize, squareSize, squareSize);
+                }
+                else{
+                    image(piece.getImage(), column * squareSize, row * squareSize, (float) (squareSize * 1.2), squareSize);
+                }
+
             }
         }
     }
@@ -57,28 +65,27 @@ public class Corsica extends PApplet {
 
         noStroke();
 
-        for (int file = 0; file < 8; file++){
-            for (int rank = 0; rank < 8; rank++){
-                if (file * 8 + rank != selectedSquare){
-                    boolean isLightSquare = (file + rank) % 2 != 0;
-                    if (!isLightSquare){
-                        fill(238, 237, 213);
-                    }
-                    else{
-                        fill(124, 148, 93);
-                    }
-                    rect(rank * (float) (windowWidth / 8),
-                            file * (float) (windowHeight / 8),
-                            (float) windowWidth / 8, (float) windowHeight / 8);
+        for (int rank = 0; rank < 8; rank++){
+            for (int file = 0; file < 8; file++){
+                boolean isLightSquare = (file + rank) % 2 != 0;
+                if (!isLightSquare){
+                    fill(238, 237, 213);
                 }
-
-                else {
-                    fill (226, 226, 64);
+                else{
+                    fill(124, 148, 93);
                 }
-
-                rect(rank * (float) (windowWidth / 8),
-                        file * (float) (windowHeight / 8),
+                rect(file * (float) (windowWidth / 8),
+                        rank * (float) (windowHeight / 8),
                         (float) windowWidth / 8, (float) windowHeight / 8);
+
+                if (board[rank * 8 + file] != null){
+                    if (board[rank * 8 + file].isSelected()){
+                        fill (226, 226, 64);
+                        rect(file * (float) (windowWidth / 8),
+                                rank * (float) (windowHeight / 8),
+                                (float) windowWidth / 8, (float) windowHeight / 8);
+                    }
+                }
             }
         }
     }
@@ -190,14 +197,35 @@ public class Corsica extends PApplet {
 
     public void keyPressed(){
         movePiece(new Move(52, 36));
+        for (Piece piece : board){
+            if (piece != null){
+                if (piece.isSelected()){
+                    System.out.println("bruh");
+                }
+            }
+        }
     }
 
 
     public void processMouseClick(){
         int file = mouseX / squareSize;
         int rank = mouseY / squareSize;
-//        removePieceAt(rank * 8 + file);
         selectedSquare = rank * 8 + file;
+
+        for (Piece piece : board){
+            if (piece != null){
+                // Case where the piece is already selected, we unselect it
+                if (piece.isSelected() && piece.getLocation() == selectedSquare){
+                    piece.setSelected(false);
+                    pieceAlreadySelected = false;
+                }
+
+                else if (!piece.isSelected() && piece.getLocation() == selectedSquare && !pieceAlreadySelected){
+                    piece.setSelected(true);
+                    pieceAlreadySelected = true;
+                }
+            }
+        }
     }
 
 
