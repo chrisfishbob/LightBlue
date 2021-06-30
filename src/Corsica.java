@@ -72,17 +72,17 @@ public class Corsica extends PApplet {
                         fill(124, 148, 93);
                     }
                     rect(rank * (float) (windowWidth / 8),
-                            file * (float) (windowHeight / 8), (float) windowWidth / 8, (float) windowHeight / 8);
+                            file * (float) (windowHeight / 8),
+                            (float) windowWidth / 8, (float) windowHeight / 8);
                 }
 
                 else {
                     fill (226, 226, 64);
                 }
 
-
                 rect(rank * (float) (windowWidth / 8),
-                        file * (float) (windowHeight / 8), (float) windowWidth / 8, (float) windowHeight / 8);
-
+                        file * (float) (windowHeight / 8),
+                        (float) windowWidth / 8, (float) windowHeight / 8);
             }
         }
     }
@@ -91,7 +91,6 @@ public class Corsica extends PApplet {
         HashMap<Character, Piece> pieceHashMap = generatePieceHashMap();
         int rank = 0;
         int file = 0;
-
 
         clearBoard();
         for (char chr : fen.toCharArray()){
@@ -115,23 +114,28 @@ public class Corsica extends PApplet {
         }
     }
 
+
     public void putPiece(Piece piece){
         board[piece.getLocation()] = piece;
     }
+
 
     public void removePiece(Piece piece){
         board[piece.getLocation()] = null;
     }
 
+
     public void removePieceAt(int location){
         board[location] = null;
     }
+
 
     public void clearBoard(){
         for (int i = 0; i < 64 ; i ++){
             board[i] = null;
         }
     }
+
 
     public HashMap<Character, Piece> generatePieceHashMap(){
         HashMap<Character, Piece> pieceHashMap = new HashMap<>();
@@ -151,6 +155,7 @@ public class Corsica extends PApplet {
         return pieceHashMap;
     }
 
+
     public void loadImages(){
         // Called by setup method. This method loads all the images used
 
@@ -168,6 +173,7 @@ public class Corsica extends PApplet {
         whitePawn = loadImage("WhitePawn.png");
     }
 
+
     public void movePiece(Move move){
         if (board[move.getStartSquare()] != null){
             Piece piece = board[move.getStartSquare()];
@@ -178,13 +184,13 @@ public class Corsica extends PApplet {
         else{
             System.out.println("Invalid move: start square has no piece object");
         }
-
     }
 
 
     public void mousePressed(){
         processMouseClick();
     }
+
 
     public void keyPressed(){
         movePiece(new Move(52, 36));
