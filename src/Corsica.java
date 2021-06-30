@@ -168,9 +168,20 @@ public class Corsica extends PApplet {
         whitePawn = loadImage("WhitePawn.png");
     }
 
+    public void movePiece(Piece piece, int target){
+        int originalLocation = piece.getLocation();
+        piece.setLocation(target) ;
+        board[target] = piece;
+        board[originalLocation] = null;
+    }
+
 
     public void mousePressed(){
         processMouseClick();
+    }
+
+    public void keyPressed(){
+        movePiece(board[0], 20);
     }
 
 
