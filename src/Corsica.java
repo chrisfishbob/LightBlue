@@ -53,7 +53,7 @@ public class Corsica extends PApplet {
                     image(piece.getImage(), column * squareSize, row * squareSize, squareSize, squareSize);
                 }
                 else{
-                    image(piece.getImage(), column * squareSize, row * squareSize, (float) (squareSize * 1.2), squareSize);
+                    image(piece.getImage(), column * squareSize, row * squareSize, squareSize, squareSize);
                 }
 
             }
@@ -78,8 +78,8 @@ public class Corsica extends PApplet {
                         rank * (float) (windowHeight / 8),
                         (float) windowWidth / 8, (float) windowHeight / 8);
 
-                // Draw a yellow square if the square is selected
-                if (rank * 8 + file == selectedSquare){
+                // Draw a yellow square if the square is selected or if its where the mouse released
+                if (rank * 8 + file == selectedSquare || rank * 8 + file == releasedSquare){
                     fill (226, 226, 64);
                     rect(file * (float) (windowWidth / 8),
                             rank * (float) (windowHeight / 8),
@@ -183,6 +183,8 @@ public class Corsica extends PApplet {
             piece.setLocation(move.getTargetSquare());
             board[move.getTargetSquare()] = piece;
             board[move.getStartSquare()] = null;
+            // Marks the target square as the release square so that it get highlighted
+            releasedSquare = move.getTargetSquare();
         }
 
         else{
@@ -203,10 +205,17 @@ public class Corsica extends PApplet {
             int file = mouseX / squareSize;
             int rank = mouseY / squareSize;
             releasedSquare = rank * 8 + file;
-            if (selectedSquare != releasedSquare && selectedSquare != 99){
+
+            // Move the piece if the player dragged the piece to a different square
+            if (selectedSquare != releasedSquare && aPieceIsSelected()){
                 Move move = new Move(selectedSquare, releasedSquare);
                 movePiece(move);
                 System.out.println("tried to move piece");
+            }
+
+            // Nullify the release square if the player clicked on a blank square
+            if (board[rank * 8 + file] == null){
+                releasedSquare = 99;
             }
 
         }
@@ -214,7 +223,7 @@ public class Corsica extends PApplet {
         else {
             System.out.println("ran");
             board[selectedSquare].setSelected(false);
-            selectedSquare = 99;
+            selectedSquare = getNullValue();
             pieceAlreadySelected = false;
         }
     }
@@ -243,7 +252,7 @@ public class Corsica extends PApplet {
 
         // If the player clicks on an empty square, deselect all squares
         if (board[selectedSquare] == null){
-            selectedSquare = 99;
+            selectedSquare = getNullValue();
             for (Piece pc : board){
                 if (pc != null){
                     if (pc.isSelected()){
@@ -262,7 +271,7 @@ public class Corsica extends PApplet {
                 if (piece.isSelected() && piece.getLocation() == selectedSquare){
                     piece.setSelected(false);
                     pieceAlreadySelected = false;
-                    selectedSquare = 99;
+                    selectedSquare = getNullValue();
                 }
 
                 // Case where the piece is not selected and there are no pieces selected on the board
@@ -287,6 +296,14 @@ public class Corsica extends PApplet {
                 }
             }
         }
+    }
+
+    public int getNullValue(){
+        return 99;
+    }
+
+    public boolean aPieceIsSelected(){
+        return selectedSquare != 99;
     }
 
 
