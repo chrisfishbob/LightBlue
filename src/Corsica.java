@@ -26,6 +26,7 @@ public class Corsica extends PApplet {
     private int selectedSquare = 99;
     private int releasedSquare = 99;
     private boolean pieceAlreadySelected = false;
+    private boolean mouseIsHeldDown = false;
 
     public void settings(){
         size(windowWidth, windowHeight);
@@ -48,17 +49,22 @@ public class Corsica extends PApplet {
                 int column = piece.getLocation() % 8;
                 int squareSize = windowWidth / 8;
 
-                if (!piece.isSelected())
+                // If the piece is not selected, or if the mouse is not being held down,
+                // just display the image at wherever its location is on the board
+                if (!piece.isSelected() || !mouseIsHeldDown)
                 {
                     image(piece.getImage(), column * squareSize, row * squareSize, squareSize, squareSize);
                 }
-                else{
-                    image(piece.getImage(), column * squareSize, row * squareSize, squareSize, squareSize);
-                }
 
+                // Display the piece, following the position of the cursor.
+                else{
+                        image(piece.getImage(), mouseX - (float) squareSize / 2,
+                                mouseY - (float) squareSize / 2, squareSize, squareSize);
+                }
             }
         }
     }
+
 
     public void drawBoard(){
         // Called for every frame, this method draws an empty board.
@@ -68,22 +74,30 @@ public class Corsica extends PApplet {
         for (int rank = 0; rank < 8; rank++){
             for (int file = 0; file < 8; file++){
                 boolean isLightSquare = (file + rank) % 2 != 0;
+                // Determine the color of the square
                 if (!isLightSquare){
                     fill(238, 237, 213);
                 }
                 else{
                     fill(124, 148, 93);
                 }
+
+                // Draw the square itself
                 rect(file * (float) (windowWidth / 8),
                         rank * (float) (windowHeight / 8),
                         (float) windowWidth / 8, (float) windowHeight / 8);
 
-                // Draw a yellow square if the square is selected or if its where the mouse released
+                // Draw a yellow square over the original if the square is selected or if its where the mouse released
                 if (rank * 8 + file == selectedSquare || rank * 8 + file == releasedSquare){
-                    fill (226, 226, 64);
-                    rect(file * (float) (windowWidth / 8),
-                            rank * (float) (windowHeight / 8),
-                            (float) windowWidth / 8, (float) windowHeight / 8);
+                    // Only draw the released square if the selected square if not Null
+                    if (selectedSquare != getNullValue())
+                    {
+                        fill (226, 226, 64);
+                        rect(file * (float) (windowWidth / 8),
+                                rank * (float) (windowHeight / 8),
+                                (float) windowWidth / 8, (float) windowHeight / 8);
+                    }
+
                 }
             }
         }
@@ -194,13 +208,15 @@ public class Corsica extends PApplet {
 
 
     public void mousePressed(){
+        mouseIsHeldDown = true;
         processMouseClick();
     }
 
-    public void mouseDragged(){
-    }
 
     public void mouseReleased(){
+        mouseIsHeldDown = false;
+
+        // Checks if the player released the mouse in bounds
         if (mouseX >= 0 && mouseY >= 0 && mouseX < windowWidth && mouseY < windowHeight){
             int file = mouseX / squareSize;
             int rank = mouseY / squareSize;
@@ -210,7 +226,6 @@ public class Corsica extends PApplet {
             if (selectedSquare != releasedSquare && aPieceIsSelected()){
                 Move move = new Move(selectedSquare, releasedSquare);
                 movePiece(move);
-                System.out.println("tried to move piece");
             }
 
             // Nullify the release square if the player clicked on a blank square
@@ -220,8 +235,8 @@ public class Corsica extends PApplet {
 
         }
 
+        // Player release mouse out of bounds, unselect selected piece and set selected Square to null
         else {
-            System.out.println("ran");
             board[selectedSquare].setSelected(false);
             selectedSquare = getNullValue();
             pieceAlreadySelected = false;
@@ -263,12 +278,13 @@ public class Corsica extends PApplet {
             }
         }
 
+
         // Loops through the board and make the selected piece highlighted if not already highlighted
         for (Piece piece : board){
             // Null check: We only allow the play to select pieces, not empty squares
             if (piece != null){
-                // Case where the piece is already selected, we unselect it
-                if (piece.isSelected() && piece.getLocation() == selectedSquare){
+                // Case where the piece is already selected, we unselect it if the mouse is not held down
+                if (piece.isSelected() && piece.getLocation() == selectedSquare && !mouseIsHeldDown){
                     piece.setSelected(false);
                     pieceAlreadySelected = false;
                     selectedSquare = getNullValue();
