@@ -10,4 +10,13 @@ public class Rook extends Piece{
             setImage(Corsica.blackRook);
         }
     }
+
+    public String toString(){
+        if (getColor().equals("white")){
+            return "R at " + getLocation();
+        }
+        else{
+            return "r at " + getLocation();
+        }
+    }
 }

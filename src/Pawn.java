@@ -10,4 +10,13 @@ public class Pawn extends Piece{
             setImage(Corsica.blackPawn);
         }
     }
+
+    public String toString(){
+        if (getColor().equals("white")){
+            return "P at " + getLocation();
+        }
+        else{
+            return "p at " + getLocation();
+        }
+    }
 }

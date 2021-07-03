@@ -36,6 +36,9 @@ public class Corsica extends PApplet {
         loadImages();
         board = new Piece[64];
         loadFromFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
+        for (Piece piece : board){
+            System.out.println(piece);
+        }
     }
 
 
@@ -97,23 +100,20 @@ public class Corsica extends PApplet {
                                 rank * (float) (windowHeight / 8),
                                 (float) windowWidth / 8, (float) windowHeight / 8);
                     }
-
                 }
             }
         }
     }
 
+
     public void loadFromFen(String fen){
-        HashMap<Character, Piece> pieceHashMap = generatePieceHashMap();
         int rank = 0;
         int file = 0;
 
         clearBoard();
         for (char chr : fen.toCharArray()){
             if (Character.isLetter(chr)){
-                Piece piece = pieceHashMap.get(chr);
-                // replaces the Piece object in the hashMap with a clone so we can modify the original
-                pieceHashMap.replace(chr, new Piece(piece) {});
+                Piece piece = getPieceFromCharacter(chr);
                 piece.setLocation(rank * 8 + file);
                 putPiece(piece);
                 file ++;
@@ -153,22 +153,22 @@ public class Corsica extends PApplet {
     }
 
 
-    public HashMap<Character, Piece> generatePieceHashMap(){
-        HashMap<Character, Piece> pieceHashMap = new HashMap<>();
-        pieceHashMap.put('r', new Rook("black", 0));
-        pieceHashMap.put('b', new Bishop("black", 0));
-        pieceHashMap.put('R', new Rook("white", 0));
-        pieceHashMap.put('B', new Bishop("white", 0));
-        pieceHashMap.put('p', new Pawn("black", 0));
-        pieceHashMap.put('P', new Pawn("white", 0));
-        pieceHashMap.put('k', new King("black", 0));
-        pieceHashMap.put('K', new King("white", 0));
-        pieceHashMap.put('q', new Queen("black", 0 ));
-        pieceHashMap.put('Q', new Queen("white", 0 ));
-        pieceHashMap.put('n', new Knight("black", 0 ));
-        pieceHashMap.put('N', new Knight("white", 0 ));
-
-        return pieceHashMap;
+    public Piece getPieceFromCharacter(char character){
+        return switch (character) {
+            case 'r' -> new Rook("black", 0);
+            case 'R' -> new Rook("white", 0);
+            case 'b' -> new Bishop("black", 0);
+            case 'B' -> new Bishop("white", 0);
+            case 'q' -> new Queen("black", 0);
+            case 'Q' -> new Queen("white", 0);
+            case 'k' -> new King("black", 0);
+            case 'K' -> new King("white", 0);
+            case 'n' -> new Knight("black", 0);
+            case 'N' -> new Knight("white", 0);
+            case 'p' -> new Pawn("black", 0);
+            case 'P' -> new Pawn("white", 0);
+            default -> throw new IllegalStateException("Unexpected value: " + character);
+        };
     }
 
 
@@ -232,7 +232,6 @@ public class Corsica extends PApplet {
             if (board[rank * 8 + file] == null){
                 releasedSquare = 99;
             }
-
         }
 
         // Player release mouse out of bounds, unselect selected piece and set selected Square to null
@@ -245,20 +244,14 @@ public class Corsica extends PApplet {
 
 
     public void keyPressed(){
-        movePiece(new Move(52, 36));
-        for (Piece piece : board){
-            if (piece != null){
-                if (piece.isSelected()){
-                    System.out.println("bruh");
-                }
-            }
-        }
+        printBoard();
     }
 
 
     public void processMouseClick(){
         processHighlighting();
     }
+
 
     public void processHighlighting(){
         int file = mouseX / squareSize;
@@ -312,6 +305,26 @@ public class Corsica extends PApplet {
                 }
             }
         }
+    }
+
+    public void printBoard(){
+        System.out.println("------------");
+        for (int i = 0 ; i < 64 ; i ++){
+            if (board[i] != null){
+                System.out.print("p");
+
+
+            }
+
+            else{
+                System.out.print("b");
+            }
+
+            if ((i + 1) % 8 == 0){
+                System.out.println();
+            }
+        }
+        System.out.println("------------\n");
     }
 
     public int getNullValue(){

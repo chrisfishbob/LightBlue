@@ -10,4 +10,13 @@ public class Bishop extends Piece{
             setImage(Corsica.blackBishop);
         }
     }
+
+    public String toString(){
+        if (getColor().equals("white")){
+            return "B at " + getLocation();
+        }
+        else{
+            return "b at " + getLocation();
+        }
+    }
 }

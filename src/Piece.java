@@ -19,6 +19,10 @@ public abstract class Piece {
         this.isSelected = clone.isSelected;
     }
 
+    public String getColor(){
+        return this.color;
+    }
+
     public int getLocation(){
         return location;
     }
@@ -35,9 +39,7 @@ public abstract class Piece {
         return this.image;
     }
 
-    public String toString(){
-        return "Piece at " + location;
-    }
+    public abstract String toString();
 
     public void setSelected(boolean bool){
         this.isSelected = bool;

@@ -10,4 +10,13 @@ public class Queen extends Piece{
             setImage(Corsica.blackQueen);
         }
     }
+
+    public String toString(){
+        if (getColor().equals("white")){
+            return "Q at " + getLocation();
+        }
+        else{
+            return "q at " + getLocation();
+        }
+    }
 }

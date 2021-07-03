@@ -11,4 +11,13 @@ public class Knight extends Piece{
         }
     }
 
+    public String toString(){
+        if (getColor().equals("white")){
+            return "N at " + getLocation();
+        }
+        else{
+            return "n at " + getLocation();
+        }
+    }
+
 }

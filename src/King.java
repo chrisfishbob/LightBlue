@@ -10,4 +10,13 @@ public class King extends Piece{
             setImage(Corsica.blackKing);
         }
     }
+
+    public String toString(){
+        if (getColor().equals("white")){
+            return "K at " + getLocation();
+        }
+        else{
+            return "k at " + getLocation();
+        }
+    }
 }
