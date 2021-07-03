@@ -19,4 +19,13 @@ public class Rook extends Piece{
             return "r at " + getLocation();
         }
     }
+
+    public String getPieceChar(){
+        if (getColor().equals("white")){
+            return "R";
+        }
+        else{
+            return "r";
+        }
+    }
 }

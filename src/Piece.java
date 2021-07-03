@@ -41,6 +41,8 @@ public abstract class Piece {
 
     public abstract String toString();
 
+    public abstract String getPieceChar();
+
     public void setSelected(boolean bool){
         this.isSelected = bool;
     }

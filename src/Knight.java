@@ -20,4 +20,13 @@ public class Knight extends Piece{
         }
     }
 
+    public String getPieceChar(){
+        if (getColor().equals("white")){
+            return "N";
+        }
+        else{
+            return "n";
+        }
+    }
+
 }

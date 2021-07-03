@@ -19,4 +19,13 @@ public class Queen extends Piece{
             return "q at " + getLocation();
         }
     }
+
+    public String getPieceChar(){
+        if (getColor().equals("white")){
+            return "Q";
+        }
+        else{
+            return "q";
+        }
+    }
 }

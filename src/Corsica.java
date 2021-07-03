@@ -36,9 +36,6 @@ public class Corsica extends PApplet {
         loadImages();
         board = new Piece[64];
         loadFromFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
-        for (Piece piece : board){
-            System.out.println(piece);
-        }
     }
 
 
@@ -307,29 +304,29 @@ public class Corsica extends PApplet {
         }
     }
 
+
     public void printBoard(){
-        System.out.println("------------");
+        System.out.println("-------------------------------");
         for (int i = 0 ; i < 64 ; i ++){
             if (board[i] != null){
-                System.out.print("p");
-
-
+                System.out.print('[' + board[i].getPieceChar() + ']' + " ");
             }
-
             else{
-                System.out.print("b");
+                System.out.print('[' + " " + ']' + " ");
             }
 
             if ((i + 1) % 8 == 0){
                 System.out.println();
             }
         }
-        System.out.println("------------\n");
+        System.out.println("-------------------------------\n\n");
     }
+
 
     public int getNullValue(){
         return 99;
     }
+
 
     public boolean aPieceIsSelected(){
         return selectedSquare != 99;

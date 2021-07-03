@@ -19,4 +19,13 @@ public class King extends Piece{
             return "k at " + getLocation();
         }
     }
+
+    public String getPieceChar(){
+        if (getColor().equals("white")){
+            return "K";
+        }
+        else{
+            return "k";
+        }
+    }
 }

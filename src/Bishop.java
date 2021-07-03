@@ -19,4 +19,13 @@ public class Bishop extends Piece{
             return "b at " + getLocation();
         }
     }
+
+    public String getPieceChar(){
+        if (getColor().equals("white")){
+            return "B";
+        }
+        else{
+            return "b";
+        }
+    }
 }

@@ -19,4 +19,13 @@ public class Pawn extends Piece{
             return "p at " + getLocation();
         }
     }
+
+    public String getPieceChar(){
+        if (getColor().equals("white")){
+            return "P";
+        }
+        else{
+            return "p";
+        }
+    }
 }
