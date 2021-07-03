@@ -1,8 +1,6 @@
 import processing.core.PApplet;
 import processing.core.PImage;
 import java.lang.*;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 
 public class Corsica extends PApplet {
@@ -241,8 +239,11 @@ public class Corsica extends PApplet {
 
 
     public void keyPressed(){
-        printBoard();
-        System.out.println(getEvaluation());
+        switch (key) {
+            case 'p' -> printBoard();
+            case 'e' -> System.out.println(getEvaluation());
+            case 'r' -> resetBoard();
+        }
     }
 
 
@@ -310,12 +311,23 @@ public class Corsica extends PApplet {
         System.out.println("-------------------------------");
         for (int i = 0 ; i < 64 ; i ++){
             if (board[i] != null){
-                System.out.print('[' + board[i].getPieceChar() + ']' + " ");
+                // Print out the piece's character if not selected, otherwise put single quotes
+                // around the character.
+                // ex: [k] = unselected black king, ['P'] = selected white pawn
+                if (!board[i].isSelected())
+                {
+                    System.out.print('[' + board[i].getPieceChar() + ']' + " ");
+                }
+                else{
+                    System.out.print("['" + board[i].getPieceChar() + "']" + " ");
+                }
+
             }
             else{
                 System.out.print('[' + " " + ']' + " ");
             }
 
+            // Print blank line after 8 squares
             if ((i + 1) % 8 == 0){
                 System.out.println();
             }
@@ -344,13 +356,23 @@ public class Corsica extends PApplet {
     }
 
 
+
+    public void resetBoard(){
+        // This method resets the board to its initial stage
+        loadFromFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
+        selectedSquare = getNullValue();
+        releasedSquare = getNullValue();
+        pieceAlreadySelected = false;
+    }
+
+
     public int getNullValue(){
         return 99;
     }
 
 
     public boolean aPieceIsSelected(){
-        return selectedSquare != 99;
+        return selectedSquare != getNullValue();
     }
 
 

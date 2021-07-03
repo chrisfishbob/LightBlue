@@ -14,12 +14,6 @@ public abstract class Piece {
         this.value = value;
     }
 
-    public Piece(Piece clone){
-        this.color = clone.color;
-        this.location = clone.location;
-        this.image = clone.image;
-        this.isSelected = clone.isSelected;
-    }
 
     public String getColor(){
         return this.color;
@@ -56,6 +50,4 @@ public abstract class Piece {
     public boolean isSelected(){
         return this.isSelected;
     }
-
-
 }
