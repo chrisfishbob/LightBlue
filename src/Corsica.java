@@ -242,6 +242,7 @@ public class Corsica extends PApplet {
 
     public void keyPressed(){
         printBoard();
+        System.out.println(getEvaluation());
     }
 
 
@@ -320,6 +321,26 @@ public class Corsica extends PApplet {
             }
         }
         System.out.println("-------------------------------\n\n");
+    }
+
+
+    public double getEvaluation(){
+        double eval = 0;
+
+        for (Piece piece : board){
+            // Ignore the king in the evaluation for now, wait till check and checkmate implementation
+            // to modify this.
+            if (!(piece instanceof King) && piece != null){
+                if (piece.getColor().equals("white")){
+                    eval += piece.getValue();
+                }
+                else{
+                    eval -= piece.getValue();
+                }
+            }
+        }
+
+        return eval;
     }
 
 

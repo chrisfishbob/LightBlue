@@ -1,7 +1,7 @@
 public class Bishop extends Piece{
 
     public Bishop(String color, int location) {
-        super(color, location);
+        super(color, location, 3.25);
 
         if (color.equals("white")){
             setImage(Corsica.whiteBishop);

@@ -5,11 +5,13 @@ public abstract class Piece {
     private int location;
     private PImage image;
     private boolean isSelected = false;
+    private double value;
 
 
-    public Piece(String color, int location){
+    public Piece(String color, int location, double value){
         this.color = color;
         this.location = location;
+        this.value = value;
     }
 
     public Piece(Piece clone){
@@ -37,6 +39,10 @@ public abstract class Piece {
 
     public PImage getImage(){
         return this.image;
+    }
+
+    public double getValue(){
+        return this.value;
     }
 
     public abstract String toString();

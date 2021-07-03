@@ -1,7 +1,7 @@
 public class Pawn extends Piece{
 
     public Pawn(String color, int location) {
-        super(color, location);
+        super(color, location, 1);
 
         if (color.equals("white")){
             setImage(Corsica.whitePawn);

@@ -1,7 +1,7 @@
 public class King extends Piece{
 
     public King(String color, int location) {
-        super(color, location);
+        super(color, location, Double.POSITIVE_INFINITY);
 
         if (color.equals("white")){
             setImage(Corsica.whiteKing);

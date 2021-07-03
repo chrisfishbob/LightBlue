@@ -1,7 +1,7 @@
 public class Queen extends Piece{
 
     public Queen(String color, int location) {
-        super(color, location);
+        super(color, location, 9);
 
         if (color.equals("white")){
             setImage(Corsica.whiteQueen);

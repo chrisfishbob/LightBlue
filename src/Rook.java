@@ -1,7 +1,7 @@
 public class Rook extends Piece{
 
     public Rook(String color, int location) {
-        super(color, location);
+        super(color, location, 5);
 
         if (color.equals("white")){
             setImage(Corsica.whiteRook);

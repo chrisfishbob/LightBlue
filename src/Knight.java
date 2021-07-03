@@ -1,7 +1,7 @@
 public class Knight extends Piece{
 
     public Knight(String color, int location) {
-        super(color, location);
+        super(color, location, 3);
 
         if (color.equals("white")){
             setImage(Corsica.whiteKnight);
