@@ -1,12 +1,7 @@
 import processing.core.PApplet;
 import processing.core.PImage;
-
 import javax.sound.sampled.*;
-import javax.swing.*;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.lang.*;
 
 
@@ -41,7 +36,6 @@ public class Corsica extends PApplet {
         loadImages();
         board = new Piece[64];
         loadFromFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
-        playSound("start");
     }
 
 
@@ -110,6 +104,7 @@ public class Corsica extends PApplet {
 
 
     public void loadFromFen(String fen){
+        playSound("start");
         int rank = 0;
         int file = 0;
 
