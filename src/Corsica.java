@@ -41,7 +41,7 @@ public class Corsica extends PApplet {
         loadImages();
         board = new Piece[64];
         loadFromFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
-        playSound();
+        playSound("start");
     }
 
 
@@ -195,6 +195,12 @@ public class Corsica extends PApplet {
 
     public void movePiece(Move move){
         if (board[move.getStartSquare()] != null){
+            if (board[move.getTargetSquare()] == null){
+                playSound("move");
+            }
+            else{
+                playSound("capture");
+            }
             board[move.getStartSquare()].setSelected(false);
             Piece piece = board[move.getStartSquare()];
             piece.setLocation(move.getTargetSquare());
@@ -202,6 +208,7 @@ public class Corsica extends PApplet {
             board[move.getStartSquare()] = null;
             // Marks the target square as the release square so that it get highlighted
             releasedSquare = move.getTargetSquare();
+
         }
 
         else{
@@ -363,9 +370,9 @@ public class Corsica extends PApplet {
         return eval;
     }
 
-    public void playSound(){
+    public void playSound(String soundName){
         try{
-            File file = new File("sound/start.wav");
+            File file = new File("sound/" + soundName + ".wav");
             AudioInputStream move = AudioSystem.getAudioInputStream(file);
             Clip clip = AudioSystem.getClip();
             clip.open(move);
@@ -373,7 +380,7 @@ public class Corsica extends PApplet {
         }
 
         catch (Exception e){
-            System.out.println(e);
+            System.out.println(e.getMessage());
         }
 
     }
