@@ -27,6 +27,7 @@ public class Corsica extends PApplet {
     private int releasedSquare = 99;
     private boolean pieceAlreadySelected = false;
     private boolean mouseIsHeldDown = false;
+    private String colorToMove = "white";
 
     public void settings(){
         size(windowWidth, windowHeight);
@@ -189,20 +190,35 @@ public class Corsica extends PApplet {
 
 
     public void movePiece(Move move){
+        // Null check not really necessary, can consider removing later
         if (board[move.getStartSquare()] != null){
+            // If not the right color to move, don't move the piece
+            if (!board[move.getStartSquare()].getColor().equals(colorToMove)){
+                return;
+            }
+
             if (board[move.getTargetSquare()] == null){
                 playSound("move");
             }
             else{
                 playSound("capture");
             }
-            board[move.getStartSquare()].setSelected(false);
+//            board[move.getStartSquare()].setSelected(false);
             Piece piece = board[move.getStartSquare()];
+            piece.setSelected(false);
             piece.setLocation(move.getTargetSquare());
             board[move.getTargetSquare()] = piece;
             board[move.getStartSquare()] = null;
             // Marks the target square as the release square so that it get highlighted
             releasedSquare = move.getTargetSquare();
+
+            if (piece.getColor().equals("white")){
+                colorToMove = "black";
+            }
+            else{
+                colorToMove = "white";
+            }
+
 
         }
 
@@ -250,7 +266,10 @@ public class Corsica extends PApplet {
 
     public void keyPressed(){
         switch (key) {
-            case 'p' -> printBoard();
+            case 'p' -> {
+                printBoard();
+                System.out.println("Released square is: " + releasedSquare);
+            }
             case 'e' -> System.out.println(getEvaluation());
             case 'r' -> resetBoard();
         }
@@ -385,6 +404,7 @@ public class Corsica extends PApplet {
     public void resetBoard(){
         // This method resets the board to its initial stage
         loadFromFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
+        colorToMove = "white";
         selectedSquare = getNullValue();
         releasedSquare = getNullValue();
         pieceAlreadySelected = false;
