@@ -23,8 +23,8 @@ public class Board extends PApplet {
     public static PImage blackPawn;
     public static PImage whitePawn;
 
-    private int selectedSquare = 99;
-    private int releasedSquare = 99;
+    private int selectedSquare = getNullValue();
+    private int releasedSquare = getNullValue();
     private boolean pieceAlreadySelected = false;
     private boolean mouseIsHeldDown = false;
     private String colorToMove = "white";
@@ -59,8 +59,8 @@ public class Board extends PApplet {
 
                 // Display the piece, following the position of the cursor.
                 else{
-                        image(piece.getImage(), mouseX - (float) squareSize / 2,
-                                mouseY - (float) squareSize / 2, squareSize, squareSize);
+                    image(piece.getImage(), mouseX - (float) squareSize / 2,
+                            mouseY - (float) squareSize / 2, squareSize, squareSize);
                 }
             }
         }
@@ -75,8 +75,6 @@ public class Board extends PApplet {
         for (int rank = 0; rank < 8; rank++){
             for (int file = 0; file < 8; file++){
                 boolean isLightSquare = (file + rank) % 2 != 0;
-
-
                 // Draw a yellow square over the original if the square is selected or if its where the mouse released
                 if (rank * 8 + file == selectedSquare || rank * 8 + file == releasedSquare){
                     // Only draw the released square if the selected square if not Null
@@ -86,6 +84,7 @@ public class Board extends PApplet {
                     }
                 }
 
+                // The square is not a special highlighted square, just draw the board
                 else{
                     if (!isLightSquare){
                         fill(238, 237, 213);
