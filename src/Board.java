@@ -75,18 +75,7 @@ public class Board extends PApplet {
         for (int rank = 0; rank < 8; rank++){
             for (int file = 0; file < 8; file++){
                 boolean isLightSquare = (file + rank) % 2 != 0;
-                // Determine the color of the square
-                if (!isLightSquare){
-                    fill(238, 237, 213);
-                }
-                else{
-                    fill(124, 148, 93);
-                }
 
-                // Draw the square itself
-                rect(file * (float) (windowWidth / 8),
-                        rank * (float) (windowHeight / 8),
-                        (float) windowWidth / 8, (float) windowHeight / 8);
 
                 // Draw a yellow square over the original if the square is selected or if its where the mouse released
                 if (rank * 8 + file == selectedSquare || rank * 8 + file == releasedSquare){
@@ -94,11 +83,22 @@ public class Board extends PApplet {
                     if (selectedSquare != getNullValue())
                     {
                         fill (226, 226, 64);
-                        rect(file * (float) (windowWidth / 8),
-                                rank * (float) (windowHeight / 8),
-                                (float) windowWidth / 8, (float) windowHeight / 8);
                     }
                 }
+
+                else{
+                    if (!isLightSquare){
+                        fill(238, 237, 213);
+                    }
+                    else{
+                        fill(124, 148, 93);
+                    }
+                }
+
+                // Draw the square itself
+                rect(file * (float) (windowWidth / 8),
+                        rank * (float) (windowHeight / 8),
+                        (float) windowWidth / 8, (float) windowHeight / 8);
             }
         }
     }
