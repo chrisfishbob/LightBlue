@@ -194,6 +194,9 @@ public class Board extends PApplet {
         if (board[move.getStartSquare()] != null){
             // If not the right color to move, don't move the piece
             if (!board[move.getStartSquare()].getColor().equals(colorToMove)){
+                // Sets releasedSquare to null so that the released square
+                // does not get highlighted if the player tries to move out of turn
+                releasedSquare = getNullValue();
                 return;
             }
 
@@ -218,8 +221,6 @@ public class Board extends PApplet {
             else{
                 colorToMove = "white";
             }
-
-
         }
 
         else{
@@ -249,9 +250,14 @@ public class Board extends PApplet {
                 movePiece(move);
             }
 
+            // If we're not moving the piece, nullify the released Square so that it does not get highlighted
+            else{
+                releasedSquare = getNullValue();
+            }
+
             // Nullify the release square if the player clicked on a blank square
             if (board[rank * 8 + file] == null){
-                releasedSquare = 99;
+                releasedSquare = getNullValue();
             }
         }
 
