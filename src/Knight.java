@@ -1,13 +1,15 @@
+import java.util.ArrayList;
+
 public class Knight extends Piece{
 
     public Knight(String color, int location) {
         super(color, location, 3);
 
         if (color.equals("white")){
-            setImage(Corsica.whiteKnight);
+            setImage(Board.whiteKnight);
         }
         else{
-            setImage(Corsica.blackKnight);
+            setImage(Board.blackKnight);
         }
     }
 
@@ -28,5 +30,11 @@ public class Knight extends Piece{
             return "n";
         }
     }
+
+//    public ArrayList<Move> generateMoves(){
+//        ArrayList<Move> moves = new ArrayList<>();
+//
+//
+//    }
 
 }

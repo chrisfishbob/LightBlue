@@ -4,10 +4,10 @@ public class Queen extends Piece{
         super(color, location, 9);
 
         if (color.equals("white")){
-            setImage(Corsica.whiteQueen);
+            setImage(Board.whiteQueen);
         }
         else{
-            setImage(Corsica.blackQueen);
+            setImage(Board.blackQueen);
         }
     }
 

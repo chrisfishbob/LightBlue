@@ -4,10 +4,10 @@ public class King extends Piece{
         super(color, location, Double.POSITIVE_INFINITY);
 
         if (color.equals("white")){
-            setImage(Corsica.whiteKing);
+            setImage(Board.whiteKing);
         }
         else{
-            setImage(Corsica.blackKing);
+            setImage(Board.blackKing);
         }
     }
 

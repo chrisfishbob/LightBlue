@@ -4,10 +4,10 @@ public class Bishop extends Piece{
         super(color, location, 3.25);
 
         if (color.equals("white")){
-            setImage(Corsica.whiteBishop);
+            setImage(Board.whiteBishop);
         }
         else{
-            setImage(Corsica.blackBishop);
+            setImage(Board.blackBishop);
         }
     }
 

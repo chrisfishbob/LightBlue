@@ -5,7 +5,7 @@ import java.io.File;
 import java.lang.*;
 
 
-public class Corsica extends PApplet {
+public class Board extends PApplet {
     Piece[] board;
     private final int windowWidth = 800;
     private final int windowHeight = 800;
@@ -269,6 +269,7 @@ public class Corsica extends PApplet {
             case 'p' -> {
                 printBoard();
                 System.out.println("Released square is: " + releasedSquare);
+                System.out.println(colorToMove + " to move");
             }
             case 'e' -> System.out.println(getEvaluation());
             case 'r' -> resetBoard();
@@ -422,7 +423,7 @@ public class Corsica extends PApplet {
 
 
     public static void main(String[] args){
-        String[] appletArgs = new String[] {"Corsica"};
+        String[] appletArgs = new String[] {"Board"};
         PApplet.main(appletArgs);
     }
 }

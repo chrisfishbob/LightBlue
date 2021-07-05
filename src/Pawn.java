@@ -4,10 +4,10 @@ public class Pawn extends Piece{
         super(color, location, 1);
 
         if (color.equals("white")){
-            setImage(Corsica.whitePawn);
+            setImage(Board.whitePawn);
         }
         else{
-            setImage(Corsica.blackPawn);
+            setImage(Board.blackPawn);
         }
     }
 

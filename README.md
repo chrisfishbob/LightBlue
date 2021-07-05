@@ -1,6 +1,6 @@
-# Corsica
+# Board
 
-Corsica is an independent chess engine with a built-in GUI. This project uses Java for all aspects of the engine, utilizing the Processing library for
+Board is an independent chess engine with a built-in GUI. This project uses Java for all aspects of the engine, utilizing the Processing library for
 the graphical user interface. 
 
 This project will be completed in five stages:

@@ -4,10 +4,10 @@ public class Rook extends Piece{
         super(color, location, 5);
 
         if (color.equals("white")){
-            setImage(Corsica.whiteRook);
+            setImage(Board.whiteRook);
         }
         else{
-            setImage(Corsica.blackRook);
+            setImage(Board.blackRook);
         }
     }
 
