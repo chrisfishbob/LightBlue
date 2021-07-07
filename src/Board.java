@@ -83,7 +83,7 @@ public class Board extends PApplet {
             for (int file = 0; file < 8; file++){
                 boolean isLightSquare = (file + rank) % 2 != 0;
 
-                // If the current square is the selected square or the released square,
+                // If the current square is the selected square or the released square
                 // draw the special colored square
                 if (rank * 8 + file == selectedSquare ||
                         rank * 8 + file == previousMoveStartSquare ||
