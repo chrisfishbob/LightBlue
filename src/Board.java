@@ -45,8 +45,6 @@ public class Board extends PApplet {
         loadImages();
         board = new Piece[64];
         loadFromFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
-        boolean shouldBeRed = true;
-        otherHighlightedSquares.add(0);
     }
 
 
