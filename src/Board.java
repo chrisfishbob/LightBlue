@@ -30,7 +30,9 @@ public class Board extends PApplet {
     private boolean mouseIsHeldDown = false;
     private boolean unselectOnRelease = false;
     private String colorToMove = "white";
-    private final int[] yellow1 = {226, 226, 64};
+    private final int[] yellow1 = {206, 206, 44};
+    private final int[] blue1 = {177, 213, 212};
+    private final int[] blue2 = {139, 190, 174};
     private final int[] darkGreen = {238, 237, 213};
     private final int[] offwhite = {124, 148, 93};
     private ArrayList<Integer> otherHighlightedSquares = new ArrayList<>();
@@ -85,11 +87,20 @@ public class Board extends PApplet {
 
                 // If the current square is the selected square or the released square
                 // draw the special colored square
-                if (rank * 8 + file == selectedSquare ||
-                        rank * 8 + file == previousMoveStartSquare ||
-                        rank * 8 + file == previousMoveTargetSquare){
+                if (rank * 8 + file == selectedSquare){
 
                     fill(yellow1[0], yellow1[1], yellow1[2]);
+                }
+
+                // Highlight the previous move squares in alternating shades of blue
+                else if (rank * 8 + file == previousMoveStartSquare ||
+                        rank * 8 + file == previousMoveTargetSquare){
+                    if (isLightSquare){
+                        fill(blue1[0], blue1[1], blue1[2]);
+                    }
+                    else{
+                        fill(blue2[0], blue2[1], blue2[2]);
+                    }
                 }
 
                 else if (otherHighlightedSquares.contains(rank * 8 + file))
@@ -221,6 +232,7 @@ public class Board extends PApplet {
             board[startSquare] = null;
             previousMoveStartSquare = startSquare;
             previousMoveTargetSquare = targetSquare;
+            selectedSquare = getNullValue();
 
 
             if (piece.getColor().equals("white")){
