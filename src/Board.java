@@ -1,8 +1,11 @@
+import org.w3c.dom.css.RGBColor;
 import processing.core.PApplet;
 import processing.core.PImage;
 import javax.sound.sampled.*;
+import java.awt.*;
 import java.io.File;
 import java.lang.*;
+import java.util.ArrayList;
 
 
 public class Board extends PApplet {
@@ -29,6 +32,10 @@ public class Board extends PApplet {
     private boolean mouseIsHeldDown = false;
     private boolean unselectOnRelease = false;
     private String colorToMove = "white";
+    private final int[] yellow1 = {226, 226, 64};
+    private final int[] darkGreen = {238, 237, 213};
+    private final int[] offwhite = {124, 148, 93};
+    private ArrayList<Integer> otherHighlightedSquares = new ArrayList<>();
 
     public void settings(){
         size(windowWidth, windowHeight);
@@ -38,6 +45,8 @@ public class Board extends PApplet {
         loadImages();
         board = new Piece[64];
         loadFromFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
+        boolean shouldBeRed = true;
+        otherHighlightedSquares.add(0);
     }
 
 
@@ -70,32 +79,34 @@ public class Board extends PApplet {
 
     public void drawBoard(){
         // Called for every frame, this method draws an empty board.
-
         noStroke();
 
         for (int rank = 0; rank < 8; rank++){
             for (int file = 0; file < 8; file++){
                 boolean isLightSquare = (file + rank) % 2 != 0;
-                // Draw a yellow square over the original if the square is selected or if its where the mouse released
+
+                // If the current square is the selected square or the released square,
+                // draw the special colored square
                 if (rank * 8 + file == selectedSquare || rank * 8 + file == releasedSquare){
-                    // Only draw the released square if the selected square if not Null
-                    if (selectedSquare != getNullValue())
-                    {
-                        fill (226, 226, 64);
-                    }
+                    fill(yellow1[0], yellow1[1], yellow1[2]);
+                }
+
+                else if (otherHighlightedSquares.contains(rank * 8 + file))
+                {
+                    fill(255, 0, 0, 130);
                 }
 
                 // The square is not a special highlighted square, just draw the board
                 else{
                     if (!isLightSquare){
-                        fill(238, 237, 213);
+                        fill(darkGreen[0], darkGreen[1], darkGreen[2]);
                     }
                     else{
-                        fill(124, 148, 93);
+                        fill(offwhite[0], offwhite[1], offwhite[2]);
                     }
                 }
 
-                // Draw the square itself
+                // Draw the square itself after color is established
                 rect(file * (float) (windowWidth / 8),
                         rank * (float) (windowHeight / 8),
                         (float) windowWidth / 8, (float) windowHeight / 8);
@@ -282,7 +293,9 @@ public class Board extends PApplet {
             case 'p' -> {
                 printBoard();
                 System.out.println("Released square is: " + releasedSquare);
+                System.out.println("Selected square is: " + selectedSquare);
                 System.out.println(colorToMove + " to move");
+
             }
             case 'e' -> System.out.println(getEvaluation());
             case 'r' -> resetBoard();
@@ -303,6 +316,7 @@ public class Board extends PApplet {
         // If the player clicks on an empty square, deselect all squares
         if (board[selectedSquare] == null){
             selectedSquare = getNullValue();
+            releasedSquare = getNullValue();
             for (Piece pc : board){
                 if (pc != null){
                     if (pc.isSelected()){
