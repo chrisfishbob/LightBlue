@@ -34,7 +34,7 @@ public class Board extends PApplet {
     private final int[] blue1 = {167, 203, 202};
     private final int[] blue2 = {139, 190, 174};
     private final int[] darkGreen = {238, 237, 213};
-    private final int[] offwhite = {124, 148, 93};
+    private final int[] offWhite = {124, 148, 93};
     private ArrayList<Integer> otherHighlightedSquares = new ArrayList<>();
     private int previousMoveStartSquare = getNullValue();
     private int previousMoveTargetSquare = getNullValue();
@@ -114,7 +114,7 @@ public class Board extends PApplet {
                         fill(darkGreen[0], darkGreen[1], darkGreen[2]);
                     }
                     else{
-                        fill(offwhite[0], offwhite[1], offwhite[2]);
+                        fill(offWhite[0], offWhite[1], offWhite[2]);
                     }
                 }
 
