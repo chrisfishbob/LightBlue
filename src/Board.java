@@ -165,21 +165,34 @@ public class Board extends PApplet {
 
 
     public Piece getPieceFromCharacter(char character){
-        return switch (character) {
-            case 'r' -> new Rook("black", 0);
-            case 'R' -> new Rook("white", 0);
-            case 'b' -> new Bishop("black", 0);
-            case 'B' -> new Bishop("white", 0);
-            case 'q' -> new Queen("black", 0);
-            case 'Q' -> new Queen("white", 0);
-            case 'k' -> new King("black", 0);
-            case 'K' -> new King("white", 0);
-            case 'n' -> new Knight("black", 0);
-            case 'N' -> new Knight("white", 0);
-            case 'p' -> new Pawn("black", 0);
-            case 'P' -> new Pawn("white", 0);
-            default -> throw new IllegalStateException("Unexpected value: " + character);
-        };
+        switch (character) {
+            case 'r':
+                return new Rook("black", 0);
+            case 'R':
+                return new Rook("white", 0);
+            case 'b':
+                return new Bishop("black", 0);
+            case 'B':
+                return new Bishop("white", 0);
+            case 'q':
+                return new Queen("black", 0);
+            case 'Q':
+                return new Queen("white", 0);
+            case 'k':
+                return new King("black", 0);
+            case 'K':
+                return new King("white", 0);
+            case 'n':
+                return new Knight("black", 0);
+            case 'N':
+                return new Knight("white", 0);
+            case 'p':
+                return new Pawn("black", 0);
+            case 'P':
+                return new Pawn("white", 0);
+            default:
+                throw new IllegalStateException("Unexpected value: " + character);
+        }
     }
 
 
@@ -276,17 +289,26 @@ public class Board extends PApplet {
 
     public void keyPressed(){
         switch (key) {
-            case 'p' -> {
+            case 'p':
                 printBoard();
                 System.out.println("Released square is: " + releasedSquare);
                 System.out.println("Selected square is: " + selectedSquare);
                 System.out.println(colorToMove + " to move");
+                break;
 
-            }
-            case 'e' -> System.out.println(getEvaluation());
-            case 'r' -> resetBoard();
-            case 't' -> colorToMove = colorToMove.equals("white") ? "black" : "white";
-            case 'v' -> verifyBoard();
+
+            case 'e':
+                System.out.println(getEvaluation());
+                break;
+            case 'r':
+                resetBoard();
+                break;
+            case 't':
+                colorToMove = colorToMove.equals("white") ? "black" : "white";
+                break;
+            case 'v':
+                verifyBoard();
+                break;
 
         }
     }
