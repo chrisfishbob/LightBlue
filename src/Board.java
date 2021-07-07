@@ -85,7 +85,10 @@ public class Board extends PApplet {
 
                 // If the current square is the selected square or the released square,
                 // draw the special colored square
-                if (rank * 8 + file == selectedSquare || rank * 8 + file == previousMoveStartSquare || rank * 8 + file == previousMoveTargetSquare){
+                if (rank * 8 + file == selectedSquare ||
+                        rank * 8 + file == previousMoveStartSquare ||
+                        rank * 8 + file == previousMoveTargetSquare){
+
                     fill(yellow1[0], yellow1[1], yellow1[2]);
                 }
 
@@ -210,12 +213,7 @@ public class Board extends PApplet {
                 return;
             }
 
-            if (board[targetSquare] == null){
-                playSound("move");
-            }
-            else{
-                playSound("capture");
-            }
+            processSound(move);
 
             piece.setSelected(false);
             piece.setLocation(targetSquare);
@@ -400,7 +398,20 @@ public class Board extends PApplet {
         return eval;
     }
 
+
+    public void processSound(Move move){
+        // This function determines which sound should be played given the Move object
+        if (board[move.getTargetSquare()] == null){
+            playSound("move");
+        }
+        else{
+            playSound("capture");
+        }
+    }
+
+
     public void playSound(String soundName){
+        // This function plays the actual sound file according to the results of processSound
         try{
             File file = new File("sound/" + soundName + ".wav");
             AudioInputStream move = AudioSystem.getAudioInputStream(file);
@@ -415,6 +426,7 @@ public class Board extends PApplet {
 
     }
 
+
     public void unselectPiece(Piece piece){
         piece.setSelected(false);
         pieceAlreadySelected = false;
@@ -423,6 +435,9 @@ public class Board extends PApplet {
     public void selectPiece(Piece piece){
         piece.setSelected(true);
         pieceAlreadySelected = true;
+        // We have to mark unselectOnRelease as false because unselecting is handled
+        // during the mouseReleased event. Not marking the square to not unselect on
+        // release will cause the selected piece to be immediately unselected upon mouse release
         unselectOnRelease = false;
     }
 
