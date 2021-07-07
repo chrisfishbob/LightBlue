@@ -27,6 +27,7 @@ public class Board extends PApplet {
     private int releasedSquare = getNullValue();
     private boolean pieceAlreadySelected = false;
     private boolean mouseIsHeldDown = false;
+    private boolean unselectOnRelease = false;
     private String colorToMove = "white";
 
     public void settings(){
@@ -249,6 +250,13 @@ public class Board extends PApplet {
                 movePiece(move);
             }
 
+            else if (selectedSquare == releasedSquare && unselectOnRelease){
+                board[selectedSquare].setSelected(false);
+                selectedSquare = getNullValue();
+                pieceAlreadySelected = false;
+                releasedSquare = getNullValue();
+            }
+
             // If we're not moving the piece, nullify the released Square so that it does not get highlighted
             else{
                 releasedSquare = getNullValue();
@@ -310,21 +318,16 @@ public class Board extends PApplet {
         for (Piece piece : board){
             // Null check: We only allow the play to select pieces, not empty squares
             if (piece != null){
-                // Case where the piece is already selected, we unselect it if the mouse is not held down
-                if (piece.isSelected() && piece.getLocation() == selectedSquare && !mouseIsHeldDown){
-                    piece.setSelected(false);
-                    pieceAlreadySelected = false;
-                    selectedSquare = getNullValue();
-                }
-
                 // Case where the piece is not selected and there are no pieces selected on the board
-                else if (!piece.isSelected() && piece.getLocation() == selectedSquare && !pieceAlreadySelected){
+                if (!piece.isSelected() && piece.getLocation() == selectedSquare && !pieceAlreadySelected){
                     piece.setSelected(true);
                     pieceAlreadySelected = true;
+                    unselectOnRelease = false;
                 }
 
                 // Case where the piece is not selected but one piece is already selected on the board
                 else if (!piece.isSelected() && piece.getLocation() == selectedSquare && pieceAlreadySelected){
+                    // Unselect all the pieces
                     for (Piece pc : board){
                         if (pc != null){
                             if (pc.isSelected()){
@@ -334,8 +337,14 @@ public class Board extends PApplet {
                         }
                     }
 
+                    // Select the clicked piece
                     piece.setSelected(true);
                     pieceAlreadySelected = true;
+                    unselectOnRelease = false;
+                }
+
+                else if (piece.isSelected() && piece.getLocation() == selectedSquare){
+                    unselectOnRelease = true;
                 }
             }
         }
@@ -414,6 +423,7 @@ public class Board extends PApplet {
         selectedSquare = getNullValue();
         releasedSquare = getNullValue();
         pieceAlreadySelected = false;
+        unselectOnRelease = false;
     }
 
 
