@@ -1,8 +1,6 @@
-import org.w3c.dom.css.RGBColor;
 import processing.core.PApplet;
 import processing.core.PImage;
 import javax.sound.sampled.*;
-import java.awt.*;
 import java.io.File;
 import java.lang.*;
 import java.util.ArrayList;
@@ -36,6 +34,8 @@ public class Board extends PApplet {
     private final int[] darkGreen = {238, 237, 213};
     private final int[] offwhite = {124, 148, 93};
     private ArrayList<Integer> otherHighlightedSquares = new ArrayList<>();
+    private int previousMoveStartSquare = getNullValue();
+    private int previousMoveTargetSquare = getNullValue();
 
     public void settings(){
         size(windowWidth, windowHeight);
@@ -85,7 +85,7 @@ public class Board extends PApplet {
 
                 // If the current square is the selected square or the released square,
                 // draw the special colored square
-                if (rank * 8 + file == selectedSquare || rank * 8 + file == releasedSquare){
+                if (rank * 8 + file == selectedSquare || rank * 8 + file == previousMoveStartSquare || rank * 8 + file == previousMoveTargetSquare){
                     fill(yellow1[0], yellow1[1], yellow1[2]);
                 }
 
@@ -200,29 +200,30 @@ public class Board extends PApplet {
 
     public void movePiece(Move move){
         // Null check not really necessary, can consider removing later
-        if (board[move.getStartSquare()] != null){
+        int startSquare = move.getStartSquare();
+        int targetSquare = move.getTargetSquare();
+        Piece piece = board[startSquare];
+
+        if (board[startSquare] != null){
             // If not the right color to move, don't move the piece
-            if (!board[move.getStartSquare()].getColor().equals(colorToMove)){
-                // Sets releasedSquare to null so that the released square
-                // does not get highlighted if the player tries to move out of turn
-                releasedSquare = getNullValue();
+            if (!board[startSquare].getColor().equals(colorToMove)){
                 return;
             }
 
-            if (board[move.getTargetSquare()] == null){
+            if (board[targetSquare] == null){
                 playSound("move");
             }
             else{
                 playSound("capture");
             }
-//            board[move.getStartSquare()].setSelected(false);
-            Piece piece = board[move.getStartSquare()];
+
             piece.setSelected(false);
-            piece.setLocation(move.getTargetSquare());
-            board[move.getTargetSquare()] = piece;
-            board[move.getStartSquare()] = null;
-            // Marks the target square as the release square so that it get highlighted
-            releasedSquare = move.getTargetSquare();
+            piece.setLocation(targetSquare);
+            board[targetSquare] = piece;
+            board[startSquare] = null;
+            previousMoveStartSquare = startSquare;
+            previousMoveTargetSquare = targetSquare;
+
 
             if (piece.getColor().equals("white")){
                 colorToMove = "black";
@@ -259,6 +260,7 @@ public class Board extends PApplet {
                 movePiece(move);
             }
 
+            // If clicking on a square that is already selected, we unselct
             else if (selectedSquare == releasedSquare && unselectOnRelease){
                 unselectPiece(board[selectedSquare]);
                 selectedSquare = getNullValue();
@@ -295,9 +297,9 @@ public class Board extends PApplet {
             }
             case 'e' -> System.out.println(getEvaluation());
             case 'r' -> resetBoard();
-            case 't' -> {
-                colorToMove = colorToMove.equals("white") ? "black" : "white";
-            }
+            case 't' -> colorToMove = colorToMove.equals("white") ? "black" : "white";
+            case 'v' -> verifyBoard();
+
         }
     }
 
@@ -442,6 +444,8 @@ public class Board extends PApplet {
         releasedSquare = getNullValue();
         pieceAlreadySelected = false;
         unselectOnRelease = false;
+        previousMoveStartSquare = getNullValue();
+        previousMoveTargetSquare = getNullValue();
     }
 
 
@@ -452,6 +456,24 @@ public class Board extends PApplet {
 
     public boolean aPieceIsSelected(){
         return selectedSquare != getNullValue();
+    }
+
+
+    public void verifyBoard() {
+        boolean verificationSuccessful = true;
+
+        for (int i = 0; i < 64; i++) {
+            if (board[i] != null) {
+                if (board[i].getLocation() != i) {
+                    System.out.println("Board verification failed. Piece at board index " + i +
+                            " has location of " + board[i].getLocation() + " in the piece object");
+                    verificationSuccessful = false;
+                }
+            }
+        }
+        if (verificationSuccessful){
+            System.out.println("Board verification successful");
+        }
     }
 
 
