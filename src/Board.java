@@ -260,9 +260,8 @@ public class Board extends PApplet {
             }
 
             else if (selectedSquare == releasedSquare && unselectOnRelease){
-                board[selectedSquare].setSelected(false);
+                unselectPiece(board[selectedSquare]);
                 selectedSquare = getNullValue();
-                pieceAlreadySelected = false;
                 releasedSquare = getNullValue();
             }
 
@@ -279,9 +278,8 @@ public class Board extends PApplet {
 
         // Player release mouse out of bounds, unselect selected piece and set selected Square to null
         else {
-            board[selectedSquare].setSelected(false);
+            unselectPiece(board[selectedSquare]);
             selectedSquare = getNullValue();
-            pieceAlreadySelected = false;
         }
     }
 
@@ -297,6 +295,9 @@ public class Board extends PApplet {
             }
             case 'e' -> System.out.println(getEvaluation());
             case 'r' -> resetBoard();
+            case 't' -> {
+                colorToMove = colorToMove.equals("white") ? "black" : "white";
+            }
         }
     }
 
@@ -318,8 +319,7 @@ public class Board extends PApplet {
             for (Piece pc : board){
                 if (pc != null){
                     if (pc.isSelected()){
-                        pc.setSelected(false);
-                        pieceAlreadySelected = false;
+                        unselectPiece(pc);
                     }
                 }
             }
@@ -332,9 +332,7 @@ public class Board extends PApplet {
             if (piece != null){
                 // Case where the piece is not selected and there are no pieces selected on the board
                 if (!piece.isSelected() && piece.getLocation() == selectedSquare && !pieceAlreadySelected){
-                    piece.setSelected(true);
-                    pieceAlreadySelected = true;
-                    unselectOnRelease = false;
+                    selectPiece(piece);
                 }
 
                 // Case where the piece is not selected but one piece is already selected on the board
@@ -343,16 +341,13 @@ public class Board extends PApplet {
                     for (Piece pc : board){
                         if (pc != null){
                             if (pc.isSelected()){
-                                pc.setSelected(false);
-                                pieceAlreadySelected = false;
+                                unselectPiece(pc);
                             }
                         }
                     }
 
                     // Select the clicked piece
-                    piece.setSelected(true);
-                    pieceAlreadySelected = true;
-                    unselectOnRelease = false;
+                    selectPiece(piece);
                 }
 
                 else if (piece.isSelected() && piece.getLocation() == selectedSquare){
@@ -424,6 +419,17 @@ public class Board extends PApplet {
             System.out.println(e.getMessage());
         }
 
+    }
+
+    public void unselectPiece(Piece piece){
+        piece.setSelected(false);
+        pieceAlreadySelected = false;
+    }
+
+    public void selectPiece(Piece piece){
+        piece.setSelected(true);
+        pieceAlreadySelected = true;
+        unselectOnRelease = false;
     }
 
 
