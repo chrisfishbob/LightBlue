@@ -30,8 +30,8 @@ public class Board extends PApplet {
     private boolean mouseIsHeldDown = false;
     private boolean unselectOnRelease = false;
     private String colorToMove = "white";
-    private final int[] yellow1 = {206, 206, 44};
-    private final int[] blue1 = {177, 213, 212};
+    private final int[] yellow1 = {246, 245, 149};
+    private final int[] blue1 = {167, 203, 202};
     private final int[] blue2 = {139, 190, 174};
     private final int[] darkGreen = {238, 237, 213};
     private final int[] offwhite = {124, 148, 93};

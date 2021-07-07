@@ -1,8 +1,8 @@
 <component name="ArtifactManager">
-  <artifact type="jar" name="Corsica:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/Corsica_jar</output-path>
-    <root id="archive" name="Corsica.jar">
-      <element id="module-output" name="Corsica" />
+  <artifact type="jar" name="LightBlue:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/LightBlue_jar</output-path>
+    <root id="archive" name="LightBlue.jar">
+      <element id="module-output" name="LightBlue" />
       <element id="extracted-dir" path="$PROJECT_DIR$/src/processing-experimental.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/out/production/Corsica/processing-experimental.jar" path-in-jar="/" />
     </root>
