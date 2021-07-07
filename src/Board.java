@@ -266,16 +266,6 @@ public class Board extends PApplet {
                 selectedSquare = getNullValue();
                 releasedSquare = getNullValue();
             }
-
-            // If we're not moving the piece, nullify the released Square so that it does not get highlighted
-            else{
-                releasedSquare = getNullValue();
-            }
-
-            // Nullify the release square if the player clicked on a blank square
-            if (board[rank * 8 + file] == null){
-                releasedSquare = getNullValue();
-            }
         }
 
         // Player release mouse out of bounds, unselect selected piece and set selected Square to null
@@ -317,11 +307,11 @@ public class Board extends PApplet {
         // If the player clicks on an empty square, deselect all squares
         if (board[selectedSquare] == null){
             selectedSquare = getNullValue();
-            releasedSquare = getNullValue();
             for (Piece pc : board){
                 if (pc != null){
                     if (pc.isSelected()){
                         unselectPiece(pc);
+                        break;
                     }
                 }
             }
@@ -339,19 +329,21 @@ public class Board extends PApplet {
 
                 // Case where the piece is not selected but one piece is already selected on the board
                 else if (!piece.isSelected() && piece.getLocation() == selectedSquare && pieceAlreadySelected){
-                    // Unselect all the pieces
+                    // find the original selected piece then unselect it
                     for (Piece pc : board){
                         if (pc != null){
                             if (pc.isSelected()){
                                 unselectPiece(pc);
+                                break;
                             }
                         }
                     }
-
                     // Select the clicked piece
                     selectPiece(piece);
                 }
 
+                // If the piece that is clicked on is already selected before we clicked, mark the square
+                // for unselecting upon the player releasing the mouse
                 else if (piece.isSelected() && piece.getLocation() == selectedSquare){
                     unselectOnRelease = true;
                 }
@@ -374,8 +366,8 @@ public class Board extends PApplet {
                 else{
                     System.out.print("['" + board[i].getPieceChar() + "']" + " ");
                 }
-
             }
+
             else{
                 System.out.print('[' + " " + ']' + " ");
             }
