@@ -2,7 +2,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MoveGenerator {
-    public static HashMap<Integer, ArrayList<Move>> preGenerateKnightMoves(){
+    public static HashMap<Integer, ArrayList<Move>> potentialLegalKnightMoveMap;
+
+    public static void preGenerateKnightMoves(){
         // Pre-generates all the potential legal knight moves during set up.
         // Moves that turn out to be illegal during run time are filtered out
         // in the generateMoves method for the Knight object.
@@ -29,7 +31,7 @@ public class MoveGenerator {
             potentialLegalKnightMovesMap.put(boardIndex, potentialLegalKnightMoves);
         }
 
-        return potentialLegalKnightMovesMap;
+       potentialLegalKnightMoveMap = potentialLegalKnightMovesMap;
     }
 
     public static boolean isInBounds(int rank, int file){
