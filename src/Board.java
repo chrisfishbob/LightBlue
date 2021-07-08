@@ -34,8 +34,8 @@ public class Board extends PApplet {
     private final int[] blue1 = {167, 203, 202};
     private final int[] blue2 = {139, 190, 174};
     private final int[] darkGreen = {238, 237, 213};
-    private final int[] offWhite = {124, 148, 93};
-    private ArrayList<Integer> otherHighlightedSquares = new ArrayList<>();
+    private final int[] offWhite  = {124, 148, 93};
+    public static ArrayList<Integer> otherHighlightedSquares = new ArrayList<>();
     private int previousMoveStartSquare = getNullValue();
     private int previousMoveTargetSquare = getNullValue();
 
@@ -233,6 +233,7 @@ public class Board extends PApplet {
             previousMoveStartSquare = startSquare;
             previousMoveTargetSquare = targetSquare;
             selectedSquare = getNullValue();
+            otherHighlightedSquares.clear();
 
 
             if (piece.getColor().equals("white")){
@@ -440,6 +441,7 @@ public class Board extends PApplet {
     public void unselectPiece(Piece piece){
         piece.setSelected(false);
         pieceAlreadySelected = false;
+        otherHighlightedSquares.clear();
     }
 
     public void selectPiece(Piece piece){
@@ -449,6 +451,9 @@ public class Board extends PApplet {
         // during the mouseReleased event. Not marking the square to not unselect on
         // release will cause the selected piece to be immediately unselected upon mouse release
         unselectOnRelease = false;
+        if (piece instanceof Knight){
+            ((Knight) piece).generateMoves();
+        }
     }
 
 
@@ -463,6 +468,7 @@ public class Board extends PApplet {
         unselectOnRelease = false;
         previousMoveStartSquare = getNullValue();
         previousMoveTargetSquare = getNullValue();
+        otherHighlightedSquares.clear();
     }
 
 
