@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class Move {
     private final int startSquare;
     private final int targetSquare;
@@ -7,9 +10,11 @@ public class Move {
         this.targetSquare = targetSquare;
     }
 
+
     public int getStartSquare() {
         return startSquare;
     }
+
 
     public int getTargetSquare(){
         return targetSquare;

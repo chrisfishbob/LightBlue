@@ -4,6 +4,7 @@ import javax.sound.sampled.*;
 import java.io.File;
 import java.lang.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class Board extends PApplet {
@@ -40,6 +41,7 @@ public class Board extends PApplet {
     public static ArrayList<Integer> legalMoveSquares = new ArrayList<>();
     private int previousMoveStartSquare = getNullValue();
     private int previousMoveTargetSquare = getNullValue();
+    public static HashMap<Integer, ArrayList<Move>> potentialLegalKnightMoveMap;
 
     public void settings(){
         size(windowWidth, windowHeight);
@@ -49,7 +51,7 @@ public class Board extends PApplet {
         loadImages();
         board = new Piece[64];
         loadFromFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
-
+        potentialLegalKnightMoveMap = preGenerateKnightMoves();
     }
 
 
@@ -460,7 +462,7 @@ public class Board extends PApplet {
         // during the mouseReleased event. Not marking the square to not unselect on
         // release will cause the selected piece to be immediately unselected upon mouse release
         unselectOnRelease = false;
-        if (piece instanceof Knight){
+        if (piece instanceof Knight && piece.getColor().equals(colorToMove)){
             ((Knight) piece).generateMoves();
         }
     }
@@ -508,6 +510,70 @@ public class Board extends PApplet {
         }
     }
 
+
+    public static HashMap<Integer, ArrayList<Move>> preGenerateKnightMoves(){
+        HashMap<Integer, ArrayList<Move>> potentialLegalKnightMovesMap = new HashMap<>();
+        int targetSquare;
+
+        for (int boardIndex = 0; boardIndex < 64; boardIndex++){
+            int rank = boardIndex / 8;
+            int file = boardIndex % 8;
+            ArrayList<Move> potentialLegalKnightMoves = new ArrayList<>();
+
+            if (isInBounds(rank - 2, file - 1)){
+                targetSquare = (rank - 2) * 8 + (file - 1);
+                potentialLegalKnightMoves.add(new Move(boardIndex, targetSquare));
+            }
+
+            if (isInBounds(rank - 2, file + 1)){
+                targetSquare = (rank - 2) * 8 + (file + 1);
+                potentialLegalKnightMoves.add(new Move(boardIndex, targetSquare));
+            }
+
+            if (isInBounds(rank - 1, file - 2)){
+                targetSquare = (rank - 1) * 8 + (file - 2);
+                potentialLegalKnightMoves.add(new Move(boardIndex, targetSquare));
+            }
+
+            if (isInBounds(rank - 1, file + 2)){
+                targetSquare = (rank - 1) * 8 + (file + 2);
+                potentialLegalKnightMoves.add(new Move(boardIndex, targetSquare));
+            }
+
+            if (isInBounds(rank + 1, file - 2)){
+                targetSquare = (rank + 1) * 8 + (file - 2);
+                potentialLegalKnightMoves.add(new Move(boardIndex, targetSquare));
+            }
+
+            if (isInBounds(rank + 1, file + 2)){
+                targetSquare = (rank + 1) * 8 + (file + 2);
+                potentialLegalKnightMoves.add(new Move(boardIndex, targetSquare));
+            }
+
+            if (isInBounds(rank + 2, file - 1)){
+                targetSquare = (rank + 2) * 8 + (file - 1);
+                potentialLegalKnightMoves.add(new Move(boardIndex, targetSquare));
+            }
+
+            if (isInBounds(rank + 2, file + 1)){
+                targetSquare = (rank + 2) * 8 + (file + 1);
+                potentialLegalKnightMoves.add(new Move(boardIndex, targetSquare));
+            }
+
+            potentialLegalKnightMovesMap.put(boardIndex, potentialLegalKnightMoves);
+        }
+
+
+
+        return potentialLegalKnightMovesMap;
+    }
+
+
+
+    public static boolean isInBounds(int rank, int file){
+        return rank >= 0 && rank < 8 && file >= 0 && file < 8;
+    }
+
     public static Piece[] getBoard(){
         return board;
     }
@@ -516,6 +582,9 @@ public class Board extends PApplet {
         return colorToMove;
     }
 
+    public HashMap<Integer, ArrayList<Move>> getPotentialLegalKnightMoveMap() {
+        return potentialLegalKnightMoveMap;
+    }
 
     public static void main(String[] args){
         String[] appletArgs = new String[] {"Board"};
