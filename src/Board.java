@@ -128,8 +128,15 @@ public class Board extends PApplet {
 
                 if (legalMoveSquares.contains(rank * 8 + file))
                 {
-                    image(legalMoveBG, file * (float) (windowWidth / 8), rank * (float) (windowHeight / 8),
-                            (float) windowWidth / 8, (float) windowHeight / 8);
+                    if (board[rank * 8 + file] == null){
+                        image(legalMoveBG, file * (float) (windowWidth / 8), rank * (float) (windowHeight / 8),
+                                (float) windowWidth / 8, (float) windowHeight / 8);
+                    }
+                    else{
+                        image(targetedPieceBG, file * (float) (windowWidth / 8), rank * (float) (windowHeight / 8),
+                                (float) windowWidth / 8, (float) windowHeight / 8);
+                    }
+
                 }
             }
         }

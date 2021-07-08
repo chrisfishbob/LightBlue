@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MoveGenerator {
-    public static HashMap<Integer, ArrayList<Move>> potentialLegalKnightMoveMap;
+    private static HashMap<Integer, ArrayList<Move>> potentialLegalKnightMoveMap;
 
     public static void preGenerateKnightMoves(){
         // Pre-generates all the potential legal knight moves during set up.
@@ -36,5 +36,9 @@ public class MoveGenerator {
 
     public static boolean isInBounds(int rank, int file){
         return rank >= 0 && rank < 8 && file >= 0 && file < 8;
+    }
+
+    public static HashMap<Integer, ArrayList<Move>> getPotentialLegalKnightMoveMap(){
+        return potentialLegalKnightMoveMap;
     }
 }

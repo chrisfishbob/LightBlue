@@ -35,8 +35,11 @@ public class Knight extends Piece{
 
 
     public ArrayList<Move> generateMoves() {
-        ArrayList<Move> potentialMoves = MoveGenerator.potentialLegalKnightMoveMap.get(this.getLocation());
+        // Gets all the potentially legal moves for a knight in the given position on the board
+        // and filter out the illegal moves
+        ArrayList<Move> potentialMoves = MoveGenerator.getPotentialLegalKnightMoveMap().get(this.getLocation());
         ArrayList<Move> legalKnightMoves = new ArrayList<>();
+
         for (Move move : potentialMoves){
             int targetSquare = move.getTargetSquare();
 
