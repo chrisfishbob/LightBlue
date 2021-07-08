@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 
 public class Board extends PApplet {
-    Piece[] board;
+    private static Piece[] board;
     private final int windowWidth = 800;
     private final int windowHeight = 800;
     private final int squareSize = windowWidth / 8;
@@ -37,7 +37,7 @@ public class Board extends PApplet {
     private final int[] blue2 = {139, 190, 174};
     private final int[] darkGreen = {238, 237, 213};
     private final int[] offWhite  = {124, 148, 93};
-    public static ArrayList<Integer> otherHighlightedSquares = new ArrayList<>();
+    public static ArrayList<Integer> legalMoveSquares = new ArrayList<>();
     private int previousMoveStartSquare = getNullValue();
     private int previousMoveTargetSquare = getNullValue();
 
@@ -57,9 +57,6 @@ public class Board extends PApplet {
         // Main loop of the program
         background(64);
         drawBoard();
-        image(targetedPieceBG, 0, 0, squareSize, squareSize);
-        image(targetedPieceBG, 100, 0, squareSize, squareSize);
-        image(legalMoveBG, 300, 300, squareSize, squareSize);
         for (Piece piece: board){
             if (piece != null) {
                 int row = piece.getLocation() / 8;
@@ -109,10 +106,6 @@ public class Board extends PApplet {
                     }
                 }
 
-                else if (otherHighlightedSquares.contains(rank * 8 + file))
-                {
-                    fill(255, 0, 0, 130);
-                }
 
                 // The square is not a special highlighted square, just draw the board
                 else{
@@ -124,10 +117,18 @@ public class Board extends PApplet {
                     }
                 }
 
+
                 // Draw the square itself after color is established
                 rect(file * (float) (windowWidth / 8),
                         rank * (float) (windowHeight / 8),
                         (float) windowWidth / 8, (float) windowHeight / 8);
+
+
+                if (legalMoveSquares.contains(rank * 8 + file))
+                {
+                    image(legalMoveBG, file * (float) (windowWidth / 8), rank * (float) (windowHeight / 8),
+                            (float) windowWidth / 8, (float) windowHeight / 8);
+                }
             }
         }
     }
@@ -216,7 +217,7 @@ public class Board extends PApplet {
         blackPawn = loadImage("BlackPawn.png");
         whitePawn = loadImage("WhitePawn.png");
         targetedPieceBG = loadImage("outline.png");
-        legalMoveBG = loadImage("dot3.png");
+        legalMoveBG = loadImage("dot5.png");
     }
 
 
@@ -241,7 +242,7 @@ public class Board extends PApplet {
             previousMoveStartSquare = startSquare;
             previousMoveTargetSquare = targetSquare;
             selectedSquare = getNullValue();
-            otherHighlightedSquares.clear();
+            legalMoveSquares.clear();
 
 
             if (piece.getColor().equals("white")){
@@ -449,7 +450,7 @@ public class Board extends PApplet {
     public void unselectPiece(Piece piece){
         piece.setSelected(false);
         pieceAlreadySelected = false;
-        otherHighlightedSquares.clear();
+        legalMoveSquares.clear();
     }
 
     public void selectPiece(Piece piece){
@@ -476,7 +477,7 @@ public class Board extends PApplet {
         unselectOnRelease = false;
         previousMoveStartSquare = getNullValue();
         previousMoveTargetSquare = getNullValue();
-        otherHighlightedSquares.clear();
+        legalMoveSquares.clear();
     }
 
 
@@ -505,6 +506,14 @@ public class Board extends PApplet {
         if (verificationSuccessful){
             System.out.println("Board verification successful");
         }
+    }
+
+    public static Piece[] getBoard(){
+        return board;
+    }
+
+    public String getColorToMove(){
+        return colorToMove;
     }
 
 

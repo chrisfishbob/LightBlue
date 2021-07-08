@@ -40,55 +40,64 @@ public class Knight extends Piece{
 
         if (isInBounds(rank - 2, file - 1)){
             targetSquare = (rank - 2) * 8 + (file - 1);
-            moves.add(new Move(boardIndex, targetSquare));
-            Board.otherHighlightedSquares.add(targetSquare);
+            filterLegalSquares(moves, boardIndex, targetSquare);
         }
 
         if (isInBounds(rank - 2, file + 1)){
             targetSquare = (rank - 2) * 8 + (file + 1);
-            moves.add(new Move(boardIndex, targetSquare));
-            Board.otherHighlightedSquares.add(targetSquare);
+            filterLegalSquares(moves, boardIndex, targetSquare);
         }
 
         if (isInBounds(rank - 1, file - 2)){
             targetSquare = (rank - 1) * 8 + (file - 2);
-            moves.add(new Move(boardIndex, targetSquare));
-            Board.otherHighlightedSquares.add(targetSquare);
+            filterLegalSquares(moves, boardIndex, targetSquare);
         }
 
         if (isInBounds(rank - 1, file + 2)){
             targetSquare = (rank - 1) * 8 + (file + 2);
-            moves.add(new Move(boardIndex, targetSquare));
-            Board.otherHighlightedSquares.add(targetSquare);
+            filterLegalSquares(moves, boardIndex, targetSquare);
         }
 
         if (isInBounds(rank + 1, file - 2)){
             targetSquare = (rank + 1) * 8 + (file - 2);
-            moves.add(new Move(boardIndex, targetSquare));
-            Board.otherHighlightedSquares.add(targetSquare);
+            filterLegalSquares(moves, boardIndex, targetSquare);
         }
 
         if (isInBounds(rank + 1, file + 2)){
             targetSquare = (rank + 1) * 8 + (file + 2);
-            moves.add(new Move(boardIndex, targetSquare));
-            Board.otherHighlightedSquares.add(targetSquare);
+            filterLegalSquares(moves, boardIndex, targetSquare);
         }
 
         if (isInBounds(rank + 2, file - 1)){
             targetSquare = (rank + 2) * 8 + (file - 1);
-            moves.add(new Move(boardIndex, targetSquare));
-            Board.otherHighlightedSquares.add(targetSquare);
+            filterLegalSquares(moves, boardIndex, targetSquare);
         }
 
         if (isInBounds(rank + 2, file + 1)){
             targetSquare = (rank + 2) * 8 + (file + 1);
             moves.add(new Move(boardIndex, targetSquare));
-            Board.otherHighlightedSquares.add(targetSquare);
+
+            filterLegalSquares(moves, boardIndex, targetSquare);
         }
 
 
         return moves;
     }
+
+
+    private void filterLegalSquares(ArrayList<Move> moves, int boardIndex, int targetSquare) {
+        if (Board.getBoard()[targetSquare] == null){
+            Board.legalMoveSquares.add(targetSquare);
+            moves.add(new Move(boardIndex, targetSquare));
+        }
+        else{
+            if (!Board.getBoard()[targetSquare].getColor().equals(this.getColor())){
+                Board.legalMoveSquares.add(targetSquare);
+                moves.add(new Move(boardIndex, targetSquare));
+            }
+        }
+    }
+
 
     public boolean isInBounds(int rank, int file){
         return rank >= 0 && rank < 8 && file >= 0 && file < 8;
