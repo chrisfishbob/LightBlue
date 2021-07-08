@@ -23,6 +23,8 @@ public class Board extends PApplet {
     public static PImage whiteKnight;
     public static PImage blackPawn;
     public static PImage whitePawn;
+    public static PImage targetedPieceBG;
+    public static PImage legalMoveBG;
 
     private int selectedSquare = getNullValue();
     private int releasedSquare = getNullValue();
@@ -47,6 +49,7 @@ public class Board extends PApplet {
         loadImages();
         board = new Piece[64];
         loadFromFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
+
     }
 
 
@@ -54,6 +57,9 @@ public class Board extends PApplet {
         // Main loop of the program
         background(64);
         drawBoard();
+        image(targetedPieceBG, 0, 0, squareSize, squareSize);
+        image(targetedPieceBG, 100, 0, squareSize, squareSize);
+        image(legalMoveBG, 300, 300, squareSize, squareSize);
         for (Piece piece: board){
             if (piece != null) {
                 int row = piece.getLocation() / 8;
@@ -209,6 +215,8 @@ public class Board extends PApplet {
         whiteKnight = loadImage("WhiteKnight.png");
         blackPawn = loadImage("BlackPawn.png");
         whitePawn = loadImage("WhitePawn.png");
+        targetedPieceBG = loadImage("outline.png");
+        legalMoveBG = loadImage("dot3.png");
     }
 
 
