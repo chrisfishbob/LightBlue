@@ -35,7 +35,6 @@ public class Pawn extends Piece{
     }
 
 
-    // todo: improve style!
     public void generateMoves(){
         int pieceColorMultiplier = getColor().equals("white") ? 1 : -1;
         int pawnLocation = getLocation();
@@ -51,53 +50,80 @@ public class Pawn extends Piece{
         if (isInBounds(oneSquareForwardIndex)){
             // test if the pawn can move forward one space
             if (Board.getBoard()[oneSquareForwardIndex] == null){
-                Board.legalMoveSquaresForSelectedPiece.add(oneSquareForwardIndex);
                 legalPawnMoves.add(new Move(pawnLocation, oneSquareForwardIndex));
             }
 
             // test if the pawn can move forward two spaces
             if (rank == 6 && getColor().equals("white") || rank == 1 && getColor().equals("black")){
                 if (Board.getBoard()[twoSquareForwardIndex] == null && Board.getBoard()[oneSquareForwardIndex] == null){
-                    Board.legalMoveSquaresForSelectedPiece.add(twoSquareForwardIndex);
                     legalPawnMoves.add(new Move(pawnLocation, twoSquareForwardIndex, "p2"));
                 }
             }
 
             // Checks if the pawn can capture sideways in both directions
-            if (potentialCaptureOneIndex / 8 == targetRankAfterCapture && Board.getBoard()[potentialCaptureOneIndex] != null){
-                if (!Board.getBoard()[potentialCaptureOneIndex].getColor().equals(getColor())){
-                    Board.legalMoveSquaresForSelectedPiece.add(potentialCaptureOneIndex);
-                    legalPawnMoves.add(new Move(pawnLocation, potentialCaptureOneIndex));
-                }
-            }
+            checkForCaptures(pawnLocation,
+                    potentialCaptureOneIndex,
+                    potentialCaptureTwoIndex,
+                    targetRankAfterCapture,
+                    legalPawnMoves);
 
-            if (potentialCaptureTwoIndex / 8 == targetRankAfterCapture && Board.getBoard()[potentialCaptureTwoIndex] != null){
-                if (!Board.getBoard()[potentialCaptureTwoIndex].getColor().equals(getColor())){
-                    Board.legalMoveSquaresForSelectedPiece.add(potentialCaptureTwoIndex);
-                    legalPawnMoves.add(new Move(pawnLocation, potentialCaptureTwoIndex));
-                }
-            }
-
-            if (potentialCaptureOneIndex / 8 == targetRankAfterCapture && potentialCaptureOneIndex == Board.getEnPassantSquare()){
-                Board.legalMoveSquaresForSelectedPiece.add(potentialCaptureOneIndex);
-                legalPawnMoves.add(new Move(pawnLocation, potentialCaptureOneIndex, "ep"));
-
-            }
-
-            if (potentialCaptureTwoIndex / 8 == targetRankAfterCapture && potentialCaptureTwoIndex == Board.getEnPassantSquare()){
-                Board.legalMoveSquaresForSelectedPiece.add(potentialCaptureTwoIndex);
-                legalPawnMoves.add(new Move(pawnLocation, potentialCaptureTwoIndex, "ep"));
-            }
-
-
-
-
-
+            // Check if en passant in possible
+            checkForEnPassant(pawnLocation,
+                    potentialCaptureOneIndex,
+                    potentialCaptureTwoIndex,
+                    targetRankAfterCapture,
+                    legalPawnMoves);
         }
 
         moves = legalPawnMoves;
-        System.out.println(legalPawnMoves.size());
+
+        // Loop through the legal pawn moves and add them to the designated array in the
+        // Board class so that legal moves can be displayed
+        if (isSelected()){
+            for (Move move : moves){
+                Board.legalMoveSquaresForSelectedPiece.add(move.getTargetSquare());
+            }
+        }
+
+
     }
+
+
+    private void checkForCaptures(int pawnLocation, int potentialCaptureOneIndex, int potentialCaptureTwoIndex,
+                                  int targetRankAfterCapture, ArrayList<Move> legalPawnMoves) {
+
+        // Check if the pawn can capture to the right (white perspective)
+        if (potentialCaptureOneIndex / 8 == targetRankAfterCapture &&
+                Board.getBoard()[potentialCaptureOneIndex] != null){
+            if (!Board.getBoard()[potentialCaptureOneIndex].getColor().equals(getColor())){
+                legalPawnMoves.add(new Move(pawnLocation, potentialCaptureOneIndex));
+            }
+        }
+
+        // Check if the pawn can capture to the left (white perspective)
+        if (potentialCaptureTwoIndex / 8 == targetRankAfterCapture &&
+                Board.getBoard()[potentialCaptureTwoIndex] != null){
+            if (!Board.getBoard()[potentialCaptureTwoIndex].getColor().equals(getColor())){
+                legalPawnMoves.add(new Move(pawnLocation, potentialCaptureTwoIndex));
+            }
+        }
+    }
+
+
+    private void checkForEnPassant(int pawnLocation, int potentialCaptureOneIndex, int potentialCaptureTwoIndex,
+                                   int targetRankAfterCapture, ArrayList<Move> legalPawnMoves) {
+
+        if (potentialCaptureOneIndex / 8 == targetRankAfterCapture &&
+                potentialCaptureOneIndex == Board.getEnPassantSquare()){
+            legalPawnMoves.add(new Move(pawnLocation, potentialCaptureOneIndex, "ep"));
+        }
+
+        else if (potentialCaptureTwoIndex / 8 == targetRankAfterCapture &&
+                potentialCaptureTwoIndex == Board.getEnPassantSquare()){
+            legalPawnMoves.add(new Move(pawnLocation, potentialCaptureTwoIndex, "ep"));
+        }
+    }
+
 
     public boolean isInBounds(int index){
         return index >= 0 && index < 64;
