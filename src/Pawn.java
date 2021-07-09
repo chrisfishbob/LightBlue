@@ -50,7 +50,16 @@ public class Pawn extends Piece{
         if (isInBounds(oneSquareForwardIndex)){
             // test if the pawn can move forward one space
             if (Board.getBoard()[oneSquareForwardIndex] == null){
-                legalPawnMoves.add(new Move(pawnLocation, oneSquareForwardIndex));
+                if (isPromotionSquare(oneSquareForwardIndex)){
+                    legalPawnMoves.add(new Move(pawnLocation, oneSquareForwardIndex, "rook"));
+                    legalPawnMoves.add(new Move(pawnLocation, oneSquareForwardIndex, "queen"));
+
+                }
+                else{
+                    legalPawnMoves.add(new Move(pawnLocation, oneSquareForwardIndex));
+                }
+
+
             }
 
             // test if the pawn can move forward two spaces
@@ -127,6 +136,10 @@ public class Pawn extends Piece{
 
     public boolean isInBounds(int index){
         return index >= 0 && index < 64;
+    }
+
+    public boolean isPromotionSquare(int index){
+        return index / 8 == 0 || index / 8 == 7;
     }
 
     public ArrayList<Move> getMoves() {

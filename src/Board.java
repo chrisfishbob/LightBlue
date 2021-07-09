@@ -281,6 +281,16 @@ public class Board extends PApplet {
                     board[enPassantSquare - 8] = null;
                 }
             }
+
+            else if (move.getSpecialFlagKind().equals("queen")){
+                board[targetSquare] = null;
+                board[targetSquare] = new Queen(piece.getColor(), targetSquare);
+            }
+
+            else if (move.getSpecialFlagKind().equals("rook")){
+                board[targetSquare] = null;
+                board[targetSquare] = new Rook(piece.getColor(), targetSquare);
+            }
             else{
                 enPassantSquare = getNullValue();
             }
@@ -534,7 +544,7 @@ public class Board extends PApplet {
                 playSound("capture");
             }
 
-            else if (move.getSpecialFlagKind().equals("p2")){
+            else{
                 playSound("move");
             }
         }
