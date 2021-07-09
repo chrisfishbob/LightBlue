@@ -270,24 +270,26 @@ public class Board extends PApplet {
 
         if (move.isSpecialMove()){
             // When a pawn moves by two spaces, mark the enPassantSquare
-            if (move.getSpecialFlagKind().equals("p2")){
+            String flag = move.getSpecialFlagKind();
+            if (flag.equals("p2")){
                 enPassantSquare = startSquare + (targetSquare - startSquare) / 2;
             }
-            else if (move.getSpecialFlagKind().equals("ep")){
+            else if (flag.equals("ep")){
                 if (piece.getColor().equals("white")){
                     board[enPassantSquare + 8] = null;
                 }
                 else{
                     board[enPassantSquare - 8] = null;
                 }
+                enPassantSquare = getNullValue();
             }
 
-            else if (move.getSpecialFlagKind().equals("queen")){
+            else if (flag.equals("queen")){
                 board[targetSquare] = null;
                 board[targetSquare] = new Queen(piece.getColor(), targetSquare);
             }
 
-            else if (move.getSpecialFlagKind().equals("rook")){
+            else if (flag.equals("rook")){
                 board[targetSquare] = null;
                 board[targetSquare] = new Rook(piece.getColor(), targetSquare);
             }

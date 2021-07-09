@@ -50,14 +50,7 @@ public class Pawn extends Piece{
         if (isInBounds(oneSquareForwardIndex)){
             // test if the pawn can move forward one space
             if (Board.getBoard()[oneSquareForwardIndex] == null){
-                if (isPromotionSquare(oneSquareForwardIndex)){
-                    legalPawnMoves.add(new Move(pawnLocation, oneSquareForwardIndex, "rook"));
-                    legalPawnMoves.add(new Move(pawnLocation, oneSquareForwardIndex, "queen"));
-
-                }
-                else{
-                    legalPawnMoves.add(new Move(pawnLocation, oneSquareForwardIndex));
-                }
+                checkPromotionMoves(pawnLocation, oneSquareForwardIndex, legalPawnMoves);
 
 
             }
@@ -85,12 +78,14 @@ public class Pawn extends Piece{
         }
 
         moves = legalPawnMoves;
+        System.out.println(moves.size());
 
         // Loop through the legal pawn moves and add them to the designated array in the
         // Board class so that legal moves can be displayed
         if (isSelected()){
             for (Move move : moves){
                 Board.legalMoveSquaresForSelectedPiece.add(move.getTargetSquare());
+                System.out.println(move.getStartSquare() + ", " + move.getTargetSquare() );
             }
         }
 
@@ -102,19 +97,38 @@ public class Pawn extends Piece{
                                   int targetRankAfterCapture, ArrayList<Move> legalPawnMoves) {
 
         // Check if the pawn can capture to the right (white perspective)
-        if (potentialCaptureOneIndex / 8 == targetRankAfterCapture &&
-                Board.getBoard()[potentialCaptureOneIndex] != null){
-            if (!Board.getBoard()[potentialCaptureOneIndex].getColor().equals(getColor())){
-                legalPawnMoves.add(new Move(pawnLocation, potentialCaptureOneIndex));
-            }
-        }
+        checkCaptureInOneDirection(pawnLocation, potentialCaptureOneIndex, targetRankAfterCapture, legalPawnMoves);
 
         // Check if the pawn can capture to the left (white perspective)
-        if (potentialCaptureTwoIndex / 8 == targetRankAfterCapture &&
-                Board.getBoard()[potentialCaptureTwoIndex] != null){
-            if (!Board.getBoard()[potentialCaptureTwoIndex].getColor().equals(getColor())){
-                legalPawnMoves.add(new Move(pawnLocation, potentialCaptureTwoIndex));
+        checkCaptureInOneDirection(pawnLocation, potentialCaptureTwoIndex, targetRankAfterCapture, legalPawnMoves);
+    }
+
+
+    private void checkCaptureInOneDirection(int pawnLocation, int potentialCaptureIndex, int targetRankAfterCapture,
+                                            ArrayList<Move> legalPawnMoves) {
+
+        if (potentialCaptureIndex / 8 == targetRankAfterCapture &&
+                Board.getBoard()[potentialCaptureIndex] != null){
+            if (!Board.getBoard()[potentialCaptureIndex].getColor().equals(getColor())){
+                checkPromotionMoves(pawnLocation, potentialCaptureIndex, legalPawnMoves);
             }
+        }
+    }
+
+
+    private void checkPromotionMoves(int pawnLocation, int potentialCaptureIndex, ArrayList<Move> legalPawnMoves) {
+        // After capturing, the pawn ends up on a promotion square, add all the promotion possibilities
+        if (isPromotionSquare(potentialCaptureIndex)){
+            legalPawnMoves.add(new Move(pawnLocation, potentialCaptureIndex, "queen"));
+            legalPawnMoves.add(new Move(pawnLocation, potentialCaptureIndex, "rook"));
+            legalPawnMoves.add(new Move(pawnLocation, potentialCaptureIndex, "knight"));
+            legalPawnMoves.add(new Move(pawnLocation, potentialCaptureIndex, "bishop"));
+
+        }
+        // If not on a promotion square just add the capture, it's legality is already determined by
+        // the checkCaptureInOneDirectionMethod
+        else{
+            legalPawnMoves.add(new Move(pawnLocation, potentialCaptureIndex));
         }
     }
 
