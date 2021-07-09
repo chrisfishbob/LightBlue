@@ -322,7 +322,7 @@ public class Board extends PApplet {
             // Move the piece if the player dragged the piece to a different square
             if (selectedSquare != releasedSquare && aPieceIsSelected()){
                 // Remove later after all pieces can process legal moves
-                if (board[selectedSquare] instanceof Knight || board[selectedSquare] instanceof Pawn){
+                if (board[selectedSquare] instanceof Knight || board[selectedSquare] instanceof Pawn || board[selectedSquare] instanceof Queen){
                     if (legalMoveSquaresForSelectedPiece.contains(releasedSquare)){
                         ArrayList<Move> moves;
                         if (board[selectedSquare] instanceof Knight){
@@ -330,6 +330,10 @@ public class Board extends PApplet {
                         }
                         else if (board[selectedSquare] instanceof Pawn){
                             moves = (((Pawn) board[selectedSquare]).getMoves());
+                        }
+                        else if (board[selectedSquare] instanceof Queen){
+                            System.out.println("this ran");
+                            moves = (((Queen) board[selectedSquare]).getMoves());
                         }
                         else{
                             return;
@@ -590,6 +594,10 @@ public class Board extends PApplet {
 
         else if (piece instanceof Pawn && piece.getColor().equals(colorToMove)){
             ((Pawn) piece).generateMoves();
+        }
+
+        else if (piece instanceof Queen && piece.getColor().equals(colorToMove)){
+            ((Queen) piece).generateMoves();
         }
     }
 

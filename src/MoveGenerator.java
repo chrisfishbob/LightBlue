@@ -3,7 +3,7 @@ import java.util.HashMap;
 
 public class MoveGenerator {
     private static HashMap<Integer, ArrayList<Move>> potentialLegalKnightMoveMap;
-    private static int[] SlidingDirectionOffsets = {8, - 8, -1, 1, 7, -7, 0, - 9};
+    private static int[] SlidingDirectionOffsets = {8, - 8, -1, 1, 7, -7, 9, -9};
     private static int[][] NumSquaresToEdge = new int[64][8];
 
 
@@ -22,13 +22,15 @@ public class MoveGenerator {
                 int squareIndex = rank * 8 + file;
 
                 NumSquaresToEdge[squareIndex] = new int[]{
+                        numSouth,
                         numNorth,
                         numWest,
                         numEast,
-                        numNorthWest,
-                        numSouthEast,
+                        numSouthWest,
                         numNorthEast,
-                        numSouthWest};
+                        numSouthEast,
+                        numNorthWest,
+                        };
             }
         }
     }
@@ -66,6 +68,14 @@ public class MoveGenerator {
 
     public static boolean isInBounds(int rank, int file){
         return rank >= 0 && rank < 8 && file >= 0 && file < 8;
+    }
+
+    public static int[][] getNumSquaresToEdge(){
+        return NumSquaresToEdge;
+    }
+
+    public static int[] getSlidingDirectionOffsets() {
+        return SlidingDirectionOffsets;
     }
 
     public static HashMap<Integer, ArrayList<Move>> getPotentialLegalKnightMoveMap(){

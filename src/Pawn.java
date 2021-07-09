@@ -78,14 +78,12 @@ public class Pawn extends Piece{
         }
 
         moves = legalPawnMoves;
-        System.out.println(moves.size());
 
         // Loop through the legal pawn moves and add them to the designated array in the
         // Board class so that legal moves can be displayed
         if (isSelected()){
             for (Move move : moves){
                 Board.legalMoveSquaresForSelectedPiece.add(move.getTargetSquare());
-                System.out.println(move.getStartSquare() + ", " + move.getTargetSquare() );
             }
         }
 

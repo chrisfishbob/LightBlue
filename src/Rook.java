@@ -1,4 +1,7 @@
+import java.util.ArrayList;
+
 public class Rook extends Piece{
+
 
     public Rook(String color, int location) {
         super(color, location, 5);
@@ -28,4 +31,7 @@ public class Rook extends Piece{
             return "r";
         }
     }
+
+
+
 }
