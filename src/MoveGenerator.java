@@ -3,6 +3,36 @@ import java.util.HashMap;
 
 public class MoveGenerator {
     private static HashMap<Integer, ArrayList<Move>> potentialLegalKnightMoveMap;
+    private static int[] SlidingDirectionOffsets = {8, - 8, -1, 1, 7, -7, 0, - 9};
+    private static int[][] NumSquaresToEdge = new int[64][8];
+
+
+    public static void PrecomputeMoveData(){
+        for (int file = 0; file < 8; file ++){
+            for (int rank = 0; rank < 8; rank ++){
+                int numNorth = rank;
+                int numSouth = 7 - rank;
+                int numWest = file;
+                int numEast = 7 - file;
+                int numNorthWest = Math.min(numNorth, numWest);
+                int numSouthEast = Math.min(numSouth, numEast);
+                int numNorthEast = Math.min(numNorth, numEast);
+                int numSouthWest = Math.min(numSouth, numWest);
+
+                int squareIndex = rank * 8 + file;
+
+                NumSquaresToEdge[squareIndex] = new int[]{
+                        numNorth,
+                        numWest,
+                        numEast,
+                        numNorthWest,
+                        numSouthEast,
+                        numNorthEast,
+                        numSouthWest};
+            }
+        }
+    }
+
 
     public static void preGenerateKnightMoves(){
         // Pre-generates all the potential legal knight moves during set up.

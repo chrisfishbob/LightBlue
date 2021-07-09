@@ -54,6 +54,7 @@ public class Board extends PApplet {
         board = new Piece[64];
         loadFromFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
         MoveGenerator.preGenerateKnightMoves();
+        MoveGenerator.PrecomputeMoveData();
     }
 
 
