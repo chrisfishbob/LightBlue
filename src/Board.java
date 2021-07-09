@@ -37,9 +37,12 @@ public class Board extends PApplet {
     private final int[] blue2 = {139, 190, 174};
     private final int[] darkGreen = {238, 237, 213};
     private final int[] offWhite  = {124, 148, 93};
+
+
     public static ArrayList<Integer> legalMoveSquaresForSelectedPiece = new ArrayList<>();
     private int previousMoveStartSquare = getNullValue();
     private int previousMoveTargetSquare = getNullValue();
+    private static int enPassantSquare = getNullValue();
 
 
     public void settings(){
@@ -264,6 +267,13 @@ public class Board extends PApplet {
         else{
             System.out.println("Invalid move: start square has no piece object");
         }
+
+        if (move.isSpecialMove()){
+            // When a pawn moves by two spaces, mark the enPassantSquare
+            if (move.getSpecialFlagKind().equals("p2")){
+                enPassantSquare = startSquare + (targetSquare - startSquare) / 2;
+            }
+        }
     }
 
 
@@ -284,11 +294,37 @@ public class Board extends PApplet {
 
             // Move the piece if the player dragged the piece to a different square
             if (selectedSquare != releasedSquare && aPieceIsSelected()){
-                Move move = new Move(selectedSquare, releasedSquare);
-                movePiece(move);
+                // Remove later after all pieces can process legal moves
+                if (board[selectedSquare] instanceof Knight || board[selectedSquare] instanceof Pawn){
+                    if (legalMoveSquaresForSelectedPiece.contains(releasedSquare)){
+                        ArrayList<Move> moves;
+                        if (board[selectedSquare] instanceof Knight){
+                            moves = ((Knight) board[selectedSquare]).getMoves();
+                        }
+                        else if (board[selectedSquare] instanceof Pawn){
+                            moves = (((Pawn) board[selectedSquare]).getMoves());
+                        }
+                        else{
+                            return;
+                        }
+
+
+                        for (Move move : moves){
+                            if (move.getTargetSquare() == releasedSquare){
+                                movePiece(move);
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                else{
+                    Move move = new Move(selectedSquare, releasedSquare);
+                    movePiece(move);
+                }
             }
 
-            // If clicking on a square that is already selected, we unselct
+            // If clicking on a square that is already selected, we unselect
             else if (selectedSquare == releasedSquare && unselectOnRelease){
                 unselectPiece(board[selectedSquare]);
                 selectedSquare = getNullValue();
@@ -395,7 +431,13 @@ public class Board extends PApplet {
             }
 
             else{
-                System.out.print('[' + " " + ']' + " ");
+                if (i != enPassantSquare){
+                    System.out.print('[' + " " + ']' + " ");
+                }
+                else{
+                    System.out.print('[' + "E" + ']' + " ");
+                }
+
             }
 
             // Print blank line after 8 squares
@@ -493,7 +535,7 @@ public class Board extends PApplet {
     }
 
 
-    public int getNullValue(){
+    public static int getNullValue(){
         return 99;
     }
 
@@ -526,6 +568,10 @@ public class Board extends PApplet {
 
     public String getColorToMove(){
         return colorToMove;
+    }
+
+    public static void setEnPassantSquare(int square){
+        enPassantSquare = square;
     }
 
 

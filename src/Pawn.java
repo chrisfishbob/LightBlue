@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 
 public class Pawn extends Piece{
+    ArrayList<Move> moves;
 
     public Pawn(String color, int location) {
         super(color, location, 1);
@@ -34,7 +35,7 @@ public class Pawn extends Piece{
     }
 
 
-    public ArrayList<Move> generateMoves(){
+    public void generateMoves(){
         int pieceColorMultiplier = getColor().equals("white") ? 1 : -1;
         int pawnLocation = getLocation();
         int rank = getLocation() / 8;
@@ -49,15 +50,17 @@ public class Pawn extends Piece{
             }
 
             if (rank == 6 && getColor().equals("white") || rank == 1 && getColor().equals("black")){
-                if (Board.getBoard()[twoSquareForwardIndex] == null){
+                if (Board.getBoard()[twoSquareForwardIndex] == null && Board.getBoard()[oneSquareForwardIndex] == null){
                     Board.legalMoveSquaresForSelectedPiece.add(twoSquareForwardIndex);
-                    legalPawnMoves.add(new Move(pawnLocation, twoSquareForwardIndex));
+                    legalPawnMoves.add(new Move(pawnLocation, twoSquareForwardIndex, "p2"));
                 }
             }
         }
 
-        return legalPawnMoves;
+        moves = legalPawnMoves;
     }
 
-
+    public ArrayList<Move> getMoves() {
+        return moves;
+    }
 }

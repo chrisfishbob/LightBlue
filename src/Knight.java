@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 
 public class Knight extends Piece{
+    private ArrayList<Move> moves;
 
     public Knight(String color, int location) {
         super(color, location, 3);
@@ -34,7 +35,7 @@ public class Knight extends Piece{
     }
 
 
-    public ArrayList<Move> generateMoves() {
+    public void generateMoves() {
         // Gets all the potentially legal moves for a knight in the given position on the board
         // and filter out the illegal moves
         ArrayList<Move> potentialMoves = MoveGenerator.getPotentialLegalKnightMoveMap().get(this.getLocation());
@@ -56,6 +57,10 @@ public class Knight extends Piece{
             }
         }
 
-        return legalKnightMoves;
+        moves = legalKnightMoves;
+    }
+
+    public ArrayList<Move> getMoves() {
+        return moves;
     }
 }
