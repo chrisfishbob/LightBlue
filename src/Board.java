@@ -4,7 +4,6 @@ import javax.sound.sampled.*;
 import java.io.File;
 import java.lang.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 
 public class Board extends PApplet {
@@ -38,7 +37,7 @@ public class Board extends PApplet {
     private final int[] blue2 = {139, 190, 174};
     private final int[] darkGreen = {238, 237, 213};
     private final int[] offWhite  = {124, 148, 93};
-    public static ArrayList<Integer> legalMoveSquares = new ArrayList<>();
+    public static ArrayList<Integer> legalMoveSquaresForSelectedPiece = new ArrayList<>();
     private int previousMoveStartSquare = getNullValue();
     private int previousMoveTargetSquare = getNullValue();
 
@@ -126,7 +125,7 @@ public class Board extends PApplet {
                         (float) windowWidth / 8, (float) windowHeight / 8);
 
 
-                if (legalMoveSquares.contains(rank * 8 + file))
+                if (legalMoveSquaresForSelectedPiece.contains(rank * 8 + file))
                 {
                     if (board[rank * 8 + file] == null){
                         image(legalMoveBG, file * (float) (windowWidth / 8), rank * (float) (windowHeight / 8),
@@ -251,7 +250,7 @@ public class Board extends PApplet {
             previousMoveStartSquare = startSquare;
             previousMoveTargetSquare = targetSquare;
             selectedSquare = getNullValue();
-            legalMoveSquares.clear();
+            legalMoveSquaresForSelectedPiece.clear();
 
 
             if (piece.getColor().equals("white")){
@@ -459,7 +458,7 @@ public class Board extends PApplet {
     public void unselectPiece(Piece piece){
         piece.setSelected(false);
         pieceAlreadySelected = false;
-        legalMoveSquares.clear();
+        legalMoveSquaresForSelectedPiece.clear();
     }
 
     public void selectPiece(Piece piece){
@@ -471,6 +470,10 @@ public class Board extends PApplet {
         unselectOnRelease = false;
         if (piece instanceof Knight && piece.getColor().equals(colorToMove)){
             ((Knight) piece).generateMoves();
+        }
+
+        else if (piece instanceof Pawn && piece.getColor().equals(colorToMove)){
+            ((Pawn) piece).generateMoves();
         }
     }
 
@@ -486,7 +489,7 @@ public class Board extends PApplet {
         unselectOnRelease = false;
         previousMoveStartSquare = getNullValue();
         previousMoveTargetSquare = getNullValue();
-        legalMoveSquares.clear();
+        legalMoveSquaresForSelectedPiece.clear();
     }
 
 

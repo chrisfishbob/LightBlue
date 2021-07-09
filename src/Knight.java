@@ -43,19 +43,19 @@ public class Knight extends Piece{
         for (Move move : potentialMoves){
             int targetSquare = move.getTargetSquare();
 
+            // Move is legal if the candidate target square is empty or occupied by enemy piece
             if (Board.getBoard()[targetSquare] == null){
-                Board.legalMoveSquares.add(targetSquare);
+                Board.legalMoveSquaresForSelectedPiece.add(targetSquare);
                 legalKnightMoves.add(move);
             }
             else{
                 if (!Board.getBoard()[targetSquare].getColor().equals(this.getColor())){
-                    Board.legalMoveSquares.add(targetSquare);
+                    Board.legalMoveSquaresForSelectedPiece.add(targetSquare);
                     legalKnightMoves.add(move);
                 }
             }
         }
 
-        System.out.println(legalKnightMoves.size());
         return legalKnightMoves;
     }
 }

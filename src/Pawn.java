@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Pawn extends Piece{
 
     public Pawn(String color, int location) {
@@ -11,6 +13,7 @@ public class Pawn extends Piece{
         }
     }
 
+
     public String toString(){
         if (getColor().equals("white")){
             return "P at " + getLocation();
@@ -20,6 +23,7 @@ public class Pawn extends Piece{
         }
     }
 
+
     public String getPieceChar(){
         if (getColor().equals("white")){
             return "P";
@@ -28,4 +32,32 @@ public class Pawn extends Piece{
             return "p";
         }
     }
+
+
+    public ArrayList<Move> generateMoves(){
+        int pieceColorMultiplier = getColor().equals("white") ? 1 : -1;
+        int pawnLocation = getLocation();
+        int rank = getLocation() / 8;
+        int oneSquareForwardIndex = pawnLocation - 8 * pieceColorMultiplier;
+        int twoSquareForwardIndex = pawnLocation - 16 * pieceColorMultiplier;
+        ArrayList<Move> legalPawnMoves = new ArrayList<>();
+
+        if (oneSquareForwardIndex >= 0 && oneSquareForwardIndex < 64){
+            if (Board.getBoard()[oneSquareForwardIndex] == null){
+                Board.legalMoveSquaresForSelectedPiece.add(oneSquareForwardIndex);
+                legalPawnMoves.add(new Move(pawnLocation, oneSquareForwardIndex));
+            }
+
+            if (rank == 6 && getColor().equals("white") || rank == 1 && getColor().equals("black")){
+                if (Board.getBoard()[twoSquareForwardIndex] == null){
+                    Board.legalMoveSquaresForSelectedPiece.add(twoSquareForwardIndex);
+                    legalPawnMoves.add(new Move(pawnLocation, twoSquareForwardIndex));
+                }
+            }
+        }
+
+        return legalPawnMoves;
+    }
+
+
 }
