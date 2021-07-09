@@ -7,13 +7,13 @@ public class Move {
     public Move(int startSquare, int targetSquare){
         this.startSquare = startSquare;
         this.targetSquare = targetSquare;
-        hasSpecialMoveFlag = false;
+        this.hasSpecialMoveFlag = false;
     }
 
     public Move(int startSquare, int targetSquare, String specialFlagKind){
         this.startSquare = startSquare;
         this.targetSquare = targetSquare;
-        hasSpecialMoveFlag = true;
+        this.hasSpecialMoveFlag = true;
         this.specialFlagKind = specialFlagKind;
     }
 

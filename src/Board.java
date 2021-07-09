@@ -232,6 +232,7 @@ public class Board extends PApplet {
     }
 
 
+    // todo: improve style!
     public void movePiece(Move move){
         // Null check not really necessary, can consider removing later
         int startSquare = move.getStartSquare();
@@ -273,6 +274,20 @@ public class Board extends PApplet {
             if (move.getSpecialFlagKind().equals("p2")){
                 enPassantSquare = startSquare + (targetSquare - startSquare) / 2;
             }
+            else if (move.getSpecialFlagKind().equals("ep")){
+                if (piece.getColor().equals("white")){
+                    board[enPassantSquare + 8] = null;
+                }
+                else{
+                    board[enPassantSquare - 8] = null;
+                }
+            }
+            else{
+                enPassantSquare = getNullValue();
+            }
+        }
+        else{
+            enPassantSquare = getNullValue();
         }
     }
 
@@ -469,13 +484,25 @@ public class Board extends PApplet {
     }
 
 
+    // Todo: improve style!
     public void processSound(Move move){
         // This function determines which sound should be played given the Move object
-        if (board[move.getTargetSquare()] == null){
-            playSound("move");
+        if (!move.isSpecialMove()){
+            if (board[move.getTargetSquare()] == null){
+                playSound("move");
+            }
+            else{
+                playSound("capture");
+            }
         }
         else{
-            playSound("capture");
+            if (move.getSpecialFlagKind().equals("ep")){
+                playSound("capture");
+            }
+
+            else if (move.getSpecialFlagKind().equals("p2")){
+                playSound("move");
+            }
         }
     }
 
@@ -572,6 +599,10 @@ public class Board extends PApplet {
 
     public static void setEnPassantSquare(int square){
         enPassantSquare = square;
+    }
+
+    public static int getEnPassantSquare(){
+        return enPassantSquare;
     }
 
 
