@@ -321,49 +321,17 @@ public class Board extends PApplet {
 
             // Move the piece if the player dragged the piece to a different square
             if (selectedSquare != releasedSquare && aPieceIsSelected()){
-                // Remove later after all pieces can process legal moves
-                if (board[selectedSquare] instanceof Knight || board[selectedSquare] instanceof Pawn || board[selectedSquare] instanceof Queen
-                || board[selectedSquare] instanceof Bishop || board[selectedSquare] instanceof Rook || board[selectedSquare] instanceof King){
-                    if (legalMoveSquaresForSelectedPiece.contains(releasedSquare)){
-                        ArrayList<Move> moves;
-                        if (board[selectedSquare] instanceof Knight){
-                            moves = ((Knight) board[selectedSquare]).getMoves();
-                        }
-                        else if (board[selectedSquare] instanceof Pawn){
-                            moves = (((Pawn) board[selectedSquare]).getMoves());
-                        }
-                        else if (board[selectedSquare] instanceof Queen){
-                            moves = (((Queen) board[selectedSquare]).getMoves());
-                        }
+                if (legalMoveSquaresForSelectedPiece.contains(releasedSquare)){
+                    ArrayList<Move> moves;
+                    moves = board[selectedSquare].getMoves();
 
-                        else if (board[selectedSquare] instanceof Bishop){
-                            moves = (((Bishop) board[selectedSquare]).getMoves());
-                        }
-
-                        else if (board[selectedSquare] instanceof Rook){
-                            moves = (((Rook) board[selectedSquare]).getMoves());
-                        }
-
-                        else if (board[selectedSquare] instanceof King){
-                            moves = (((King) board[selectedSquare]).getMoves());
-                        }
-                        else{
-                            return;
-                        }
-
-
-                        for (Move move : moves){
-                            if (move.getTargetSquare() == releasedSquare){
-                                movePiece(move);
-                                break;
-                            }
+                    for (Move move : moves){
+                        if (move.getTargetSquare() == releasedSquare){
+                            movePiece(move);
+                            break;
                         }
                     }
-                }
 
-                else{
-                    Move move = new Move(selectedSquare, releasedSquare);
-                    movePiece(move);
                 }
             }
 
@@ -600,29 +568,11 @@ public class Board extends PApplet {
         // during the mouseReleased event. Not marking the square to not unselect on
         // release will cause the selected piece to be immediately unselected upon mouse release
         unselectOnRelease = false;
-        if (piece instanceof Knight && piece.getColor().equals(colorToMove)){
-            ((Knight) piece).generateMoves();
+
+        if (piece.getColor().equals(colorToMove)){
+            piece.generateMoves();
         }
 
-        else if (piece instanceof Pawn && piece.getColor().equals(colorToMove)){
-            ((Pawn) piece).generateMoves();
-        }
-
-        else if (piece instanceof Queen && piece.getColor().equals(colorToMove)){
-            ((Queen) piece).generateMoves();
-        }
-
-        else if (piece instanceof Bishop && piece.getColor().equals(colorToMove)){
-            ((Bishop) piece).generateMoves();
-        }
-
-        else if (piece instanceof Rook && piece.getColor().equals(colorToMove)){
-            ((Rook) piece).generateMoves();
-        }
-
-        else if (piece instanceof King && piece.getColor().equals(colorToMove)){
-            ((King) piece).generateMoves();
-        }
     }
 
 

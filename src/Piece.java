@@ -1,5 +1,7 @@
 import processing.core.PImage;
 
+import java.util.ArrayList;
+
 public abstract class Piece {
     private final String color;
     private int location;
@@ -42,6 +44,10 @@ public abstract class Piece {
     public abstract String toString();
 
     public abstract String getPieceChar();
+
+    public abstract void generateMoves();
+
+    public abstract ArrayList<Move> getMoves();
 
     public void setSelected(boolean bool){
         this.isSelected = bool;
