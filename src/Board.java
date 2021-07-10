@@ -25,6 +25,11 @@ public class Board extends PApplet {
     public static PImage whitePawn;
     public static PImage targetedPieceBG;
     public static PImage legalMoveBG;
+    private final int[] yellow1 = {246, 245, 149};
+    private final int[] blue1 = {167, 203, 202};
+    private final int[] blue2 = {139, 190, 174};
+    private final int[] darkGreen = {238, 237, 213};
+    private final int[] offWhite  = {124, 148, 93};
 
     private static int selectedSquare = getNullValue();
     private int releasedSquare = getNullValue();
@@ -32,11 +37,7 @@ public class Board extends PApplet {
     private boolean mouseIsHeldDown = false;
     private boolean unselectOnRelease = false;
     private static String colorToMove = "white";
-    private final int[] yellow1 = {246, 245, 149};
-    private final int[] blue1 = {167, 203, 202};
-    private final int[] blue2 = {139, 190, 174};
-    private final int[] darkGreen = {238, 237, 213};
-    private final int[] offWhite  = {124, 148, 93};
+
 
 
     public static ArrayList<Integer> legalMoveSquaresForSelectedPiece = new ArrayList<>();
@@ -236,7 +237,7 @@ public class Board extends PApplet {
     }
 
 
-    public static void movePiece(Move move){
+    public static void makeMove(Move move){
         // Null check not really necessary, can consider removing later
         int startSquare = move.getStartSquare();
         int targetSquare = move.getTargetSquare();
@@ -322,11 +323,10 @@ public class Board extends PApplet {
         legalMoveSquaresForSelectedPiece.clear();
         previousMoveStartSquare = getNullValue();
         previousMoveTargetSquare = getNullValue();
+        enPassantSquare = getNullValue();
         colorToMove = piece.getColor().equals("white") ? "white" : "black";
 
         if (capturedPiece != null){
-            System.out.println("huh");
-            System.out.println(capturedPiece);
             board[startSquare] = capturedPiece;
         }
     }
@@ -355,7 +355,7 @@ public class Board extends PApplet {
 
                     for (Move move : moves){
                         if (move.getTargetSquare() == releasedSquare){
-                            movePiece(move);
+                            makeMove(move);
                             break;
                         }
                     }
