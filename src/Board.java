@@ -322,7 +322,8 @@ public class Board extends PApplet {
             // Move the piece if the player dragged the piece to a different square
             if (selectedSquare != releasedSquare && aPieceIsSelected()){
                 // Remove later after all pieces can process legal moves
-                if (board[selectedSquare] instanceof Knight || board[selectedSquare] instanceof Pawn || board[selectedSquare] instanceof Queen){
+                if (board[selectedSquare] instanceof Knight || board[selectedSquare] instanceof Pawn || board[selectedSquare] instanceof Queen
+                || board[selectedSquare] instanceof Bishop || board[selectedSquare] instanceof Rook){
                     if (legalMoveSquaresForSelectedPiece.contains(releasedSquare)){
                         ArrayList<Move> moves;
                         if (board[selectedSquare] instanceof Knight){
@@ -332,8 +333,17 @@ public class Board extends PApplet {
                             moves = (((Pawn) board[selectedSquare]).getMoves());
                         }
                         else if (board[selectedSquare] instanceof Queen){
-                            System.out.println("this ran");
                             moves = (((Queen) board[selectedSquare]).getMoves());
+                        }
+
+                        else if (board[selectedSquare] instanceof Bishop){
+                            System.out.println("this ran");
+                            moves = (((Bishop) board[selectedSquare]).getMoves());
+                        }
+
+                        else if (board[selectedSquare] instanceof Rook){
+                            System.out.println("this ran");
+                            moves = (((Rook) board[selectedSquare]).getMoves());
                         }
                         else{
                             return;
@@ -598,6 +608,14 @@ public class Board extends PApplet {
 
         else if (piece instanceof Queen && piece.getColor().equals(colorToMove)){
             ((Queen) piece).generateMoves();
+        }
+
+        else if (piece instanceof Bishop && piece.getColor().equals(colorToMove)){
+            ((Bishop) piece).generateMoves();
+        }
+
+        else if (piece instanceof Rook && piece.getColor().equals(colorToMove)){
+            ((Rook) piece).generateMoves();
         }
     }
 
