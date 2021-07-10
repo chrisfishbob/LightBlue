@@ -47,6 +47,7 @@ public class Board extends PApplet {
     private static Move previousMove;
     public static boolean isMute = false;
     private static Piece capturedPiece;
+    private final SoundProcessor soundProcessor = new SoundProcessor();
 
 
     public void settings(){
@@ -151,7 +152,7 @@ public class Board extends PApplet {
 
 
     public void loadFromFen(String fen){
-        playSound("start");
+        soundProcessor.playSound("start");
         int rank = 0;
         int file = 0;
 
@@ -237,7 +238,7 @@ public class Board extends PApplet {
     }
 
 
-    public static void makeMove(Move move){
+    public void makeMove(Move move){
         // Null check not really necessary, can consider removing later
         int startSquare = move.getStartSquare();
         int targetSquare = move.getTargetSquare();
@@ -251,7 +252,7 @@ public class Board extends PApplet {
             capturedPiece = null;
         }
 
-        processSound(move);
+        soundProcessor.processSound(move);
         previousMove = move;
         piece.setSelected(false);
         piece.setLocation(targetSquare);
@@ -515,48 +516,8 @@ public class Board extends PApplet {
     }
 
 
-    // Todo: improve style!
-    public static void processSound(Move move){
-        if (isMute){
-            return;
-        }
-
-        // This function determines which sound should be played given the Move object
-        if (!move.isSpecialMove()){
-            if (board[move.getTargetSquare()] == null){
-                playSound("move");
-            }
-            else{
-                playSound("capture");
-            }
-        }
-        else{
-            if (move.getSpecialFlagKind().equals("ep")){
-                playSound("capture");
-            }
-
-            else{
-                playSound("move");
-            }
-        }
-    }
 
 
-    public static void playSound(String soundName){
-        // This function plays the actual sound file according to the results of processSound
-        try{
-            File file = new File("sound/" + soundName + ".wav");
-            AudioInputStream move = AudioSystem.getAudioInputStream(file);
-            Clip clip = AudioSystem.getClip();
-            clip.open(move);
-            clip.start();
-        }
-
-        catch (Exception e){
-            System.out.println(e.getMessage());
-        }
-
-    }
 
 
     public void unselectPiece(Piece piece){
