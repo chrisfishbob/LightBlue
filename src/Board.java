@@ -26,12 +26,12 @@ public class Board extends PApplet {
     public static PImage targetedPieceBG;
     public static PImage legalMoveBG;
 
-    private int selectedSquare = getNullValue();
+    private static int selectedSquare = getNullValue();
     private int releasedSquare = getNullValue();
     private boolean pieceAlreadySelected = false;
     private boolean mouseIsHeldDown = false;
     private boolean unselectOnRelease = false;
-    private String colorToMove = "white";
+    private static String colorToMove = "white";
     private final int[] yellow1 = {246, 245, 149};
     private final int[] blue1 = {167, 203, 202};
     private final int[] blue2 = {139, 190, 174};
@@ -40,8 +40,8 @@ public class Board extends PApplet {
 
 
     public static ArrayList<Integer> legalMoveSquaresForSelectedPiece = new ArrayList<>();
-    private int previousMoveStartSquare = getNullValue();
-    private int previousMoveTargetSquare = getNullValue();
+    private static int previousMoveStartSquare = getNullValue();
+    private static int previousMoveTargetSquare = getNullValue();
     private static int enPassantSquare = getNullValue();
     private static Move previousMove;
 
@@ -234,7 +234,7 @@ public class Board extends PApplet {
     }
 
 
-    public void movePiece(Move move){
+    public static void movePiece(Move move){
         // Null check not really necessary, can consider removing later
         int startSquare = move.getStartSquare();
         int targetSquare = move.getTargetSquare();
@@ -297,7 +297,7 @@ public class Board extends PApplet {
         }
     }
 
-    public void unMakeMove(Move move){
+    public static void unMakeMove(Move move){
         int targetSquare = move.getStartSquare();
         int startSquare = move.getTargetSquare();
         Piece piece = board[startSquare];
@@ -491,7 +491,7 @@ public class Board extends PApplet {
 
 
     // Todo: improve style!
-    public void processSound(Move move){
+    public static void processSound(Move move){
         // This function determines which sound should be played given the Move object
         if (!move.isSpecialMove()){
             if (board[move.getTargetSquare()] == null){
@@ -513,7 +513,7 @@ public class Board extends PApplet {
     }
 
 
-    public void playSound(String soundName){
+    public static void playSound(String soundName){
         // This function plays the actual sound file according to the results of processSound
         try{
             File file = new File("sound/" + soundName + ".wav");
