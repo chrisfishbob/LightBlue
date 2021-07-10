@@ -43,6 +43,7 @@ public class Board extends PApplet {
     private int previousMoveStartSquare = getNullValue();
     private int previousMoveTargetSquare = getNullValue();
     private static int enPassantSquare = getNullValue();
+    private static Move previousMove;
 
 
     public void settings(){
@@ -239,35 +240,28 @@ public class Board extends PApplet {
         int targetSquare = move.getTargetSquare();
         Piece piece = board[startSquare];
 
-        if (board[startSquare] != null){
-            // If not the right color to move, don't move the piece
-            if (!board[startSquare].getColor().equals(colorToMove)){
-                return;
-            }
 
-            processSound(move);
-
-            piece.setSelected(false);
-            piece.setLocation(targetSquare);
-            board[targetSquare] = piece;
-            board[startSquare] = null;
-            previousMoveStartSquare = startSquare;
-            previousMoveTargetSquare = targetSquare;
-            selectedSquare = getNullValue();
-            legalMoveSquaresForSelectedPiece.clear();
+        processSound(move);
+        previousMove = move;
+        piece.setSelected(false);
+        piece.setLocation(targetSquare);
+        board[targetSquare] = piece;
+        board[startSquare] = null;
+        previousMoveStartSquare = startSquare;
+        previousMoveTargetSquare = targetSquare;
+        selectedSquare = getNullValue();
+        legalMoveSquaresForSelectedPiece.clear();
 
 
-            if (piece.getColor().equals("white")){
-                colorToMove = "black";
-            }
-            else{
-                colorToMove = "white";
-            }
+        if (piece.getColor().equals("white")){
+            colorToMove = "black";
         }
-
         else{
-            System.out.println("Invalid move: start square has no piece object");
+            colorToMove = "white";
         }
+
+
+
 
         if (move.isSpecialMove()){
             // When a pawn moves by two spaces, mark the enPassantSquare
@@ -301,6 +295,21 @@ public class Board extends PApplet {
         else{
             enPassantSquare = getNullValue();
         }
+    }
+
+    public void unMakeMove(Move move){
+        int targetSquare = move.getStartSquare();
+        int startSquare = move.getTargetSquare();
+        Piece piece = board[startSquare];
+
+        piece.setSelected(false);
+        piece.setLocation(targetSquare);
+        board[targetSquare] = piece;
+        board[startSquare] = null;
+        selectedSquare = getNullValue();
+        legalMoveSquaresForSelectedPiece.clear();
+
+        colorToMove = piece.getColor().equals("white") ? "white" : "black";
     }
 
 
@@ -363,6 +372,7 @@ public class Board extends PApplet {
             case 't' -> colorToMove = colorToMove.equals("white") ? "black" : "white";
             case 'v' -> verifyBoard();
             case 'm' -> MoveGenerator.generateAllMoves(colorToMove);
+            case 'u' -> unMakeMove(previousMove);
         }
     }
 
