@@ -7,6 +7,25 @@ public class MoveGenerator {
     private static int[][] NumSquaresToEdge = new int[64][8];
 
 
+    public static ArrayList<Move> generateAllMoves(String colorToGenerate){
+        ArrayList<Move> allMoves = new ArrayList<>();
+
+        for (Piece piece : Board.getBoard()){
+            if (piece != null){
+                if (piece.getColor().equals(colorToGenerate)){
+                    piece.generateMoves();
+                    allMoves.addAll(piece.getMoves());
+                }
+            }
+        }
+
+        return allMoves;
+    }
+
+
+
+
+
     public static void PrecomputeMoveData(){
         for (int file = 0; file < 8; file ++){
             for (int rank = 0; rank < 8; rank ++){

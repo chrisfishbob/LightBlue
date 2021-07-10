@@ -331,7 +331,6 @@ public class Board extends PApplet {
                             break;
                         }
                     }
-
                 }
             }
 
@@ -363,41 +362,7 @@ public class Board extends PApplet {
             case 'r' -> resetBoard();
             case 't' -> colorToMove = colorToMove.equals("white") ? "black" : "white";
             case 'v' -> verifyBoard();
-            case 'm' -> {
-                ArrayList<Pawn> pawnsOfRightColor = new ArrayList<>();
-                ArrayList<Pawn> movablePawns = new ArrayList<>();
-                ArrayList<Move> moves;
-                for (Piece piece : board){
-                    if (piece != null){
-                        if (piece instanceof Pawn && piece.getColor().equals(colorToMove)){
-                            pawnsOfRightColor.add((Pawn) piece);
-                        }
-                    }
-                }
-
-                for (Pawn pawn : pawnsOfRightColor){
-                    pawn.generateMoves();
-                    if (pawn.getMoves().size() != 0){
-                        movablePawns.add(pawn);
-                    }
-                }
-
-                if (movablePawns.size() == 0){
-                    System.out.println("No legal pawn moves");
-                    return;
-                }
-
-                int random1 = (int) random(0, movablePawns.size());
-
-                Pawn pawn = movablePawns.get(random1);
-                pawn.generateMoves();
-                moves = pawn.getMoves();
-
-                int random2 = (int) random(0, moves.size());
-                movePiece(moves.get(random2));
-
-
-            }
+            case 'm' -> MoveGenerator.generateAllMoves(colorToMove);
         }
     }
 
