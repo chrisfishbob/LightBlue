@@ -41,8 +41,8 @@ public class Board extends PApplet {
 
 
     public static ArrayList<Integer> legalMoveSquaresForSelectedPiece = new ArrayList<>();
-    private static int previousMoveStartSquare = getNullValue();
-    private static int previousMoveTargetSquare = getNullValue();
+    private int previousMoveStartSquare = getNullValue();
+    private int previousMoveTargetSquare = getNullValue();
     private static int enPassantSquare = getNullValue();
     private static Move previousMove;
     public static boolean isMute = false;
@@ -309,7 +309,7 @@ public class Board extends PApplet {
         }
     }
 
-    public static void unMakeMove(Move move){
+    public void unMakeMove(Move move){
         int targetSquare = move.getStartSquare();
         int startSquare = move.getTargetSquare();
         Piece piece = board[startSquare];
