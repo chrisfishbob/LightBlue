@@ -44,6 +44,8 @@ public class Board extends PApplet {
     private static int previousMoveTargetSquare = getNullValue();
     private static int enPassantSquare = getNullValue();
     private static Move previousMove;
+    public static boolean isMute = false;
+    private static Piece capturedPiece;
 
 
     public void settings(){
@@ -240,6 +242,13 @@ public class Board extends PApplet {
         int targetSquare = move.getTargetSquare();
         Piece piece = board[startSquare];
 
+        if (board[targetSquare] != null) {
+            capturedPiece = board[targetSquare];
+            System.out.println(capturedPiece);
+        }
+        else{
+            capturedPiece = null;
+        }
 
         processSound(move);
         previousMove = move;
@@ -259,6 +268,7 @@ public class Board extends PApplet {
         else{
             colorToMove = "white";
         }
+
 
 
 
@@ -302,14 +312,23 @@ public class Board extends PApplet {
         int startSquare = move.getTargetSquare();
         Piece piece = board[startSquare];
 
+
+
         piece.setSelected(false);
         piece.setLocation(targetSquare);
         board[targetSquare] = piece;
         board[startSquare] = null;
         selectedSquare = getNullValue();
         legalMoveSquaresForSelectedPiece.clear();
-
+        previousMoveStartSquare = getNullValue();
+        previousMoveTargetSquare = getNullValue();
         colorToMove = piece.getColor().equals("white") ? "white" : "black";
+
+        if (capturedPiece != null){
+            System.out.println("huh");
+            System.out.println(capturedPiece);
+            board[startSquare] = capturedPiece;
+        }
     }
 
 
@@ -371,7 +390,13 @@ public class Board extends PApplet {
             case 'r' -> resetBoard();
             case 't' -> colorToMove = colorToMove.equals("white") ? "black" : "white";
             case 'v' -> verifyBoard();
-            case 'm' -> MoveGenerator.generateAllMoves(colorToMove);
+            case 'm' -> {
+                try {
+                    MoveGenerator.generateAllMoves(colorToMove);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
             case 'u' -> unMakeMove(previousMove);
         }
     }
@@ -492,6 +517,10 @@ public class Board extends PApplet {
 
     // Todo: improve style!
     public static void processSound(Move move){
+        if (isMute){
+            return;
+        }
+
         // This function determines which sound should be played given the Move object
         if (!move.isSpecialMove()){
             if (board[move.getTargetSquare()] == null){
