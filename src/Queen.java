@@ -14,6 +14,7 @@ public class Queen extends Piece{
         }
     }
 
+
     public String toString(){
         if (getColor().equals("white")){
             return "Q at " + getLocation();
@@ -23,6 +24,7 @@ public class Queen extends Piece{
         }
     }
 
+
     public String getPieceChar(){
         if (getColor().equals("white")){
             return "Q";
@@ -31,6 +33,7 @@ public class Queen extends Piece{
             return "q";
         }
     }
+
 
     public void generateMoves(){
         int startSquare = getLocation();
@@ -42,8 +45,8 @@ public class Queen extends Piece{
 
                 // If the target square is occupied by a friendly piece, stop searching for more
                 // moves in this direction
-                if (LightBlueMain.getBoard()[targetSquare] != null){
-                    if (LightBlueMain.getBoard()[targetSquare].getColor().equals(getColor())){
+                if (LightBlueMain.getBoardArray()[targetSquare] != null){
+                    if (LightBlueMain.getBoardArray()[targetSquare].getColor().equals(getColor())){
                         break;
                     }
                 }
@@ -53,8 +56,8 @@ public class Queen extends Piece{
 
                 // If the target square is occupied by an enemy piece, we stop searching for more
                 // moves in this direction (the capture itself was made legal in the statement above
-                if (LightBlueMain.getBoard()[targetSquare] != null){
-                    if (!LightBlueMain.getBoard()[targetSquare].getColor().equals(getColor())){
+                if (LightBlueMain.getBoardArray()[targetSquare] != null){
+                    if (!LightBlueMain.getBoardArray()[targetSquare].getColor().equals(getColor())){
                         break;
                     }
                 }
@@ -63,11 +66,11 @@ public class Queen extends Piece{
 
         moves = legalQueenMoves;
 
-        if (isSelected()){
-            for (Move move : moves){
-                LightBlueMain.legalMoveSquaresForSelectedPiece.add(move.getTargetSquare());
-            }
-        }
+//        if (isSelected()){
+//            for (Move move : moves){
+//                LightBlueMain.legalMoveSquaresForSelectedPiece.add(move.getTargetSquare());
+//            }
+//        }
     }
 
     public ArrayList<Move> getMoves(){

@@ -10,7 +10,7 @@ public class MoveGenerator {
     public static ArrayList<Move> generateAllMoves(String colorToGenerate) throws InterruptedException {
         ArrayList<Move> allMoves = new ArrayList<>();
 
-        for (Piece piece : LightBlueMain.getBoard()){
+        for (Piece piece : LightBlueMain.getBoardArray()){
             if (piece != null){
                 if (piece.getColor().equals(colorToGenerate)){
                     piece.generateMoves();

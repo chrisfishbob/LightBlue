@@ -49,7 +49,7 @@ public class Pawn extends Piece{
 
         if (isInBounds(oneSquareForwardIndex)){
             // test if the pawn can move forward one space
-            if (LightBlueMain.getBoard()[oneSquareForwardIndex] == null){
+            if (LightBlueMain.getBoardArray()[oneSquareForwardIndex] == null){
                 checkPromotionMoves(pawnLocation, oneSquareForwardIndex, legalPawnMoves);
 
 
@@ -57,7 +57,7 @@ public class Pawn extends Piece{
 
             // test if the pawn can move forward two spaces
             if (rank == 6 && getColor().equals("white") || rank == 1 && getColor().equals("black")){
-                if (LightBlueMain.getBoard()[twoSquareForwardIndex] == null && LightBlueMain.getBoard()[oneSquareForwardIndex] == null){
+                if (LightBlueMain.getBoardArray()[twoSquareForwardIndex] == null && LightBlueMain.getBoardArray()[oneSquareForwardIndex] == null){
                     legalPawnMoves.add(new Move(pawnLocation, twoSquareForwardIndex, "p2"));
                 }
             }
@@ -81,11 +81,11 @@ public class Pawn extends Piece{
 
         // Loop through the legal pawn moves and add them to the designated array in the
         // Board class so that legal moves can be displayed
-        if (isSelected()){
-            for (Move move : moves){
-                LightBlueMain.legalMoveSquaresForSelectedPiece.add(move.getTargetSquare());
-            }
-        }
+//        if (isSelected()){
+//            for (Move move : moves){
+//                LightBlueMain.legalMoveSquaresForSelectedPiece.add(move.getTargetSquare());
+//            }
+//        }
 
 
     }
@@ -106,8 +106,8 @@ public class Pawn extends Piece{
                                             ArrayList<Move> legalPawnMoves) {
 
         if (potentialCaptureIndex / 8 == targetRankAfterCapture &&
-                LightBlueMain.getBoard()[potentialCaptureIndex] != null){
-            if (!LightBlueMain.getBoard()[potentialCaptureIndex].getColor().equals(getColor())){
+                LightBlueMain.getBoardArray()[potentialCaptureIndex] != null){
+            if (!LightBlueMain.getBoardArray()[potentialCaptureIndex].getColor().equals(getColor())){
                 checkPromotionMoves(pawnLocation, potentialCaptureIndex, legalPawnMoves);
             }
         }

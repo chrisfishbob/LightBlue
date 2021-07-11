@@ -13,7 +13,7 @@ public class SoundProcessor {
 
         // This function determines which sound should be played given the Move object
         if (!move.isSpecialMove()){
-            if (LightBlueMain.getBoard()[move.getTargetSquare()] == null){
+            if (LightBlueMain.getBoardArray()[move.getTargetSquare()] == null){
                 playSound("move");
             }
             else{

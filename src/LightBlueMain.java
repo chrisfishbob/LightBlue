@@ -1,13 +1,15 @@
 import processing.core.PApplet;
 import processing.core.PImage;
-import javax.sound.sampled.*;
-import java.io.File;
+
 import java.lang.*;
 import java.util.ArrayList;
 
 
 public class LightBlueMain extends PApplet {
-    private static Piece[] board;
+    private static Piece[] boardArray;
+    private Board board;
+
+
     private final int windowWidth = 800;
     private final int windowHeight = 800;
     private final int squareSize = windowWidth / 8;
@@ -40,7 +42,7 @@ public class LightBlueMain extends PApplet {
 
 
 
-    public static ArrayList<Integer> legalMoveSquaresForSelectedPiece = new ArrayList<>();
+
     private int previousMoveStartSquare = getNullValue();
     private int previousMoveTargetSquare = getNullValue();
     private static int enPassantSquare = getNullValue();
@@ -56,8 +58,9 @@ public class LightBlueMain extends PApplet {
 
     public void setup(){
         loadImages();
-        board = new Piece[64];
-        loadFromFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
+        board = new Board(this, soundProcessor);
+        boardArray = board.getBoardArray();
+        board.loadFromFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
         MoveGenerator.preGenerateKnightMoves();
         MoveGenerator.PrecomputeMoveData();
     }
@@ -67,31 +70,13 @@ public class LightBlueMain extends PApplet {
         // Main loop of the program
         background(64);
         drawBoard();
-        for (Piece piece: board){
-            if (piece != null) {
-                int row = piece.getLocation() / 8;
-                int column = piece.getLocation() % 8;
-                int squareSize = windowWidth / 8;
+        board.drawPieces(windowWidth, mouseIsHeldDown, mouseX, mouseY);
 
-                // If the piece is not selected, or if the mouse is not being held down,
-                // just display the image at wherever its location is on the board
-                if (!piece.isSelected() || !mouseIsHeldDown)
-                {
-                    image(piece.getImage(), column * squareSize, row * squareSize, squareSize, squareSize);
-                }
-
-                // Display the piece, following the position of the cursor.
-                else{
-                    image(piece.getImage(), mouseX - (float) squareSize / 2,
-                            mouseY - (float) squareSize / 2, squareSize, squareSize);
-                }
-            }
-        }
     }
 
 
     public void drawBoard(){
-        // Called for every frame, this method draws an empty board.
+        // Called for every frame, this method draws an empty boardArray.
         noStroke();
 
         for (int rank = 0; rank < 8; rank++){
@@ -117,7 +102,7 @@ public class LightBlueMain extends PApplet {
                 }
 
 
-                // The square is not a special highlighted square, just draw the board
+                // The square is not a special highlighted square, just draw the boardArray
                 else{
                     if (!isLightSquare){
                         fill(darkGreen[0], darkGreen[1], darkGreen[2]);
@@ -134,9 +119,9 @@ public class LightBlueMain extends PApplet {
                         (float) windowWidth / 8, (float) windowHeight / 8);
 
 
-                if (legalMoveSquaresForSelectedPiece.contains(rank * 8 + file))
+                if (board.legalMoveSquaresForSelectedPiece.contains(rank * 8 + file))
                 {
-                    if (board[rank * 8 + file] == null){
+                    if (boardArray[rank * 8 + file] == null){
                         image(legalMoveBG, file * (float) (windowWidth / 8), rank * (float) (windowHeight / 8),
                                 (float) windowWidth / 8, (float) windowHeight / 8);
                     }
@@ -151,71 +136,28 @@ public class LightBlueMain extends PApplet {
     }
 
 
-    public void loadFromFen(String fen){
-        soundProcessor.playSound("start");
-        int rank = 0;
-        int file = 0;
-
-        clearBoard();
-        for (char chr : fen.toCharArray()){
-            if (Character.isLetter(chr)){
-                Piece piece = getPieceFromCharacter(chr);
-                piece.setLocation(rank * 8 + file);
-                putPiece(piece);
-                file ++;
-            }
-
-            else if (Character.isDigit(chr)){
-                file += Character.getNumericValue(chr);
-            }
-
-            else if (chr == '/'){
-                rank ++;
-                file = 0;
-            }
-        }
-    }
-
 
     public void putPiece(Piece piece){
-        board[piece.getLocation()] = piece;
+        boardArray[piece.getLocation()] = piece;
     }
 
 
     public void removePiece(Piece piece){
-        board[piece.getLocation()] = null;
+        boardArray[piece.getLocation()] = null;
     }
 
 
     public void removePieceAt(int location){
-        board[location] = null;
+        boardArray[location] = null;
     }
 
 
     public void clearBoard(){
         for (int i = 0; i < 64 ; i ++){
-            board[i] = null;
+            boardArray[i] = null;
         }
     }
 
-
-    public Piece getPieceFromCharacter(char character){
-        return switch (character) {
-            case 'r' -> new Rook("black", 0);
-            case 'R' -> new Rook("white", 0);
-            case 'b' -> new Bishop("black", 0);
-            case 'B' -> new Bishop("white", 0);
-            case 'q' -> new Queen("black", 0);
-            case 'Q' -> new Queen("white", 0);
-            case 'k' -> new King("black", 0);
-            case 'K' -> new King("white", 0);
-            case 'n' -> new Knight("black", 0);
-            case 'N' -> new Knight("white", 0);
-            case 'p' -> new Pawn("black", 0);
-            case 'P' -> new Pawn("white", 0);
-            default -> throw new IllegalStateException("Unexpected value: " + character);
-        };
-    }
 
 
     public void loadImages(){
@@ -234,7 +176,6 @@ public class LightBlueMain extends PApplet {
         blackPawn = loadImage("BlackPawn.png");
         whitePawn = loadImage("WhitePawn.png");
         targetedPieceBG = loadImage("outline.png");
-        legalMoveBG = loadImage("dot5.png");
     }
 
 
@@ -242,10 +183,10 @@ public class LightBlueMain extends PApplet {
         // Null check not really necessary, can consider removing later
         int startSquare = move.getStartSquare();
         int targetSquare = move.getTargetSquare();
-        Piece piece = board[startSquare];
+        Piece piece = boardArray[startSquare];
 
-        if (board[targetSquare] != null) {
-            capturedPiece = board[targetSquare];
+        if (boardArray[targetSquare] != null) {
+            capturedPiece = boardArray[targetSquare];
             System.out.println(capturedPiece);
         }
         else{
@@ -256,12 +197,12 @@ public class LightBlueMain extends PApplet {
         previousMove = move;
         piece.setSelected(false);
         piece.setLocation(targetSquare);
-        board[targetSquare] = piece;
-        board[startSquare] = null;
+        boardArray[targetSquare] = piece;
+        boardArray[startSquare] = null;
         previousMoveStartSquare = startSquare;
         previousMoveTargetSquare = targetSquare;
         selectedSquare = getNullValue();
-        legalMoveSquaresForSelectedPiece.clear();
+        board.legalMoveSquaresForSelectedPiece.clear();
 
 
         if (piece.getColor().equals("white")){
@@ -283,24 +224,24 @@ public class LightBlueMain extends PApplet {
             }
             else if (flag.equals("ep")){
                 if (piece.getColor().equals("white")){
-                    capturedPiece = board[enPassantSquare + 8];
-                    board[enPassantSquare + 8] = null;
+                    capturedPiece = boardArray[enPassantSquare + 8];
+                    boardArray[enPassantSquare + 8] = null;
                 }
                 else{
-                    capturedPiece = board[enPassantSquare - 8];
-                    board[enPassantSquare - 8] = null;
+                    capturedPiece = boardArray[enPassantSquare - 8];
+                    boardArray[enPassantSquare - 8] = null;
                 }
                 enPassantSquare = getNullValue();
             }
 
             else if (flag.equals("queen")){
-                board[targetSquare] = null;
-                board[targetSquare] = new Queen(piece.getColor(), targetSquare);
+                boardArray[targetSquare] = null;
+                boardArray[targetSquare] = new Queen(piece.getColor(), targetSquare);
             }
 
             else if (flag.equals("rook")){
-                board[targetSquare] = null;
-                board[targetSquare] = new Rook(piece.getColor(), targetSquare);
+                boardArray[targetSquare] = null;
+                boardArray[targetSquare] = new Rook(piece.getColor(), targetSquare);
             }
             else{
                 enPassantSquare = getNullValue();
@@ -314,23 +255,23 @@ public class LightBlueMain extends PApplet {
     public void unMakeMove(Move move){
         int targetSquare = move.getStartSquare();
         int startSquare = move.getTargetSquare();
-        Piece piece = board[startSquare];
+        Piece piece = boardArray[startSquare];
 
 
 
         piece.setSelected(false);
         piece.setLocation(targetSquare);
-        board[targetSquare] = piece;
-        board[startSquare] = null;
+        boardArray[targetSquare] = piece;
+        boardArray[startSquare] = null;
         selectedSquare = getNullValue();
-        legalMoveSquaresForSelectedPiece.clear();
+        board.legalMoveSquaresForSelectedPiece.clear();
         previousMoveStartSquare = getNullValue();
         previousMoveTargetSquare = getNullValue();
         enPassantSquare = getNullValue();
         colorToMove = piece.getColor().equals("white") ? "white" : "black";
 
         if (capturedPiece != null){
-            board[startSquare] = capturedPiece;
+            boardArray[startSquare] = capturedPiece;
         }
     }
 
@@ -352,9 +293,9 @@ public class LightBlueMain extends PApplet {
 
             // Move the piece if the player dragged the piece to a different square
             if (selectedSquare != releasedSquare && aPieceIsSelected()){
-                if (legalMoveSquaresForSelectedPiece.contains(releasedSquare)){
+                if (board.legalMoveSquaresForSelectedPiece.contains(releasedSquare)){
                     ArrayList<Move> moves;
-                    moves = board[selectedSquare].getMoves();
+                    moves = boardArray[selectedSquare].getMoves();
 
                     for (Move move : moves){
                         if (move.getTargetSquare() == releasedSquare){
@@ -367,7 +308,7 @@ public class LightBlueMain extends PApplet {
 
             // If clicking on a square that is already selected, we unselect
             else if (selectedSquare == releasedSquare && unselectOnRelease){
-                unselectPiece(board[selectedSquare]);
+                unselectPiece(boardArray[selectedSquare]);
                 selectedSquare = getNullValue();
                 releasedSquare = getNullValue();
             }
@@ -375,7 +316,7 @@ public class LightBlueMain extends PApplet {
 
         // Player release mouse out of bounds, unselect selected piece and set selected Square to null
         else {
-            unselectPiece(board[selectedSquare]);
+            unselectPiece(boardArray[selectedSquare]);
             selectedSquare = getNullValue();
         }
     }
@@ -384,7 +325,7 @@ public class LightBlueMain extends PApplet {
     public void keyPressed(){
         switch (key) {
             case 'p' -> {
-                printBoard();
+                board.printBoard();
                 System.out.println("Released square is: " + releasedSquare);
                 System.out.println("Selected square is: " + selectedSquare);
                 System.out.println(colorToMove + " to move");
@@ -416,9 +357,9 @@ public class LightBlueMain extends PApplet {
         selectedSquare = rank * 8 + file;
 
         // If the player clicks on an empty square, deselect all squares
-        if (board[selectedSquare] == null){
+        if (boardArray[selectedSquare] == null){
             selectedSquare = getNullValue();
-            for (Piece pc : board){
+            for (Piece pc : boardArray){
                 if (pc != null){
                     if (pc.isSelected()){
                         unselectPiece(pc);
@@ -429,19 +370,19 @@ public class LightBlueMain extends PApplet {
         }
 
 
-        // Loops through the board and make the selected piece highlighted if not already highlighted
-        for (Piece piece : board){
+        // Loops through the boardArray and make the selected piece highlighted if not already highlighted
+        for (Piece piece : boardArray){
             // Null check: We only allow the play to select pieces, not empty squares
             if (piece != null){
-                // Case where the piece is not selected and there are no pieces selected on the board
+                // Case where the piece is not selected and there are no pieces selected on the boardArray
                 if (!piece.isSelected() && piece.getLocation() == selectedSquare && !pieceAlreadySelected){
                     selectPiece(piece);
                 }
 
-                // Case where the piece is not selected but one piece is already selected on the board
+                // Case where the piece is not selected but one piece is already selected on the boardArray
                 else if (!piece.isSelected() && piece.getLocation() == selectedSquare && pieceAlreadySelected){
                     // find the original selected piece then unselect it
-                    for (Piece pc : board){
+                    for (Piece pc : boardArray){
                         if (pc != null){
                             if (pc.isSelected()){
                                 unselectPiece(pc);
@@ -463,45 +404,13 @@ public class LightBlueMain extends PApplet {
     }
 
 
-    public void printBoard(){
-        System.out.println("-------------------------------");
-        for (int i = 0 ; i < 64 ; i ++){
-            if (board[i] != null){
-                // Print out the piece's character if not selected, otherwise put single quotes
-                // around the character.
-                // ex: [k] = unselected black king, ['P'] = selected white pawn
-                if (!board[i].isSelected())
-                {
-                    System.out.print('[' + board[i].getPieceChar() + ']' + " ");
-                }
-                else{
-                    System.out.print("['" + board[i].getPieceChar() + "']" + " ");
-                }
-            }
 
-            else{
-                if (i != enPassantSquare){
-                    System.out.print('[' + " " + ']' + " ");
-                }
-                else{
-                    System.out.print('[' + "E" + ']' + " ");
-                }
-
-            }
-
-            // Print blank line after 8 squares
-            if ((i + 1) % 8 == 0){
-                System.out.println();
-            }
-        }
-        System.out.println("-------------------------------\n\n");
-    }
 
 
     public double getEvaluation(){
         double eval = 0;
 
-        for (Piece piece : board){
+        for (Piece piece : boardArray){
             // Ignore the king in the evaluation for now, wait till check and checkmate implementation
             // to modify this.
             if (!(piece instanceof King) && piece != null){
@@ -525,7 +434,7 @@ public class LightBlueMain extends PApplet {
     public void unselectPiece(Piece piece){
         piece.setSelected(false);
         pieceAlreadySelected = false;
-        legalMoveSquaresForSelectedPiece.clear();
+        board.legalMoveSquaresForSelectedPiece.clear();
     }
 
     public void selectPiece(Piece piece){
@@ -545,8 +454,8 @@ public class LightBlueMain extends PApplet {
 
 
     public void resetBoard(){
-        // This method resets the board to its initial stage
-        loadFromFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
+        // This method resets the boardArray to its initial stage
+        board.loadFromFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
         colorToMove = "white";
         selectedSquare = getNullValue();
         releasedSquare = getNullValue();
@@ -554,7 +463,7 @@ public class LightBlueMain extends PApplet {
         unselectOnRelease = false;
         previousMoveStartSquare = getNullValue();
         previousMoveTargetSquare = getNullValue();
-        legalMoveSquaresForSelectedPiece.clear();
+        board.legalMoveSquaresForSelectedPiece.clear();
     }
 
 
@@ -572,10 +481,10 @@ public class LightBlueMain extends PApplet {
         boolean verificationSuccessful = true;
 
         for (int i = 0; i < 64; i++) {
-            if (board[i] != null) {
-                if (board[i].getLocation() != i) {
-                    System.out.println("Board verification failed. Piece at board index " + i +
-                            " has location of " + board[i].getLocation() + " in the piece object");
+            if (boardArray[i] != null) {
+                if (boardArray[i].getLocation() != i) {
+                    System.out.println("Board verification failed. Piece at boardArray index " + i +
+                            " has location of " + boardArray[i].getLocation() + " in the piece object");
                     verificationSuccessful = false;
                 }
             }
@@ -585,8 +494,8 @@ public class LightBlueMain extends PApplet {
         }
     }
 
-    public static Piece[] getBoard(){
-        return board;
+    public static Piece[] getBoardArray(){
+        return boardArray;
     }
 
     public String getColorToMove(){
@@ -599,6 +508,19 @@ public class LightBlueMain extends PApplet {
 
     public static int getEnPassantSquare(){
         return enPassantSquare;
+    }
+
+
+    public int getWindowWidth() {
+        return windowWidth;
+    }
+
+    public int getWindowHeight() {
+        return windowHeight;
+    }
+
+    public int getSquareSize() {
+        return squareSize;
     }
 
     public static void main(String[] args){

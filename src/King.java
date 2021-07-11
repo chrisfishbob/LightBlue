@@ -44,14 +44,14 @@ public class King extends Piece{
             {
                 // If the target square is occupied by a friendly piece, stop searching for more
                 // moves in this direction
-                if (LightBlueMain.getBoard()[targetSquare] == null){
+                if (LightBlueMain.getBoardArray()[targetSquare] == null){
                     legalKingMoves.add(new Move(startSquare, targetSquare));
                 }
 
                 // If the target square is occupied by an enemy piece, we stop searching for more
                 // moves in this direction (the capture itself was made legal in the statement above
-                if (LightBlueMain.getBoard()[targetSquare] != null){
-                    if (!LightBlueMain.getBoard()[targetSquare].getColor().equals(getColor())){
+                if (LightBlueMain.getBoardArray()[targetSquare] != null){
+                    if (!LightBlueMain.getBoardArray()[targetSquare].getColor().equals(getColor())){
                         legalKingMoves.add(new Move(startSquare, targetSquare));
                     }
                 }
@@ -63,11 +63,11 @@ public class King extends Piece{
 
         moves = legalKingMoves;
 
-        if (isSelected()){
-            for (Move move : moves){
-                LightBlueMain.legalMoveSquaresForSelectedPiece.add(move.getTargetSquare());
-            }
-        }
+//        if (isSelected()){
+//            for (Move move : moves){
+//                LightBlueMain.legalMoveSquaresForSelectedPiece.add(move.getTargetSquare());
+//            }
+//        }
     }
 
     public ArrayList<Move> getMoves(){

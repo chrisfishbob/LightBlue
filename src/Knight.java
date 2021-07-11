@@ -2,6 +2,7 @@ import java.util.ArrayList;
 
 public class Knight extends Piece{
     private ArrayList<Move> moves;
+    private Board board;
 
     public Knight(String color, int location) {
         super(color, location, 3);
@@ -45,11 +46,11 @@ public class Knight extends Piece{
             int targetSquare = move.getTargetSquare();
 
             // Move is legal if the candidate target square is empty or occupied by enemy piece
-            if (LightBlueMain.getBoard()[targetSquare] == null){
+            if (LightBlueMain.getBoardArray()[targetSquare] == null){
                 legalKnightMoves.add(move);
             }
             else{
-                if (!LightBlueMain.getBoard()[targetSquare].getColor().equals(this.getColor())){
+                if (!LightBlueMain.getBoardArray()[targetSquare].getColor().equals(this.getColor())){
                     legalKnightMoves.add(move);
                 }
             }
@@ -59,7 +60,7 @@ public class Knight extends Piece{
 
         if (isSelected()){
             for (Move move : moves){
-                LightBlueMain.legalMoveSquaresForSelectedPiece.add(move.getTargetSquare());
+                board.legalMoveSquaresForSelectedPiece.add(move.getTargetSquare());
             }
         }
     }
