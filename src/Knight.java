@@ -2,7 +2,6 @@ import java.util.ArrayList;
 
 public class Knight extends Piece{
     private ArrayList<Move> moves;
-    private Board board;
 
     public Knight(String color, int location) {
         super(color, location, 3);
@@ -58,11 +57,6 @@ public class Knight extends Piece{
 
         moves = legalKnightMoves;
 
-        if (isSelected()){
-            for (Move move : moves){
-                board.legalMoveSquaresForSelectedPiece.add(move.getTargetSquare());
-            }
-        }
     }
 
     public ArrayList<Move> getMoves() {

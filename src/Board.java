@@ -19,8 +19,8 @@ public class Board {
     private final int[] darkGreen = {238, 237, 213};
     private final int[] offWhite  = {124, 148, 93};
 
-    public static PImage legalMoveBG;
-    public static PImage targetedPieceBG;
+    private final PImage legalMoveBG;
+    private final PImage targetedPieceBG;
 
     public ArrayList<Integer> legalMoveSquaresForSelectedPiece = new ArrayList<>();
 
@@ -205,6 +205,24 @@ public class Board {
             }
         }
         System.out.println("-------------------------------\n\n");
+    }
+
+
+    public void verifyBoard() {
+        boolean verificationSuccessful = true;
+
+        for (int i = 0; i < 64; i++) {
+            if (boardArray[i] != null) {
+                if (boardArray[i].getLocation() != i) {
+                    System.out.println("Board verification failed. Piece at boardArray index " + i +
+                            " has location of " + boardArray[i].getLocation() + " in the piece object");
+                    verificationSuccessful = false;
+                }
+            }
+        }
+        if (verificationSuccessful){
+            System.out.println("Board verification successful");
+        }
     }
 
     public Piece[] getBoardArray(){

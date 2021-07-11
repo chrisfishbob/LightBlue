@@ -7,7 +7,7 @@ public class MoveGenerator {
     private static int[][] NumSquaresToEdge = new int[64][8];
 
 
-    public static ArrayList<Move> generateAllMoves(String colorToGenerate) throws InterruptedException {
+    public static ArrayList<Move> generateAllMoves(String colorToGenerate){
         ArrayList<Move> allMoves = new ArrayList<>();
 
         for (Piece piece : LightBlueMain.getBoardArray()){
