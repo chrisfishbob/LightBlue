@@ -7,13 +7,13 @@ public class SoundProcessor {
     public SoundProcessor(){}
 
     public void processSound(Move move){
-        if (Board.isMute){
+        if (LightBlueMain.isMute){
             return;
         }
 
         // This function determines which sound should be played given the Move object
         if (!move.isSpecialMove()){
-            if (Board.getBoard()[move.getTargetSquare()] == null){
+            if (LightBlueMain.getBoard()[move.getTargetSquare()] == null){
                 playSound("move");
             }
             else{

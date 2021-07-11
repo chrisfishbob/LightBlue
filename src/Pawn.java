@@ -7,10 +7,10 @@ public class Pawn extends Piece{
         super(color, location, 1);
 
         if (color.equals("white")){
-            setImage(Board.whitePawn);
+            setImage(LightBlueMain.whitePawn);
         }
         else{
-            setImage(Board.blackPawn);
+            setImage(LightBlueMain.blackPawn);
         }
     }
 
@@ -49,7 +49,7 @@ public class Pawn extends Piece{
 
         if (isInBounds(oneSquareForwardIndex)){
             // test if the pawn can move forward one space
-            if (Board.getBoard()[oneSquareForwardIndex] == null){
+            if (LightBlueMain.getBoard()[oneSquareForwardIndex] == null){
                 checkPromotionMoves(pawnLocation, oneSquareForwardIndex, legalPawnMoves);
 
 
@@ -57,7 +57,7 @@ public class Pawn extends Piece{
 
             // test if the pawn can move forward two spaces
             if (rank == 6 && getColor().equals("white") || rank == 1 && getColor().equals("black")){
-                if (Board.getBoard()[twoSquareForwardIndex] == null && Board.getBoard()[oneSquareForwardIndex] == null){
+                if (LightBlueMain.getBoard()[twoSquareForwardIndex] == null && LightBlueMain.getBoard()[oneSquareForwardIndex] == null){
                     legalPawnMoves.add(new Move(pawnLocation, twoSquareForwardIndex, "p2"));
                 }
             }
@@ -83,7 +83,7 @@ public class Pawn extends Piece{
         // Board class so that legal moves can be displayed
         if (isSelected()){
             for (Move move : moves){
-                Board.legalMoveSquaresForSelectedPiece.add(move.getTargetSquare());
+                LightBlueMain.legalMoveSquaresForSelectedPiece.add(move.getTargetSquare());
             }
         }
 
@@ -106,8 +106,8 @@ public class Pawn extends Piece{
                                             ArrayList<Move> legalPawnMoves) {
 
         if (potentialCaptureIndex / 8 == targetRankAfterCapture &&
-                Board.getBoard()[potentialCaptureIndex] != null){
-            if (!Board.getBoard()[potentialCaptureIndex].getColor().equals(getColor())){
+                LightBlueMain.getBoard()[potentialCaptureIndex] != null){
+            if (!LightBlueMain.getBoard()[potentialCaptureIndex].getColor().equals(getColor())){
                 checkPromotionMoves(pawnLocation, potentialCaptureIndex, legalPawnMoves);
             }
         }
@@ -135,12 +135,12 @@ public class Pawn extends Piece{
                                    int targetRankAfterCapture, ArrayList<Move> legalPawnMoves) {
 
         if (potentialCaptureOneIndex / 8 == targetRankAfterCapture &&
-                potentialCaptureOneIndex == Board.getEnPassantSquare()){
+                potentialCaptureOneIndex == LightBlueMain.getEnPassantSquare()){
             legalPawnMoves.add(new Move(pawnLocation, potentialCaptureOneIndex, "ep"));
         }
 
         else if (potentialCaptureTwoIndex / 8 == targetRankAfterCapture &&
-                potentialCaptureTwoIndex == Board.getEnPassantSquare()){
+                potentialCaptureTwoIndex == LightBlueMain.getEnPassantSquare()){
             legalPawnMoves.add(new Move(pawnLocation, potentialCaptureTwoIndex, "ep"));
         }
     }

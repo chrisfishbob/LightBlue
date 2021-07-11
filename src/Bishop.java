@@ -7,10 +7,10 @@ public class Bishop extends Piece{
         super(color, location, 3.25);
 
         if (color.equals("white")){
-            setImage(Board.whiteBishop);
+            setImage(LightBlueMain.whiteBishop);
         }
         else{
-            setImage(Board.blackBishop);
+            setImage(LightBlueMain.blackBishop);
         }
     }
 
@@ -42,8 +42,8 @@ public class Bishop extends Piece{
 
                 // If the target square is occupied by a friendly piece, stop searching for more
                 // moves in this direction
-                if (Board.getBoard()[targetSquare] != null){
-                    if (Board.getBoard()[targetSquare].getColor().equals(getColor())){
+                if (LightBlueMain.getBoard()[targetSquare] != null){
+                    if (LightBlueMain.getBoard()[targetSquare].getColor().equals(getColor())){
                         break;
                     }
                 }
@@ -53,8 +53,8 @@ public class Bishop extends Piece{
 
                 // If the target square is occupied by an enemy piece, we stop searching for more
                 // moves in this direction (the capture itself was made legal in the statement above
-                if (Board.getBoard()[targetSquare] != null){
-                    if (!Board.getBoard()[targetSquare].getColor().equals(getColor())){
+                if (LightBlueMain.getBoard()[targetSquare] != null){
+                    if (!LightBlueMain.getBoard()[targetSquare].getColor().equals(getColor())){
                         break;
                     }
                 }
@@ -65,7 +65,7 @@ public class Bishop extends Piece{
 
         if (isSelected()){
             for (Move move : moves){
-                Board.legalMoveSquaresForSelectedPiece.add(move.getTargetSquare());
+                LightBlueMain.legalMoveSquaresForSelectedPiece.add(move.getTargetSquare());
             }
         }
     }
