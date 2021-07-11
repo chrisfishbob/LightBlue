@@ -283,9 +283,11 @@ public class Board extends PApplet {
             }
             else if (flag.equals("ep")){
                 if (piece.getColor().equals("white")){
+                    capturedPiece = board[enPassantSquare + 8];
                     board[enPassantSquare + 8] = null;
                 }
                 else{
+                    capturedPiece = board[enPassantSquare - 8];
                     board[enPassantSquare - 8] = null;
                 }
                 enPassantSquare = getNullValue();
