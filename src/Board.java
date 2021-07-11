@@ -10,9 +10,9 @@ public class Board {
     private int previousMoveStartSquare = nullValue;
     private int previousMoveTargetSquare = nullValue;
     private int selectedSquare = nullValue;
-    private int windowWidth;
-    private int windowHeight;
-    private int squareSize;
+    private final int windowWidth;
+    private final int windowHeight;
+    private final int squareSize;
     private final int[] yellow1 = {246, 245, 149};
     private final int[] blue1 = {167, 203, 202};
     private final int[] blue2 = {139, 190, 174};
@@ -23,6 +23,14 @@ public class Board {
     private final PImage targetedPieceBG;
 
     public ArrayList<Integer> legalMoveSquaresForSelectedPiece = new ArrayList<>();
+    private Piece capturedPiece;
+    private Move previousMove;
+    private String colorToMove = "white";
+    private int enPassantSquare = nullValue;
+    private boolean pieceAlreadySelected;
+    private boolean unselectOnRelease;
+    private int releasedSquare = nullValue;
+
 
     public Board(LightBlueMain main, SoundProcessor soundProcessor){
         boardArray = new Piece[64];
@@ -189,15 +197,15 @@ public class Board {
                 }
             }
 
-//            else{
-//                    if (i != enPassantSquare){
-//                        System.out.print('[' + " " + ']' + " ");
-//                    }
-//                    else{
-//                        System.out.print('[' + "E" + ']' + " ");
-//                    }
-//
-//            }
+            else{
+                    if (i != enPassantSquare){
+                        System.out.print('[' + " " + ']' + " ");
+                    }
+                    else{
+                        System.out.print('[' + "E" + ']' + " ");
+                    }
+
+            }
 
             // Print blank line after 8 squares
             if ((i + 1) % 8 == 0){
@@ -207,6 +215,238 @@ public class Board {
         System.out.println("-------------------------------\n\n");
     }
 
+
+
+    public void makeMove(Move move){
+        // Null check not really necessary, can consider removing later
+        int startSquare = move.getStartSquare();
+        int targetSquare = move.getTargetSquare();
+        Piece piece = boardArray[startSquare];
+
+        if (boardArray[targetSquare] != null) {
+            capturedPiece = boardArray[targetSquare];
+            System.out.println(capturedPiece);
+        }
+        else{
+            capturedPiece = null;
+        }
+
+        soundProcessor.processSound(move);
+        previousMove = move;
+        piece.setSelected(false);
+        piece.setLocation(targetSquare);
+        boardArray[targetSquare] = piece;
+        boardArray[startSquare] = null;
+        previousMoveStartSquare = startSquare;
+        previousMoveTargetSquare = targetSquare;
+        selectedSquare = nullValue;
+        legalMoveSquaresForSelectedPiece.clear();
+
+
+        System.out.println(piece.getColor());
+        if (piece.getColor().equals("white")){
+            colorToMove = "black";
+        }
+        else{
+            colorToMove = "white";
+        }
+
+
+
+        if (move.isSpecialMove()){
+            // When a pawn moves by two spaces, mark the enPassantSquare
+            String flag = move.getSpecialFlagKind();
+            if (flag.equals("p2")){
+                enPassantSquare = startSquare + (targetSquare - startSquare) / 2;
+            }
+            else if (flag.equals("ep")){
+                if (piece.getColor().equals("white")){
+                    capturedPiece = boardArray[enPassantSquare + 8];
+                    boardArray[enPassantSquare + 8] = null;
+                }
+                else{
+                    capturedPiece = boardArray[enPassantSquare - 8];
+                    boardArray[enPassantSquare - 8] = null;
+                }
+                enPassantSquare = nullValue;
+            }
+
+            else if (flag.equals("queen")){
+                boardArray[targetSquare] = null;
+                boardArray[targetSquare] = new Queen(piece.getColor(), targetSquare);
+            }
+
+            else if (flag.equals("rook")){
+                boardArray[targetSquare] = null;
+                boardArray[targetSquare] = new Rook(piece.getColor(), targetSquare);
+            }
+            else{
+                enPassantSquare = nullValue;
+            }
+        }
+        else{
+            enPassantSquare = nullValue;
+        }
+    }
+
+    public void unMakeMove(Move move){
+        int targetSquare = move.getStartSquare();
+        int startSquare = move.getTargetSquare();
+        Piece piece = boardArray[startSquare];
+
+
+
+        piece.setSelected(false);
+        piece.setLocation(targetSquare);
+        boardArray[targetSquare] = piece;
+        boardArray[startSquare] = null;
+        selectedSquare = nullValue;
+        legalMoveSquaresForSelectedPiece.clear();
+        previousMoveStartSquare = nullValue;
+        previousMoveTargetSquare = nullValue;
+        enPassantSquare = nullValue;
+        colorToMove = piece.getColor().equals("white") ? "white" : "black";
+
+        if (capturedPiece != null){
+            boardArray[startSquare] = capturedPiece;
+        }
+    }
+
+
+    public void selectPiece(Piece piece){
+        piece.setSelected(true);
+        pieceAlreadySelected = true;
+        // We have to mark unselectOnRelease as false because unselecting is handled
+        // during the mouseReleased event. Not marking the square to not unselect on
+        // release will cause the selected piece to be immediately unselected upon mouse release
+        unselectOnRelease = false;
+        ArrayList<Move> allMoves = MoveGenerator.generateAllMoves(colorToMove);
+
+        for (Move move : allMoves){
+            if (move.getStartSquare() == piece.getLocation()){
+                legalMoveSquaresForSelectedPiece.add(move.getTargetSquare());
+            }
+        }
+
+//        if (piece.getColor().equals(colorToMove)){
+//            piece.generateMoves();
+//        }
+
+    }
+
+
+
+    public void processMouseRelease(int mouseX, int mouseY){
+        // Checks if the player released the mouse in bounds
+        if (mouseX >= 0 && mouseY >= 0 && mouseX < windowWidth && mouseY < windowHeight){
+            int file = mouseX / squareSize;
+            int rank = mouseY / squareSize;
+            int test = selectedSquare;
+            releasedSquare = rank * 8 + file;
+
+
+            // Move the piece if the player dragged the piece to a different square
+            if (selectedSquare != releasedSquare && selectedSquare != nullValue){
+                if (legalMoveSquaresForSelectedPiece.contains(releasedSquare)){
+                    ArrayList<Move> moves;
+                    moves = boardArray[selectedSquare].getMoves();
+
+                    for (Move move : moves){
+                        if (move.getTargetSquare() == releasedSquare){
+                            makeMove(move);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // If clicking on a square that is already selected, we unselect
+            else if (selectedSquare == releasedSquare && unselectOnRelease){
+                unselectPiece(boardArray[selectedSquare]);
+                selectedSquare = nullValue;
+                releasedSquare = nullValue;
+            }
+        }
+
+        // Player release mouse out of bounds, unselect selected piece and set selected Square to null
+        else {
+            unselectPiece(boardArray[selectedSquare]);
+            selectedSquare = nullValue;
+        }
+    }
+
+
+    public void unselectPiece(Piece piece){
+        piece.setSelected(false);
+        pieceAlreadySelected = false;
+        legalMoveSquaresForSelectedPiece.clear();
+    }
+
+
+    public void processHighlighting(int mouseX, int mouseY){
+        int file = mouseX / squareSize;
+        int rank = mouseY / squareSize;
+        selectedSquare = rank * 8 + file;
+
+        // If the player clicks on an empty square, deselect all squares
+        if (boardArray[selectedSquare] == null){
+            selectedSquare = nullValue;
+            for (Piece pc : boardArray){
+                if (pc != null){
+                    if (pc.isSelected()){
+                        unselectPiece(pc);
+                        break;
+                    }
+                }
+            }
+        }
+
+
+        // Loops through the boardArray and make the selected piece highlighted if not already highlighted
+        for (Piece piece : boardArray){
+            // Null check: We only allow the play to select pieces, not empty squares
+            if (piece != null){
+                // Case where the piece is not selected and there are no pieces selected on the boardArray
+                if (!piece.isSelected() && piece.getLocation() == selectedSquare && !pieceAlreadySelected){
+                    selectPiece(piece);
+                }
+
+                // Case where the piece is not selected but one piece is already selected on the boardArray
+                else if (!piece.isSelected() && piece.getLocation() == selectedSquare && pieceAlreadySelected){
+                    // find the original selected piece then unselect it
+                    for (Piece pc : boardArray){
+                        if (pc != null){
+                            if (pc.isSelected()){
+                                unselectPiece(pc);
+                                break;
+                            }
+                        }
+                    }
+                    // Select the clicked piece
+                    selectPiece(piece);
+                }
+
+                // If the piece that is clicked on is already selected before we clicked, mark the square
+                // for unselecting upon the player releasing the mouse
+                else if (piece.isSelected() && piece.getLocation() == selectedSquare){
+                    unselectOnRelease = true;
+                }
+            }
+        }
+    }
+
+    public void resetBoard(){
+        // This method resets the boardArray to its initial stage
+        loadFromFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
+        colorToMove = "white";
+        selectedSquare = nullValue;
+        releasedSquare = nullValue;
+        pieceAlreadySelected = false;
+        unselectOnRelease = false;
+        previousMoveStartSquare = nullValue;
+        previousMoveTargetSquare = nullValue;
+        legalMoveSquaresForSelectedPiece.clear();
+    }
 
     public void verifyBoard() {
         boolean verificationSuccessful = true;
@@ -225,9 +465,38 @@ public class Board {
         }
     }
 
+    public double getEvaluation(){
+        double eval = 0;
+
+        for (Piece piece : boardArray){
+            // Ignore the king in the evaluation for now, wait till check and checkmate implementation
+            // to modify this.
+            if (!(piece instanceof King) && piece != null){
+                if (piece.getColor().equals("white")){
+                    eval += piece.getValue();
+                }
+                else{
+                    eval -= piece.getValue();
+                }
+            }
+        }
+
+        return eval;
+    }
+
+    public void changeColorToMove(){
+        colorToMove = colorToMove.equals("white") ? "black" : "white";
+    }
+
     public Piece[] getBoardArray(){
         return this.boardArray;
     }
 
+    public Move getPreviousMove(){
+        return previousMove;
+    }
 
+    public String getColorToMove(){
+        return colorToMove;
+    }
 }

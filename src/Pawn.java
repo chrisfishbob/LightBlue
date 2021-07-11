@@ -70,11 +70,11 @@ public class Pawn extends Piece{
                     legalPawnMoves);
 
             // Check if en passant in possible
-            checkForEnPassant(pawnLocation,
-                    potentialCaptureOneIndex,
-                    potentialCaptureTwoIndex,
-                    targetRankAfterCapture,
-                    legalPawnMoves);
+//            checkForEnPassant(pawnLocation,
+//                    potentialCaptureOneIndex,
+//                    potentialCaptureTwoIndex,
+//                    targetRankAfterCapture,
+//                    legalPawnMoves);
         }
 
         moves = legalPawnMoves;
@@ -131,19 +131,19 @@ public class Pawn extends Piece{
     }
 
 
-    private void checkForEnPassant(int pawnLocation, int potentialCaptureOneIndex, int potentialCaptureTwoIndex,
-                                   int targetRankAfterCapture, ArrayList<Move> legalPawnMoves) {
-
-        if (potentialCaptureOneIndex / 8 == targetRankAfterCapture &&
-                potentialCaptureOneIndex == LightBlueMain.getEnPassantSquare()){
-            legalPawnMoves.add(new Move(pawnLocation, potentialCaptureOneIndex, "ep"));
-        }
-
-        else if (potentialCaptureTwoIndex / 8 == targetRankAfterCapture &&
-                potentialCaptureTwoIndex == LightBlueMain.getEnPassantSquare()){
-            legalPawnMoves.add(new Move(pawnLocation, potentialCaptureTwoIndex, "ep"));
-        }
-    }
+//    private void checkForEnPassant(int pawnLocation, int potentialCaptureOneIndex, int potentialCaptureTwoIndex,
+//                                   int targetRankAfterCapture, ArrayList<Move> legalPawnMoves) {
+//
+//        if (potentialCaptureOneIndex / 8 == targetRankAfterCapture &&
+//                potentialCaptureOneIndex == Board.getEnPassantSquare()){
+//            legalPawnMoves.add(new Move(pawnLocation, potentialCaptureOneIndex, "ep"));
+//        }
+//
+//        else if (potentialCaptureTwoIndex / 8 == targetRankAfterCapture &&
+//                potentialCaptureTwoIndex == LightBlueMain.getEnPassantSquare()){
+//            legalPawnMoves.add(new Move(pawnLocation, potentialCaptureTwoIndex, "ep"));
+//        }
+//    }
 
 
     public boolean isInBounds(int index){

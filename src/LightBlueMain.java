@@ -1,8 +1,7 @@
 import processing.core.PApplet;
 import processing.core.PImage;
-
 import java.lang.*;
-import java.util.ArrayList;
+
 
 
 public class LightBlueMain extends PApplet {
@@ -27,28 +26,13 @@ public class LightBlueMain extends PApplet {
     public static PImage whitePawn;
     public static PImage targetedPieceBG;
     public static PImage legalMoveBG;
-    private final int[] yellow1 = {246, 245, 149};
-    private final int[] blue1 = {167, 203, 202};
-    private final int[] blue2 = {139, 190, 174};
-    private final int[] darkGreen = {238, 237, 213};
-    private final int[] offWhite  = {124, 148, 93};
+
 
     private static int selectedSquare = getNullValue();
     private int releasedSquare = getNullValue();
-    private boolean pieceAlreadySelected = false;
     private boolean mouseIsHeldDown = false;
-    private boolean unselectOnRelease = false;
-    private static String colorToMove = "white";
 
-
-
-
-    private int previousMoveStartSquare = getNullValue();
-    private int previousMoveTargetSquare = getNullValue();
-    private static int enPassantSquare = getNullValue();
-    private static Move previousMove;
     public static boolean isMute = false;
-    private static Piece capturedPiece;
     private final SoundProcessor soundProcessor = new SoundProcessor();
 
 
@@ -102,102 +86,6 @@ public class LightBlueMain extends PApplet {
     }
 
 
-    public void makeMove(Move move){
-        // Null check not really necessary, can consider removing later
-        int startSquare = move.getStartSquare();
-        int targetSquare = move.getTargetSquare();
-        Piece piece = boardArray[startSquare];
-
-        if (boardArray[targetSquare] != null) {
-            capturedPiece = boardArray[targetSquare];
-            System.out.println(capturedPiece);
-        }
-        else{
-            capturedPiece = null;
-        }
-
-        soundProcessor.processSound(move);
-        previousMove = move;
-        piece.setSelected(false);
-        piece.setLocation(targetSquare);
-        boardArray[targetSquare] = piece;
-        boardArray[startSquare] = null;
-        previousMoveStartSquare = startSquare;
-        previousMoveTargetSquare = targetSquare;
-        selectedSquare = getNullValue();
-        board.legalMoveSquaresForSelectedPiece.clear();
-
-
-        if (piece.getColor().equals("white")){
-            colorToMove = "black";
-        }
-        else{
-            colorToMove = "white";
-        }
-
-
-
-
-
-        if (move.isSpecialMove()){
-            // When a pawn moves by two spaces, mark the enPassantSquare
-            String flag = move.getSpecialFlagKind();
-            if (flag.equals("p2")){
-                enPassantSquare = startSquare + (targetSquare - startSquare) / 2;
-            }
-            else if (flag.equals("ep")){
-                if (piece.getColor().equals("white")){
-                    capturedPiece = boardArray[enPassantSquare + 8];
-                    boardArray[enPassantSquare + 8] = null;
-                }
-                else{
-                    capturedPiece = boardArray[enPassantSquare - 8];
-                    boardArray[enPassantSquare - 8] = null;
-                }
-                enPassantSquare = getNullValue();
-            }
-
-            else if (flag.equals("queen")){
-                boardArray[targetSquare] = null;
-                boardArray[targetSquare] = new Queen(piece.getColor(), targetSquare);
-            }
-
-            else if (flag.equals("rook")){
-                boardArray[targetSquare] = null;
-                boardArray[targetSquare] = new Rook(piece.getColor(), targetSquare);
-            }
-            else{
-                enPassantSquare = getNullValue();
-            }
-        }
-        else{
-            enPassantSquare = getNullValue();
-        }
-    }
-
-    public void unMakeMove(Move move){
-        int targetSquare = move.getStartSquare();
-        int startSquare = move.getTargetSquare();
-        Piece piece = boardArray[startSquare];
-
-
-
-        piece.setSelected(false);
-        piece.setLocation(targetSquare);
-        boardArray[targetSquare] = piece;
-        boardArray[startSquare] = null;
-        selectedSquare = getNullValue();
-        board.legalMoveSquaresForSelectedPiece.clear();
-        previousMoveStartSquare = getNullValue();
-        previousMoveTargetSquare = getNullValue();
-        enPassantSquare = getNullValue();
-        colorToMove = piece.getColor().equals("white") ? "white" : "black";
-
-        if (capturedPiece != null){
-            boardArray[startSquare] = capturedPiece;
-        }
-    }
-
 
     public void mousePressed(){
         mouseIsHeldDown = true;
@@ -207,41 +95,8 @@ public class LightBlueMain extends PApplet {
 
     public void mouseReleased(){
         mouseIsHeldDown = false;
+        board.processMouseRelease(mouseX, mouseY);
 
-        // Checks if the player released the mouse in bounds
-        if (mouseX >= 0 && mouseY >= 0 && mouseX < windowWidth && mouseY < windowHeight){
-            int file = mouseX / squareSize;
-            int rank = mouseY / squareSize;
-            releasedSquare = rank * 8 + file;
-
-            // Move the piece if the player dragged the piece to a different square
-            if (selectedSquare != releasedSquare && aPieceIsSelected()){
-                if (board.legalMoveSquaresForSelectedPiece.contains(releasedSquare)){
-                    ArrayList<Move> moves;
-                    moves = boardArray[selectedSquare].getMoves();
-
-                    for (Move move : moves){
-                        if (move.getTargetSquare() == releasedSquare){
-                            makeMove(move);
-                            break;
-                        }
-                    }
-                }
-            }
-
-            // If clicking on a square that is already selected, we unselect
-            else if (selectedSquare == releasedSquare && unselectOnRelease){
-                unselectPiece(boardArray[selectedSquare]);
-                selectedSquare = getNullValue();
-                releasedSquare = getNullValue();
-            }
-        }
-
-        // Player release mouse out of bounds, unselect selected piece and set selected Square to null
-        else {
-            unselectPiece(boardArray[selectedSquare]);
-            selectedSquare = getNullValue();
-        }
     }
 
 
@@ -251,143 +106,20 @@ public class LightBlueMain extends PApplet {
                 board.printBoard();
                 System.out.println("Released square is: " + releasedSquare);
                 System.out.println("Selected square is: " + selectedSquare);
-                System.out.println(colorToMove + " to move");
+                System.out.println(board.getColorToMove() + " to move");
             }
-            case 'e' -> System.out.println(getEvaluation());
-            case 'r' -> resetBoard();
-            case 't' -> colorToMove = colorToMove.equals("white") ? "black" : "white";
+            case 'e' -> System.out.println(board.getEvaluation());
+            case 'r' -> board.resetBoard();
+            case 't' -> board.changeColorToMove();
             case 'v' -> board.verifyBoard();
-            case 'm' -> MoveGenerator.generateAllMoves(colorToMove);
-            case 'u' -> unMakeMove(previousMove);
+            case 'm' -> MoveGenerator.generateAllMoves(board.getColorToMove());
+            case 'u' -> board.unMakeMove(board.getPreviousMove());
         }
     }
 
 
     public void processMouseClick(){
-        processHighlighting();
-    }
-
-
-    public void processHighlighting(){
-        int file = mouseX / squareSize;
-        int rank = mouseY / squareSize;
-        selectedSquare = rank * 8 + file;
-
-        // If the player clicks on an empty square, deselect all squares
-        if (boardArray[selectedSquare] == null){
-            selectedSquare = getNullValue();
-            for (Piece pc : boardArray){
-                if (pc != null){
-                    if (pc.isSelected()){
-                        unselectPiece(pc);
-                        break;
-                    }
-                }
-            }
-        }
-
-
-        // Loops through the boardArray and make the selected piece highlighted if not already highlighted
-        for (Piece piece : boardArray){
-            // Null check: We only allow the play to select pieces, not empty squares
-            if (piece != null){
-                // Case where the piece is not selected and there are no pieces selected on the boardArray
-                if (!piece.isSelected() && piece.getLocation() == selectedSquare && !pieceAlreadySelected){
-                    selectPiece(piece);
-                }
-
-                // Case where the piece is not selected but one piece is already selected on the boardArray
-                else if (!piece.isSelected() && piece.getLocation() == selectedSquare && pieceAlreadySelected){
-                    // find the original selected piece then unselect it
-                    for (Piece pc : boardArray){
-                        if (pc != null){
-                            if (pc.isSelected()){
-                                unselectPiece(pc);
-                                break;
-                            }
-                        }
-                    }
-                    // Select the clicked piece
-                    selectPiece(piece);
-                }
-
-                // If the piece that is clicked on is already selected before we clicked, mark the square
-                // for unselecting upon the player releasing the mouse
-                else if (piece.isSelected() && piece.getLocation() == selectedSquare){
-                    unselectOnRelease = true;
-                }
-            }
-        }
-    }
-
-
-
-
-
-    public double getEvaluation(){
-        double eval = 0;
-
-        for (Piece piece : boardArray){
-            // Ignore the king in the evaluation for now, wait till check and checkmate implementation
-            // to modify this.
-            if (!(piece instanceof King) && piece != null){
-                if (piece.getColor().equals("white")){
-                    eval += piece.getValue();
-                }
-                else{
-                    eval -= piece.getValue();
-                }
-            }
-        }
-
-        return eval;
-    }
-
-
-
-
-
-
-    public void unselectPiece(Piece piece){
-        piece.setSelected(false);
-        pieceAlreadySelected = false;
-        board.legalMoveSquaresForSelectedPiece.clear();
-    }
-
-    public void selectPiece(Piece piece){
-        piece.setSelected(true);
-        pieceAlreadySelected = true;
-        // We have to mark unselectOnRelease as false because unselecting is handled
-        // during the mouseReleased event. Not marking the square to not unselect on
-        // release will cause the selected piece to be immediately unselected upon mouse release
-        unselectOnRelease = false;
-        ArrayList<Move> allMoves = MoveGenerator.generateAllMoves(colorToMove);
-
-        for (Move move : allMoves){
-            if (move.getStartSquare() == piece.getLocation()){
-                board.legalMoveSquaresForSelectedPiece.add(move.getTargetSquare());
-            }
-        }
-
-//        if (piece.getColor().equals(colorToMove)){
-//            piece.generateMoves();
-//        }
-
-    }
-
-
-
-    public void resetBoard(){
-        // This method resets the boardArray to its initial stage
-        board.loadFromFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
-        colorToMove = "white";
-        selectedSquare = getNullValue();
-        releasedSquare = getNullValue();
-        pieceAlreadySelected = false;
-        unselectOnRelease = false;
-        previousMoveStartSquare = getNullValue();
-        previousMoveTargetSquare = getNullValue();
-        board.legalMoveSquaresForSelectedPiece.clear();
+        board.processHighlighting(mouseX, mouseY);
     }
 
 
@@ -396,26 +128,8 @@ public class LightBlueMain extends PApplet {
     }
 
 
-    public boolean aPieceIsSelected(){
-        return selectedSquare != getNullValue();
-    }
-
-
-
     public static Piece[] getBoardArray(){
         return boardArray;
-    }
-
-    public String getColorToMove(){
-        return colorToMove;
-    }
-
-    public static void setEnPassantSquare(int square){
-        enPassantSquare = square;
-    }
-
-    public static int getEnPassantSquare(){
-        return enPassantSquare;
     }
 
 
