@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MoveGenerator {
-    private static HashMap<Integer, ArrayList<Move>> potentialLegalKnightMoveMap;
+    private HashMap<Integer, ArrayList<Move>> potentialLegalKnightMoveMap;
     private static ArrayList<Move> allMoves = new ArrayList<>();
     private static int[] SlidingDirectionOffsets = {8, - 8, -1, 1, 7, -7, 9, -9};
     private static int[][] NumSquaresToEdge = new int[64][8];
@@ -10,27 +10,28 @@ public class MoveGenerator {
 
     public ArrayList<Move> generateAllMoves(Board board, String colorToGenerate){
         allMoves.clear();
+        Piece[] boardArray = board.getBoardArray();
 
         for (Piece piece : board.getBoardArray()){
             if (piece != null){
                 if (piece.getColor().equals(colorToGenerate)){
                     if (piece instanceof Pawn){
-                        generatePawnMoves(piece, board.getEnPassantSquare());
+                        generatePawnMoves(piece, boardArray, board.getEnPassantSquare());
                     }
                     else if (piece instanceof Knight){
-                        generateKnightMoves(piece);
+                        generateKnightMoves(piece, boardArray);
                     }
                     else if (piece instanceof King){
-                        generateKingMoves(piece);
+                        generateKingMoves(piece, boardArray);
                     }
                     else if (piece instanceof Queen){
-                        generateQueenMoves(piece);
+                        generateQueenMoves(piece, boardArray);
                     }
                     else if (piece instanceof Bishop){
-                        generateBishopMoves(piece);
+                        generateBishopMoves(piece, boardArray);
                     }
                     else if (piece instanceof Rook){
-                        generateRookMoves(piece);
+                        generateRookMoves(piece,boardArray);
                     }
                 }
             }
@@ -100,21 +101,21 @@ public class MoveGenerator {
     }
 
 
-    public void generateKnightMoves(Piece piece) {
+    public void generateKnightMoves(Piece piece, Piece[] boardArray) {
         // Gets all the potentially legal moves for a knight in the given position on the board
         // and filter out the illegal moves
-        ArrayList<Move> potentialMoves = MoveGenerator.getPotentialLegalKnightMoveMap().get(piece.getLocation());
+        ArrayList<Move> potentialMoves = potentialLegalKnightMoveMap.get(piece.getLocation());
         ArrayList<Move> legalKnightMoves = new ArrayList<>();
 
         for (Move move : potentialMoves){
             int targetSquare = move.getTargetSquare();
 
             // Move is legal if the candidate target square is empty or occupied by enemy piece
-            if (LightBlueMain.getBoardArray()[targetSquare] == null){
+            if (boardArray[targetSquare] == null){
                 legalKnightMoves.add(move);
             }
             else{
-                if (!LightBlueMain.getBoardArray()[targetSquare].getColor().equals(piece.getColor())){
+                if (!boardArray[targetSquare].getColor().equals(piece.getColor())){
                     legalKnightMoves.add(move);
                 }
             }
@@ -125,7 +126,7 @@ public class MoveGenerator {
     }
 
 
-    public void generateKingMoves(Piece piece){
+    public void generateKingMoves(Piece piece, Piece[] boardArray){
         int startSquare = piece.getLocation();
         ArrayList<Move> legalKingMoves = new ArrayList<>();
 
@@ -137,14 +138,14 @@ public class MoveGenerator {
             {
                 // If the target square is occupied by a friendly piece, stop searching for more
                 // moves in this direction
-                if (LightBlueMain.getBoardArray()[targetSquare] == null){
+                if (boardArray[targetSquare] == null){
                     legalKingMoves.add(new Move(startSquare, targetSquare));
                 }
 
                 // If the target square is occupied by an enemy piece, we stop searching for more
                 // moves in this direction (the capture itself was made legal in the statement above
-                if (LightBlueMain.getBoardArray()[targetSquare] != null){
-                    if (!LightBlueMain.getBoardArray()[targetSquare].getColor().equals(piece.getColor())){
+                if (boardArray[targetSquare] != null){
+                    if (!boardArray[targetSquare].getColor().equals(piece.getColor())){
                         legalKingMoves.add(new Move(startSquare, targetSquare));
                     }
                 }
@@ -156,7 +157,7 @@ public class MoveGenerator {
     }
 
 
-    public void generateRookMoves(Piece piece){
+    public void generateRookMoves(Piece piece, Piece[] boardArray){
         int startSquare = piece.getLocation();
         ArrayList<Move> legalRookMoves = new ArrayList<>();
 
@@ -166,8 +167,8 @@ public class MoveGenerator {
 
                 // If the target square is occupied by a friendly piece, stop searching for more
                 // moves in this direction
-                if (LightBlueMain.getBoardArray()[targetSquare] != null){
-                    if (LightBlueMain.getBoardArray()[targetSquare].getColor().equals(piece.getColor())){
+                if (boardArray[targetSquare] != null){
+                    if (boardArray[targetSquare].getColor().equals(piece.getColor())){
                         break;
                     }
                 }
@@ -177,8 +178,8 @@ public class MoveGenerator {
 
                 // If the target square is occupied by an enemy piece, we stop searching for more
                 // moves in this direction (the capture itself was made legal in the statement above
-                if (LightBlueMain.getBoardArray()[targetSquare] != null){
-                    if (!LightBlueMain.getBoardArray()[targetSquare].getColor().equals(piece.getColor())){
+                if (boardArray[targetSquare] != null){
+                    if (!boardArray[targetSquare].getColor().equals(piece.getColor())){
                         break;
                     }
                 }
@@ -189,7 +190,7 @@ public class MoveGenerator {
     }
 
 
-    public void generateBishopMoves(Piece piece){
+    public void generateBishopMoves(Piece piece, Piece[] boardArray){
         int startSquare = piece.getLocation();
         ArrayList<Move> legalBishopMoves = new ArrayList<>();
 
@@ -199,8 +200,8 @@ public class MoveGenerator {
 
                 // If the target square is occupied by a friendly piece, stop searching for more
                 // moves in this direction
-                if (LightBlueMain.getBoardArray()[targetSquare] != null){
-                    if (LightBlueMain.getBoardArray()[targetSquare].getColor().equals(piece.getColor())){
+                if (boardArray[targetSquare] != null){
+                    if (boardArray[targetSquare].getColor().equals(piece.getColor())){
                         break;
                     }
                 }
@@ -210,8 +211,8 @@ public class MoveGenerator {
 
                 // If the target square is occupied by an enemy piece, we stop searching for more
                 // moves in this direction (the capture itself was made legal in the statement above
-                if (LightBlueMain.getBoardArray()[targetSquare] != null){
-                    if (!LightBlueMain.getBoardArray()[targetSquare].getColor().equals(piece.getColor())){
+                if (boardArray[targetSquare] != null){
+                    if (!boardArray[targetSquare].getColor().equals(piece.getColor())){
                         break;
                     }
                 }
@@ -222,7 +223,7 @@ public class MoveGenerator {
 
     }
 
-    public void generateQueenMoves(Piece piece){
+    public void generateQueenMoves(Piece piece, Piece[] boardArray){
         int startSquare = piece.getLocation();
         ArrayList<Move> legalQueenMoves = new ArrayList<>();
 
@@ -232,8 +233,8 @@ public class MoveGenerator {
 
                 // If the target square is occupied by a friendly piece, stop searching for more
                 // moves in this direction
-                if (LightBlueMain.getBoardArray()[targetSquare] != null){
-                    if (LightBlueMain.getBoardArray()[targetSquare].getColor().equals(piece.getColor())){
+                if (boardArray[targetSquare] != null){
+                    if (boardArray[targetSquare].getColor().equals(piece.getColor())){
                         break;
                     }
                 }
@@ -243,8 +244,8 @@ public class MoveGenerator {
 
                 // If the target square is occupied by an enemy piece, we stop searching for more
                 // moves in this direction (the capture itself was made legal in the statement above
-                if (LightBlueMain.getBoardArray()[targetSquare] != null){
-                    if (!LightBlueMain.getBoardArray()[targetSquare].getColor().equals(piece.getColor())){
+                if (boardArray[targetSquare] != null){
+                    if (!boardArray[targetSquare].getColor().equals(piece.getColor())){
                         break;
                     }
                 }
@@ -255,7 +256,7 @@ public class MoveGenerator {
 
     }
 
-    public void generatePawnMoves(Piece piece, int enPassantSquare){
+    public void generatePawnMoves(Piece piece, Piece[] boardArray, int enPassantSquare){
         int pieceColorMultiplier = piece.getColor().equals("white") ? 1 : -1;
         int pawnLocation = piece.getLocation();
         int rank = piece.getLocation() / 8;
@@ -269,7 +270,7 @@ public class MoveGenerator {
 
         if (isInBounds(oneSquareForwardIndex)){
             // test if the pawn can move forward one space
-            if (LightBlueMain.getBoardArray()[oneSquareForwardIndex] == null){
+            if (boardArray[oneSquareForwardIndex] == null){
                 checkPromotionMoves(pawnLocation, oneSquareForwardIndex, legalPawnMoves);
 
 
@@ -277,7 +278,7 @@ public class MoveGenerator {
 
             // test if the pawn can move forward two spaces
             if (rank == 6 && piece.getColor().equals("white") || rank == 1 && piece.getColor().equals("black")){
-                if (LightBlueMain.getBoardArray()[twoSquareForwardIndex] == null && LightBlueMain.getBoardArray()[oneSquareForwardIndex] == null){
+                if (boardArray[twoSquareForwardIndex] == null && boardArray[oneSquareForwardIndex] == null){
                     legalPawnMoves.add(new Move(pawnLocation, twoSquareForwardIndex, "p2"));
                 }
             }
@@ -287,7 +288,7 @@ public class MoveGenerator {
                     potentialCaptureOneIndex,
                     potentialCaptureTwoIndex,
                     targetRankAfterCapture,
-                    legalPawnMoves, piece);
+                    legalPawnMoves, piece, boardArray);
 
             // Check if en passant in possible
             checkForEnPassant(pawnLocation,
@@ -303,22 +304,22 @@ public class MoveGenerator {
 
 
     private void checkForCaptures(int pawnLocation, int potentialCaptureOneIndex, int potentialCaptureTwoIndex,
-                                  int targetRankAfterCapture, ArrayList<Move> legalPawnMoves, Piece piece) {
+                                  int targetRankAfterCapture, ArrayList<Move> legalPawnMoves, Piece piece, Piece[] boardArray) {
 
         // Check if the pawn can capture to the right (white perspective)
-        checkCaptureInOneDirection(pawnLocation, potentialCaptureOneIndex, targetRankAfterCapture, legalPawnMoves, piece);
+        checkCaptureInOneDirection(pawnLocation, potentialCaptureOneIndex, targetRankAfterCapture, legalPawnMoves, piece, boardArray);
 
         // Check if the pawn can capture to the left (white perspective)
-        checkCaptureInOneDirection(pawnLocation, potentialCaptureTwoIndex, targetRankAfterCapture, legalPawnMoves, piece);
+        checkCaptureInOneDirection(pawnLocation, potentialCaptureTwoIndex, targetRankAfterCapture, legalPawnMoves, piece, boardArray);
     }
 
 
     private void checkCaptureInOneDirection(int pawnLocation, int potentialCaptureIndex, int targetRankAfterCapture,
-                                            ArrayList<Move> legalPawnMoves, Piece piece) {
+                                            ArrayList<Move> legalPawnMoves, Piece piece, Piece[] boardArray) {
 
         if (potentialCaptureIndex / 8 == targetRankAfterCapture &&
-                LightBlueMain.getBoardArray()[potentialCaptureIndex] != null){
-            if (!LightBlueMain.getBoardArray()[potentialCaptureIndex].getColor().equals(piece.getColor())){
+                boardArray[potentialCaptureIndex] != null){
+            if (!boardArray[potentialCaptureIndex].getColor().equals(piece.getColor())){
                 checkPromotionMoves(pawnLocation, potentialCaptureIndex, legalPawnMoves);
             }
         }
@@ -376,7 +377,7 @@ public class MoveGenerator {
         return SlidingDirectionOffsets;
     }
 
-    public static HashMap<Integer, ArrayList<Move>> getPotentialLegalKnightMoveMap(){
+    public HashMap<Integer, ArrayList<Move>> getPotentialLegalKnightMoveMap(){
         return potentialLegalKnightMoveMap;
     }
 

@@ -5,14 +5,13 @@ import java.lang.*;
 
 
 public class LightBlueMain extends PApplet {
-    private static Piece[] boardArray;
+    private Piece[] boardArray;
     private Board board;
     private MoveGenerator moveGenerator;
-
-
     private final int windowWidth = 800;
     private final int windowHeight = 800;
     private final int squareSize = windowWidth / 8;
+
     public static PImage blackKing;
     public static PImage whiteKing;
     public static PImage blackQueen;
@@ -26,15 +25,10 @@ public class LightBlueMain extends PApplet {
     public static PImage blackPawn;
     public static PImage whitePawn;
     public static PImage targetedPieceBG;
-    public static PImage legalMoveBG;
 
-
-    private static int selectedSquare = getNullValue();
-    private int releasedSquare = getNullValue();
     private boolean mouseIsHeldDown = false;
-
     public static boolean isMute = false;
-    private final SoundProcessor soundProcessor = new SoundProcessor();
+    private SoundProcessor soundProcessor;
 
 
     public void settings(){
@@ -44,6 +38,7 @@ public class LightBlueMain extends PApplet {
     public void setup(){
         loadImages();
         moveGenerator = new MoveGenerator();
+        soundProcessor = new SoundProcessor();
         board = new Board(this, soundProcessor, moveGenerator);
 
         boardArray = board.getBoardArray();
@@ -99,7 +94,6 @@ public class LightBlueMain extends PApplet {
     public void mouseReleased(){
         mouseIsHeldDown = false;
         board.processMouseRelease(mouseX, mouseY);
-
     }
 
 
@@ -107,8 +101,8 @@ public class LightBlueMain extends PApplet {
         switch (key) {
             case 'p' -> {
                 board.printBoard();
-                System.out.println("Released square is: " + releasedSquare);
-                System.out.println("Selected square is: " + selectedSquare);
+                System.out.println("Released square is: " + board.getReleasedSquare());
+                System.out.println("Selected square is: " + board.getSelectedSquare());
                 System.out.println(board.getColorToMove() + " to move");
             }
             case 'e' -> System.out.println(board.getEvaluation());
@@ -123,16 +117,6 @@ public class LightBlueMain extends PApplet {
 
     public void processMouseClick(){
         board.processHighlighting(mouseX, mouseY);
-    }
-
-
-    public static int getNullValue(){
-        return 99;
-    }
-
-
-    public static Piece[] getBoardArray(){
-        return boardArray;
     }
 
 

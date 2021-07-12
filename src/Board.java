@@ -232,7 +232,7 @@ public class Board {
             capturedPiece = null;
         }
 
-        soundProcessor.processSound(move);
+        soundProcessor.processSound(move, this);
         previousMove = move;
         piece.setSelected(false);
         piece.setLocation(targetSquare);
@@ -497,5 +497,13 @@ public class Board {
 
     public int getEnPassantSquare(){
         return enPassantSquare;
+    }
+
+    public int getSelectedSquare(){
+        return selectedSquare;
+    }
+
+    public int getReleasedSquare(){
+        return releasedSquare;
     }
 }

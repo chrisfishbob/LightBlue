@@ -4,16 +4,17 @@ import javax.sound.sampled.Clip;
 import java.io.File;
 
 public class SoundProcessor {
-    public SoundProcessor(){}
+    public SoundProcessor(){
+    }
 
-    public void processSound(Move move){
+    public void processSound(Move move, Board board){
         if (LightBlueMain.isMute){
             return;
         }
 
         // This function determines which sound should be played given the Move object
         if (!move.isSpecialMove()){
-            if (LightBlueMain.getBoardArray()[move.getTargetSquare()] == null){
+            if (board.getBoardArray()[move.getTargetSquare()] == null){
                 playSound("move");
             }
             else{
