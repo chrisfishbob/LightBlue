@@ -7,10 +7,10 @@ public class Queen extends Piece{
         super(color, location, 9);
 
         if (color.equals("white")){
-            setImage(LightBlueMain.whiteQueen);
+            setImage(LightBlueMain.getPieceImage("whiteQueen"));
         }
         else{
-            setImage(LightBlueMain.blackQueen);
+            setImage(LightBlueMain.getPieceImage("blackQueen"));
         }
     }
 

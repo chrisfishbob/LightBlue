@@ -7,10 +7,10 @@ public class Pawn extends Piece{
         super(color, location, 1);
 
         if (color.equals("white")){
-            setImage(LightBlueMain.whitePawn);
+            setImage(LightBlueMain.getPieceImage("whitePawn"));
         }
         else{
-            setImage(LightBlueMain.blackPawn);
+            setImage(LightBlueMain.getPieceImage("blackPawn"));
         }
     }
 

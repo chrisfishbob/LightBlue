@@ -7,10 +7,10 @@ public class King extends Piece{
         super(color, location, Double.POSITIVE_INFINITY);
 
         if (color.equals("white")){
-            setImage(LightBlueMain.whiteKing);
+            setImage(LightBlueMain.getPieceImage("whiteKing"));
         }
         else{
-            setImage(LightBlueMain.blackKing);
+            setImage(LightBlueMain.getPieceImage("blackKing"));
         }
     }
 

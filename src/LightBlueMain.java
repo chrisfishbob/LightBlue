@@ -12,19 +12,18 @@ public class LightBlueMain extends PApplet {
     private final int windowHeight = 800;
     private final int squareSize = windowWidth / 8;
 
-    public static PImage blackKing;
-    public static PImage whiteKing;
-    public static PImage blackQueen;
-    public static PImage whiteQueen;
-    public static PImage blackRook;
-    public static PImage whiteRook;
-    public static PImage blackBishop;
-    public static PImage whiteBishop;
-    public static PImage blackKnight;
-    public static PImage whiteKnight;
-    public static PImage blackPawn;
-    public static PImage whitePawn;
-    public static PImage targetedPieceBG;
+    private static PImage blackKing;
+    private static PImage whiteKing;
+    private static PImage blackQueen;
+    private static PImage whiteQueen;
+    private static PImage blackRook;
+    private static PImage whiteRook;
+    private static PImage blackBishop;
+    private static PImage whiteBishop;
+    private static PImage blackKnight;
+    private static PImage whiteKnight;
+    private static PImage blackPawn;
+    private static PImage whitePawn;
 
     private boolean mouseIsHeldDown = false;
     public static boolean isMute = false;
@@ -80,7 +79,7 @@ public class LightBlueMain extends PApplet {
         whiteKnight = loadImage("WhiteKnight.png");
         blackPawn = loadImage("BlackPawn.png");
         whitePawn = loadImage("WhitePawn.png");
-        targetedPieceBG = loadImage("outline.png");
+//        targetedPieceBG = loadImage("outline.png");
     }
 
 
@@ -132,8 +131,27 @@ public class LightBlueMain extends PApplet {
         return squareSize;
     }
 
+    public static PImage getPieceImage(String pieceName) {
+        return switch (pieceName){
+            case "blackKing" -> blackKing;
+            case "blackQueen" -> blackQueen;
+            case "blackRook" -> blackRook;
+            case "blackBishop" -> blackBishop;
+            case "blackKnight" -> blackKnight;
+            case "blackPawn" -> blackPawn;
+            case "whiteKing" -> whiteKing;
+            case "whiteQueen" -> whiteQueen;
+            case "whiteRook" -> whiteRook;
+            case "whiteBishop" -> whiteBishop;
+            case "whiteKnight" -> whiteKnight;
+            case "whitePawn" -> whitePawn;
+            default -> throw new IllegalStateException("Unexpected value: " + pieceName);
+        };
+    }
+
     public static void main(String[] args){
         String[] appletArgs = new String[] {"LightBlueMain"};
         PApplet.main(appletArgs);
     }
+
 }

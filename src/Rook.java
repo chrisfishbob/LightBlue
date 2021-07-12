@@ -7,10 +7,10 @@ public class Rook extends Piece{
         super(color, location, 5);
 
         if (color.equals("white")){
-            setImage(LightBlueMain.whiteRook);
+            setImage(LightBlueMain.getPieceImage("whiteRook"));
         }
         else{
-            setImage(LightBlueMain.blackRook);
+            setImage(LightBlueMain.getPieceImage("blackRook"));
         }
     }
 

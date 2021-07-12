@@ -7,10 +7,10 @@ public class Bishop extends Piece{
         super(color, location, 3.25);
 
         if (color.equals("white")){
-            setImage(LightBlueMain.whiteBishop);
+            setImage(LightBlueMain.getPieceImage("whiteBishop"));
         }
         else{
-            setImage(LightBlueMain.blackBishop);
+            setImage(LightBlueMain.getPieceImage("blackBishop"));
         }
     }
 

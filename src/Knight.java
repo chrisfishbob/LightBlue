@@ -7,10 +7,10 @@ public class Knight extends Piece{
         super(color, location, 3);
 
         if (color.equals("white")){
-            setImage(LightBlueMain.whiteKnight);
+            setImage(LightBlueMain.getPieceImage("whiteKnight"));
         }
         else{
-            setImage(LightBlueMain.blackKnight);
+            setImage(LightBlueMain.getPieceImage("blackKnight"));
         }
     }
 
