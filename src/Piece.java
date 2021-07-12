@@ -45,10 +45,6 @@ public abstract class Piece {
 
     public abstract String getPieceChar();
 
-    public abstract void generateMoves();
-
-    public abstract ArrayList<Move> getMoves();
-
     public void setSelected(boolean bool){
         this.isSelected = bool;
     }

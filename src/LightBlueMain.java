@@ -7,6 +7,7 @@ import java.lang.*;
 public class LightBlueMain extends PApplet {
     private static Piece[] boardArray;
     private Board board;
+    private MoveGenerator moveGenerator;
 
 
     private final int windowWidth = 800;
@@ -42,11 +43,13 @@ public class LightBlueMain extends PApplet {
 
     public void setup(){
         loadImages();
-        board = new Board(this, soundProcessor);
+        moveGenerator = new MoveGenerator();
+        board = new Board(this, soundProcessor, moveGenerator);
+
         boardArray = board.getBoardArray();
         board.loadFromFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
-        MoveGenerator.preGenerateKnightMoves();
-        MoveGenerator.PrecomputeMoveData();
+        moveGenerator.preGenerateKnightMoves();
+        moveGenerator.PrecomputeMoveData();
     }
 
 
@@ -112,7 +115,7 @@ public class LightBlueMain extends PApplet {
             case 'r' -> board.resetBoard();
             case 't' -> board.changeColorToMove();
             case 'v' -> board.verifyBoard();
-            case 'm' -> MoveGenerator.generateAllMoves(board.getColorToMove());
+            case 'm' -> moveGenerator.generateAllMoves(board, board.getColorToMove());
             case 'u' -> board.unMakeMove(board.getPreviousMove());
         }
     }

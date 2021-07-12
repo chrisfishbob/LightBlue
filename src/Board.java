@@ -6,6 +6,7 @@ public class Board {
     private Piece[] boardArray;
     private LightBlueMain main;
     private SoundProcessor soundProcessor;
+    private MoveGenerator moveGenerator;
     private int nullValue = -1;
     private int previousMoveStartSquare = nullValue;
     private int previousMoveTargetSquare = nullValue;
@@ -32,10 +33,11 @@ public class Board {
     private int releasedSquare = nullValue;
 
 
-    public Board(LightBlueMain main, SoundProcessor soundProcessor){
+    public Board(LightBlueMain main, SoundProcessor soundProcessor, MoveGenerator moveGenerator){
         boardArray = new Piece[64];
         this.main = main;
         this.soundProcessor = soundProcessor;
+        this.moveGenerator = moveGenerator;
         this.windowWidth = main.getWindowWidth();
         this.windowHeight = main.getWindowHeight();
         this.squareSize = main.getSquareSize();
@@ -225,7 +227,6 @@ public class Board {
 
         if (boardArray[targetSquare] != null) {
             capturedPiece = boardArray[targetSquare];
-            System.out.println(capturedPiece);
         }
         else{
             capturedPiece = null;
@@ -243,7 +244,6 @@ public class Board {
         legalMoveSquaresForSelectedPiece.clear();
 
 
-        System.out.println(piece.getColor());
         if (piece.getColor().equals("white")){
             colorToMove = "black";
         }
@@ -320,17 +320,13 @@ public class Board {
         // during the mouseReleased event. Not marking the square to not unselect on
         // release will cause the selected piece to be immediately unselected upon mouse release
         unselectOnRelease = false;
-        ArrayList<Move> allMoves = MoveGenerator.generateAllMoves(colorToMove);
+        ArrayList<Move> allMoves = moveGenerator.generateAllMoves(this, colorToMove);
 
         for (Move move : allMoves){
             if (move.getStartSquare() == piece.getLocation()){
                 legalMoveSquaresForSelectedPiece.add(move.getTargetSquare());
             }
         }
-
-//        if (piece.getColor().equals(colorToMove)){
-//            piece.generateMoves();
-//        }
 
     }
 
@@ -341,7 +337,6 @@ public class Board {
         if (mouseX >= 0 && mouseY >= 0 && mouseX < windowWidth && mouseY < windowHeight){
             int file = mouseX / squareSize;
             int rank = mouseY / squareSize;
-            int test = selectedSquare;
             releasedSquare = rank * 8 + file;
 
 
@@ -349,10 +344,10 @@ public class Board {
             if (selectedSquare != releasedSquare && selectedSquare != nullValue){
                 if (legalMoveSquaresForSelectedPiece.contains(releasedSquare)){
                     ArrayList<Move> moves;
-                    moves = boardArray[selectedSquare].getMoves();
+                    moves = moveGenerator.getAllMoves();
 
                     for (Move move : moves){
-                        if (move.getTargetSquare() == releasedSquare){
+                        if (move.getStartSquare() == selectedSquare && move.getTargetSquare() == releasedSquare){
                             makeMove(move);
                             break;
                         }
@@ -498,5 +493,9 @@ public class Board {
 
     public String getColorToMove(){
         return colorToMove;
+    }
+
+    public int getEnPassantSquare(){
+        return enPassantSquare;
     }
 }
