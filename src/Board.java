@@ -24,6 +24,7 @@ public class Board {
     private final PImage targetedPieceBG;
 
     public ArrayList<Integer> legalMoveSquaresForSelectedPiece = new ArrayList<>();
+    private ArrayList<Move> legalMoves;
     private Piece capturedPiece;
     private Move previousMove;
     private String colorToMove = "white";
@@ -31,6 +32,7 @@ public class Board {
     private boolean pieceAlreadySelected;
     private boolean unselectOnRelease;
     private int releasedSquare = nullValue;
+    private boolean isMute;
 
 
     public Board(LightBlueMain main, SoundProcessor soundProcessor, MoveGenerator moveGenerator){
@@ -43,6 +45,8 @@ public class Board {
         this.squareSize = main.getSquareSize();
         legalMoveBG = main.loadImage("dot5.png");
         targetedPieceBG = main.loadImage("outline.png");
+        loadFromFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
+        legalMoves = moveGenerator.generateLegalMoves(this, colorToMove);
     }
 
 
@@ -223,6 +227,8 @@ public class Board {
         // Null check not really necessary, can consider removing later
         int startSquare = move.getStartSquare();
         int targetSquare = move.getTargetSquare();
+        System.out.println("start " + startSquare);
+        System.out.println("target " + targetSquare);
         Piece piece = boardArray[startSquare];
 
         if (boardArray[targetSquare] != null) {
@@ -295,6 +301,7 @@ public class Board {
         Piece piece = boardArray[startSquare];
 
 
+
         piece.setSelected(false);
         piece.setLocation(targetSquare);
         boardArray[targetSquare] = piece;
@@ -331,12 +338,21 @@ public class Board {
             }
         }
 
-       if (move.getSpecialFlagKind().equals("queen") ||
-               move.getSpecialFlagKind().equals("rook") ||
-               move.getSpecialFlagKind().equals("bishop") ||
-               move.getSpecialFlagKind().equals("knight")){
-            boardArray[targetSquare] = new Pawn(piece.getColor(), targetSquare);
+        if (move.getSpecialFlagKind() != null){
+            if (move.getSpecialFlagKind().equals("queen") ||
+                    move.getSpecialFlagKind().equals("rook") ||
+                    move.getSpecialFlagKind().equals("bishop") ||
+                    move.getSpecialFlagKind().equals("knight")){
+                boardArray[targetSquare] = new Pawn(piece.getColor(), targetSquare);
+            }
         }
+
+        if (previousMove.isSpecialMove()){
+            if (previousMove.getSpecialFlagKind().equals("p2")){
+                System.out.println(previousMove.getStartSquare());
+            }
+        }
+
     }
 
 
@@ -347,9 +363,9 @@ public class Board {
         // during the mouseReleased event. Not marking the square to not unselect on
         // release will cause the selected piece to be immediately unselected upon mouse release
         unselectOnRelease = false;
-        ArrayList<Move> allMoves = moveGenerator.generateAllMoves(this, colorToMove);
 
-        for (Move move : allMoves){
+        System.out.println(legalMoves.size());
+        for (Move move : legalMoves){
             if (move.getStartSquare() == piece.getLocation()){
                 legalMoveSquaresForSelectedPiece.add(move.getTargetSquare());
             }
@@ -371,7 +387,7 @@ public class Board {
             if (selectedSquare != releasedSquare && selectedSquare != nullValue){
                 if (legalMoveSquaresForSelectedPiece.contains(releasedSquare)){
                     ArrayList<Move> moves;
-                    moves = moveGenerator.getAllMoves();
+                    moves = legalMoves;
 
                     for (Move move : moves){
                         if (move.getStartSquare() == selectedSquare && move.getTargetSquare() == releasedSquare){
@@ -379,6 +395,9 @@ public class Board {
                             break;
                         }
                     }
+
+                    String opponentColor = colorToMove.equals("white") ? "white" : "black";
+                    legalMoves = moveGenerator.generateLegalMoves(this, opponentColor);
                 }
             }
 
@@ -459,7 +478,7 @@ public class Board {
 
     public void resetBoard(){
         // This method resets the boardArray to its initial stage
-        loadFromFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
+        loadFromFen("rnbqkbnr/pppppppp/8/8/8/5n/PPPPPPPP/RNBQKBNR");
         colorToMove = "white";
         selectedSquare = nullValue;
         releasedSquare = nullValue;
@@ -532,5 +551,17 @@ public class Board {
 
     public int getReleasedSquare(){
         return releasedSquare;
+    }
+
+    public void muteBoard(){
+        isMute = true;
+    }
+
+    public void unMuteBoard(){
+        isMute = false;
+    }
+
+    public boolean isMute(){
+        return isMute;
     }
 }

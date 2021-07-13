@@ -8,7 +8,7 @@ public class SoundProcessor {
     }
 
     public void processSound(Move move, Board board){
-        if (LightBlueMain.isMute){
+        if (board.isMute()){
             return;
         }
 

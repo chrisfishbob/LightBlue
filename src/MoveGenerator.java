@@ -3,35 +3,71 @@ import java.util.HashMap;
 
 public class MoveGenerator {
     private HashMap<Integer, ArrayList<Move>> potentialLegalKnightMoveMap;
-    private static ArrayList<Move> allMoves = new ArrayList<>();
     private static int[] SlidingDirectionOffsets = {8, - 8, -1, 1, 7, -7, 9, -9};
     private static int[][] NumSquaresToEdge = new int[64][8];
+    private ArrayList<Move> legalMoves;
+
+    public MoveGenerator(){
+        preGenerateKnightMoves();
+        PrecomputeMoveData();
+    }
+    public ArrayList<Move> generateLegalMoves(Board board, String colorToGenerate){
+        board.muteBoard();
+        ArrayList<Move> candidateMoves= generateAllMoves(board, colorToGenerate);
+        ArrayList<Move> legalMoves = new ArrayList<>();
+
+        for (Move candidateMove : candidateMoves){
+            boolean moveIsIllegal = false;
+            board.makeMove(candidateMove);
+            String opponentColor = colorToGenerate.equals("white") ? "black" : "white";
+            ArrayList<Move> opponentMoves = generateAllMoves(board, opponentColor);
+
+            for (Move opponentMove: opponentMoves){
+                if (opponentMove.getTargetSquare() == 60) {
+                    moveIsIllegal = true;
+                    break;
+                }
+            }
+
+            if (!moveIsIllegal){
+                legalMoves.add(candidateMove);
+            }
+
+            board.unMakeMove(candidateMove);
+        }
+
+
+        System.out.println("Legal move " + legalMoves.size());
+        System.out.println("Candidate move " + candidateMoves.size());
+        board.unMuteBoard();
+        return legalMoves;
+    }
 
 
     public ArrayList<Move> generateAllMoves(Board board, String colorToGenerate){
-        allMoves.clear();
+        ArrayList<Move> allMoves = new ArrayList<>();
         Piece[] boardArray = board.getBoardArray();
 
         for (Piece piece : board.getBoardArray()){
             if (piece != null){
                 if (piece.getColor().equals(colorToGenerate)){
                     if (piece instanceof Pawn){
-                        generatePawnMoves(piece, boardArray, board.getEnPassantSquare());
+                        generatePawnMoves(piece, boardArray, board.getEnPassantSquare(), allMoves);
                     }
                     else if (piece instanceof Knight){
-                        generateKnightMoves(piece, boardArray);
+                        generateKnightMoves(piece, boardArray, allMoves);
                     }
                     else if (piece instanceof King){
-                        generateKingMoves(piece, boardArray);
+                        generateKingMoves(piece, boardArray, allMoves);
                     }
                     else if (piece instanceof Queen){
-                        generateQueenMoves(piece, boardArray);
+                        generateQueenMoves(piece, boardArray, allMoves);
                     }
                     else if (piece instanceof Bishop){
-                        generateBishopMoves(piece, boardArray);
+                        generateBishopMoves(piece, boardArray, allMoves);
                     }
                     else if (piece instanceof Rook){
-                        generateRookMoves(piece,boardArray);
+                        generateRookMoves(piece,boardArray, allMoves);
                     }
                 }
             }
@@ -39,6 +75,7 @@ public class MoveGenerator {
 
         return allMoves;
     }
+
 
 
     public void PrecomputeMoveData(){
@@ -101,7 +138,7 @@ public class MoveGenerator {
     }
 
 
-    public void generateKnightMoves(Piece piece, Piece[] boardArray) {
+    public void generateKnightMoves(Piece piece, Piece[] boardArray, ArrayList<Move> allMoves) {
         // Gets all the potentially legal moves for a knight in the given position on the board
         // and filter out the illegal moves
         ArrayList<Move> potentialMoves = potentialLegalKnightMoveMap.get(piece.getLocation());
@@ -126,7 +163,7 @@ public class MoveGenerator {
     }
 
 
-    public void generateKingMoves(Piece piece, Piece[] boardArray){
+    public void generateKingMoves(Piece piece, Piece[] boardArray, ArrayList<Move> allMoves){
         int startSquare = piece.getLocation();
         ArrayList<Move> legalKingMoves = new ArrayList<>();
 
@@ -157,7 +194,7 @@ public class MoveGenerator {
     }
 
 
-    public void generateRookMoves(Piece piece, Piece[] boardArray){
+    public void generateRookMoves(Piece piece, Piece[] boardArray, ArrayList<Move> allMoves){
         int startSquare = piece.getLocation();
         ArrayList<Move> legalRookMoves = new ArrayList<>();
 
@@ -190,7 +227,7 @@ public class MoveGenerator {
     }
 
 
-    public void generateBishopMoves(Piece piece, Piece[] boardArray){
+    public void generateBishopMoves(Piece piece, Piece[] boardArray, ArrayList<Move> allMoves){
         int startSquare = piece.getLocation();
         ArrayList<Move> legalBishopMoves = new ArrayList<>();
 
@@ -223,7 +260,7 @@ public class MoveGenerator {
 
     }
 
-    public void generateQueenMoves(Piece piece, Piece[] boardArray){
+    public void generateQueenMoves(Piece piece, Piece[] boardArray, ArrayList<Move> allMoves){
         int startSquare = piece.getLocation();
         ArrayList<Move> legalQueenMoves = new ArrayList<>();
 
@@ -256,7 +293,7 @@ public class MoveGenerator {
 
     }
 
-    public void generatePawnMoves(Piece piece, Piece[] boardArray, int enPassantSquare){
+    public void generatePawnMoves(Piece piece, Piece[] boardArray, int enPassantSquare, ArrayList<Move> allMoves){
         int pieceColorMultiplier = piece.getColor().equals("white") ? 1 : -1;
         int pawnLocation = piece.getLocation();
         int rank = piece.getLocation() / 8;
@@ -381,7 +418,7 @@ public class MoveGenerator {
         return potentialLegalKnightMoveMap;
     }
 
-    public ArrayList<Move> getAllMoves() {
-        return allMoves;
+    public ArrayList<Move> getLegalMoves() {
+        return legalMoves;
     }
 }

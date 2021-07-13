@@ -41,9 +41,9 @@ public class LightBlueMain extends PApplet {
         board = new Board(this, soundProcessor, moveGenerator);
 
         boardArray = board.getBoardArray();
-        board.loadFromFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
-        moveGenerator.preGenerateKnightMoves();
-        moveGenerator.PrecomputeMoveData();
+//        board.loadFromFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
+//        moveGenerator.preGenerateKnightMoves();
+//        moveGenerator.PrecomputeMoveData();
     }
 
 
