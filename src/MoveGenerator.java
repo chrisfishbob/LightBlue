@@ -16,6 +16,7 @@ public class MoveGenerator {
         ArrayList<Move> candidateMoves= generateAllMoves(board, colorToGenerate);
         ArrayList<Move> legalMoves = new ArrayList<>();
         int kingLocation;
+        boolean isInCheck = board.isInCheck(colorToGenerate);
 
         for (Move candidateMove : candidateMoves){
             boolean moveIsIllegal = false;
@@ -40,7 +41,16 @@ public class MoveGenerator {
         }
 
         board.unMuteBoard();
-        System.out.println(legalMoves.size());
+
+
+        if (legalMoves.size() == 0){
+            if (isInCheck){
+                System.out.println("CHECKMATE");
+            }
+            else{
+                System.out.println("STALEMATE");
+            }
+        }
         return legalMoves;
     }
 

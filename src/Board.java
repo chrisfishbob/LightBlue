@@ -17,6 +17,7 @@ public class Board {
     private boolean unselectOnRelease;
     private int releasedSquare = nullValue;
 
+
     private Piece[] prevBoardArray;
     private int prevPreviousMoveStartSquare = nullValue;
     private int prevPreviousMoveTargetSquare = nullValue;
@@ -629,5 +630,16 @@ public class Board {
         }
 
         return -1;
+    }
+
+    public boolean isInCheck(String colorToCheck){
+        String opponentColor = colorToCheck.equals("white") ? "black" : "white";
+        ArrayList<Move> opponentMoves = moveGenerator.generateAllMoves(this, opponentColor);
+        for (Move move : opponentMoves){
+            if (move.getTargetSquare() == getKingLocation(colorToCheck)){
+                return true;
+            }
+        }
+        return false;
     }
 }
