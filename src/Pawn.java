@@ -14,6 +14,17 @@ public class Pawn extends Piece{
         }
     }
 
+    public Pawn(Pawn other){
+        super(other.getColor(), other.getLocation(), 5);
+
+        if (other.getColor().equals("white")){
+            setImage(LightBlueMain.getPieceImage("whitePawn"));
+        }
+        else{
+            setImage(LightBlueMain.getPieceImage("blackPawn"));
+        }
+    }
+
 
     public String toString(){
         if (getColor().equals("white")){

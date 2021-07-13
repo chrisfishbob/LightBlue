@@ -14,6 +14,17 @@ public class Bishop extends Piece{
         }
     }
 
+    public Bishop(Bishop other){
+        super(other.getColor(), other.getLocation(), 5);
+
+        if (other.getColor().equals("white")){
+            setImage(LightBlueMain.getPieceImage("whiteBishop"));
+        }
+        else{
+            setImage(LightBlueMain.getPieceImage("blackBishop"));
+        }
+    }
+
     public String toString(){
         if (getColor().equals("white")){
             return "B at " + getLocation();

@@ -33,7 +33,8 @@ public class MoveGenerator {
                 legalMoves.add(candidateMove);
             }
 
-            board.unMakeMove(candidateMove);
+            board.restoreBoardState();
+            board.printBoard();
         }
 
 

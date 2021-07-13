@@ -14,6 +14,17 @@ public class Queen extends Piece{
         }
     }
 
+    public Queen(Queen other){
+        super(other.getColor(), other.getLocation(), 5);
+
+        if (other.getColor().equals("white")){
+            setImage(LightBlueMain.getPieceImage("whiteQueen"));
+        }
+        else{
+            setImage(LightBlueMain.getPieceImage("blackQueen"));
+        }
+    }
+
 
     public String toString(){
         if (getColor().equals("white")){

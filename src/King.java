@@ -14,6 +14,17 @@ public class King extends Piece{
         }
     }
 
+    public King(King other){
+        super(other.getColor(), other.getLocation(), 5);
+
+        if (other.getColor().equals("white")){
+            setImage(LightBlueMain.getPieceImage("whiteKing"));
+        }
+        else{
+            setImage(LightBlueMain.getPieceImage("blackKing"));
+        }
+    }
+
     public String toString(){
         if (getColor().equals("white")){
             return "K at " + getLocation();

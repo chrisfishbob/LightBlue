@@ -8,9 +8,22 @@ public class Board {
     private SoundProcessor soundProcessor;
     private MoveGenerator moveGenerator;
     private int nullValue = -1;
+
     private int previousMoveStartSquare = nullValue;
     private int previousMoveTargetSquare = nullValue;
     private int selectedSquare = nullValue;
+    private int enPassantSquare = nullValue;
+    private boolean pieceAlreadySelected;
+    private boolean unselectOnRelease;
+    private int releasedSquare = nullValue;
+
+    private Piece[] prevBoardArray;
+    private int prevPreviousMoveStartSquare = nullValue;
+    private int prevPreviousMoveTargetSquare = nullValue;
+    private int prevSelectedSquare = nullValue;
+    private int prevEnPassantSquare = nullValue;
+
+
     private final int windowWidth;
     private final int windowHeight;
     private final int squareSize;
@@ -28,10 +41,7 @@ public class Board {
     private Piece capturedPiece;
     private Move previousMove;
     private String colorToMove = "white";
-    private int enPassantSquare = nullValue;
-    private boolean pieceAlreadySelected;
-    private boolean unselectOnRelease;
-    private int releasedSquare = nullValue;
+
     private boolean isMute;
 
 
@@ -224,7 +234,43 @@ public class Board {
 
 
     public void makeMove(Move move){
-        // Null check not really necessary, can consider removing later
+
+
+        prevBoardArray = new Piece[64];
+        for (int i = 0; i < 64; i++){
+            if (boardArray[i] != null){
+                if (boardArray[i] instanceof King){
+                    prevBoardArray[i] = new King((King) boardArray[i]);
+                }
+                else if (boardArray[i] instanceof Queen){
+                    prevBoardArray[i] = new Queen((Queen) boardArray[i]);
+                }
+
+                else if (boardArray[i] instanceof Rook){
+                    prevBoardArray[i] = new Rook((Rook) boardArray[i]);
+                }
+
+                else if (boardArray[i] instanceof Bishop){
+                    prevBoardArray[i] = new Bishop((Bishop) boardArray[i]);
+                }
+
+                else if (boardArray[i] instanceof Knight){
+                    prevBoardArray[i] = new Knight((Knight) boardArray[i]);
+                }
+
+                else if (boardArray[i] instanceof Pawn){
+                    prevBoardArray[i] = new Pawn((Pawn) boardArray[i]);
+                }
+
+
+            }
+        }
+        prevPreviousMoveStartSquare = previousMoveStartSquare;
+        prevPreviousMoveTargetSquare = previousMoveTargetSquare;
+        prevSelectedSquare = selectedSquare;
+        prevEnPassantSquare = enPassantSquare;
+
+
         int startSquare = move.getStartSquare();
         int targetSquare = move.getTargetSquare();
         System.out.println("start " + startSquare);
@@ -293,6 +339,9 @@ public class Board {
         else{
             enPassantSquare = nullValue;
         }
+
+
+
     }
 
     public void unMakeMove(Move move){
@@ -478,7 +527,7 @@ public class Board {
 
     public void resetBoard(){
         // This method resets the boardArray to its initial stage
-        loadFromFen("rnbqkbnr/pppppppp/8/8/8/5n/PPPPPPPP/RNBQKBNR");
+        loadFromFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
         colorToMove = "white";
         selectedSquare = nullValue;
         releasedSquare = nullValue;
@@ -523,6 +572,14 @@ public class Board {
         }
 
         return eval;
+    }
+
+    public void restoreBoardState(){
+        boardArray = prevBoardArray;
+        enPassantSquare = prevEnPassantSquare;
+        previousMoveTargetSquare = prevPreviousMoveTargetSquare;
+        previousMoveStartSquare = prevPreviousMoveTargetSquare;
+        selectedSquare = prevSelectedSquare;
     }
 
     public void changeColorToMove(){

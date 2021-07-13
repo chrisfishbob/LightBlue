@@ -14,6 +14,17 @@ public class Knight extends Piece{
         }
     }
 
+    public Knight(Knight other){
+        super(other.getColor(), other.getLocation(), 5);
+
+        if (other.getColor().equals("white")){
+            setImage(LightBlueMain.getPieceImage("whiteKnight"));
+        }
+        else{
+            setImage(LightBlueMain.getPieceImage("blackKnight"));
+        }
+    }
+
 
     public String toString(){
         if (getColor().equals("white")){
