@@ -13,23 +13,28 @@ public class SoundProcessor {
         }
 
         // This function determines which sound should be played given the Move object
-        if (!move.isSpecialMove()){
-            if (board.getBoardArray()[move.getTargetSquare()] == null){
-                playSound("move");
-            }
-            else{
-                playSound("capture");
-            }
+        if (board.isInCheck(board.getColorToMove())){
+            playSound("check");
+            return;
         }
-        else{
+
+        if (move.isSpecialMove()){
             if (move.getSpecialFlagKind().equals("ep")){
                 playSound("capture");
-            }
-
-            else{
-                playSound("move");
+                return;
             }
         }
+
+
+        if (board.getCapturedPiece() == null){
+            playSound("move");
+        }
+        else{
+            playSound("capture");
+        }
+
+
+
     }
 
     public void playSound(String soundName){

@@ -40,17 +40,20 @@ public class MoveGenerator {
             board.restoreBoardState();
         }
 
-        board.unMuteBoard();
+
 
 
         if (legalMoves.size() == 0){
             if (isInCheck){
                 System.out.println("CHECKMATE");
             }
+
             else{
                 System.out.println("STALEMATE");
             }
         }
+
+        board.unMuteBoard();
         return legalMoves;
     }
 

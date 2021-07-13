@@ -19,11 +19,11 @@ public class Board {
 
 
     private Piece[] prevBoardArray;
+    private String prevColorToMove;
     private int prevPreviousMoveStartSquare = nullValue;
     private int prevPreviousMoveTargetSquare = nullValue;
     private int prevSelectedSquare = nullValue;
     private int prevEnPassantSquare = nullValue;
-
 
     private final int windowWidth;
     private final int windowHeight;
@@ -236,7 +236,6 @@ public class Board {
 
     public void makeMove(Move move){
         saveBoardState();
-
         int startSquare = move.getStartSquare();
         int targetSquare = move.getTargetSquare();
         Piece piece = boardArray[startSquare];
@@ -248,7 +247,6 @@ public class Board {
             capturedPiece = null;
         }
 
-        soundProcessor.processSound(move, this);
         previousMove = move;
         piece.setSelected(false);
         piece.setLocation(targetSquare);
@@ -304,67 +302,7 @@ public class Board {
             enPassantSquare = nullValue;
         }
 
-
-
-    }
-
-    public void unMakeMove(Move move){
-        int targetSquare = move.getStartSquare();
-        int startSquare = move.getTargetSquare();
-        Piece piece = boardArray[startSquare];
-
-
-
-        piece.setSelected(false);
-        piece.setLocation(targetSquare);
-        boardArray[targetSquare] = piece;
-        boardArray[startSquare] = null;
-        selectedSquare = nullValue;
-        legalMoveSquaresForSelectedPiece.clear();
-        previousMoveStartSquare = nullValue;
-        previousMoveTargetSquare = nullValue;
-        enPassantSquare = nullValue;
-        colorToMove = piece.getColor().equals("white") ? "white" : "black";
-
-        // If the original move captured something
-        if (capturedPiece != null){
-            if (!move.isSpecialMove()){
-                boardArray[startSquare] = capturedPiece;
-            }
-            else{
-                if (move.getSpecialFlagKind().equals("ep")){
-                    boardArray[capturedPiece.getLocation()] = capturedPiece;
-                    if (capturedPiece.getColor().equals("white")){
-                        enPassantSquare = capturedPiece.getLocation() + 8;
-                    }
-                    else{
-                        enPassantSquare = capturedPiece.getLocation() - 8;
-                    }
-                }
-                else if (move.getSpecialFlagKind().equals("queen") ||
-                        move.getSpecialFlagKind().equals("rook") ||
-                        move.getSpecialFlagKind().equals("bishop") ||
-                        move.getSpecialFlagKind().equals("knight")){
-                    boardArray[capturedPiece.getLocation()] = capturedPiece;
-                    boardArray[targetSquare] = new Pawn(piece.getColor(), targetSquare);
-                }
-            }
-        }
-
-        if (move.getSpecialFlagKind() != null){
-            if (move.getSpecialFlagKind().equals("queen") ||
-                    move.getSpecialFlagKind().equals("rook") ||
-                    move.getSpecialFlagKind().equals("bishop") ||
-                    move.getSpecialFlagKind().equals("knight")){
-                boardArray[targetSquare] = new Pawn(piece.getColor(), targetSquare);
-            }
-        }
-
-        if (previousMove.isSpecialMove()){
-            if (previousMove.getSpecialFlagKind().equals("p2")){
-            }
-        }
-
+        soundProcessor.processSound(move, this);
     }
 
 
@@ -570,6 +508,7 @@ public class Board {
         prevPreviousMoveTargetSquare = previousMoveTargetSquare;
         prevSelectedSquare = selectedSquare;
         prevEnPassantSquare = enPassantSquare;
+        prevColorToMove = colorToMove;
     }
 
     public void restoreBoardState(){
@@ -578,6 +517,7 @@ public class Board {
         previousMoveTargetSquare = prevPreviousMoveTargetSquare;
         previousMoveStartSquare = prevPreviousMoveTargetSquare;
         selectedSquare = prevSelectedSquare;
+        colorToMove = prevColorToMove;
     }
 
     public void changeColorToMove(){
@@ -616,9 +556,15 @@ public class Board {
         isMute = false;
     }
 
+    public Piece getCapturedPiece(){
+        return capturedPiece;
+    }
+
+
     public boolean isMute(){
         return isMute;
     }
+
 
     public int getKingLocation(String kingColor){
         for (Piece piece : boardArray){
@@ -632,6 +578,7 @@ public class Board {
         return -1;
     }
 
+
     public boolean isInCheck(String colorToCheck){
         String opponentColor = colorToCheck.equals("white") ? "black" : "white";
         ArrayList<Move> opponentMoves = moveGenerator.generateAllMoves(this, opponentColor);
@@ -641,5 +588,65 @@ public class Board {
             }
         }
         return false;
+    }
+
+
+    public void unMakeMove(Move move){
+        int targetSquare = move.getStartSquare();
+        int startSquare = move.getTargetSquare();
+        Piece piece = boardArray[startSquare];
+
+
+
+        piece.setSelected(false);
+        piece.setLocation(targetSquare);
+        boardArray[targetSquare] = piece;
+        boardArray[startSquare] = null;
+        selectedSquare = nullValue;
+        legalMoveSquaresForSelectedPiece.clear();
+        previousMoveStartSquare = nullValue;
+        previousMoveTargetSquare = nullValue;
+        enPassantSquare = nullValue;
+        colorToMove = piece.getColor().equals("white") ? "white" : "black";
+
+        // If the original move captured something
+        if (capturedPiece != null){
+            if (!move.isSpecialMove()){
+                boardArray[startSquare] = capturedPiece;
+            }
+            else{
+                if (move.getSpecialFlagKind().equals("ep")){
+                    boardArray[capturedPiece.getLocation()] = capturedPiece;
+                    if (capturedPiece.getColor().equals("white")){
+                        enPassantSquare = capturedPiece.getLocation() + 8;
+                    }
+                    else{
+                        enPassantSquare = capturedPiece.getLocation() - 8;
+                    }
+                }
+                else if (move.getSpecialFlagKind().equals("queen") ||
+                        move.getSpecialFlagKind().equals("rook") ||
+                        move.getSpecialFlagKind().equals("bishop") ||
+                        move.getSpecialFlagKind().equals("knight")){
+                    boardArray[capturedPiece.getLocation()] = capturedPiece;
+                    boardArray[targetSquare] = new Pawn(piece.getColor(), targetSquare);
+                }
+            }
+        }
+
+        if (move.getSpecialFlagKind() != null){
+            if (move.getSpecialFlagKind().equals("queen") ||
+                    move.getSpecialFlagKind().equals("rook") ||
+                    move.getSpecialFlagKind().equals("bishop") ||
+                    move.getSpecialFlagKind().equals("knight")){
+                boardArray[targetSquare] = new Pawn(piece.getColor(), targetSquare);
+            }
+        }
+
+        if (previousMove.isSpecialMove()){
+            if (previousMove.getSpecialFlagKind().equals("p2")){
+            }
+        }
+
     }
 }
