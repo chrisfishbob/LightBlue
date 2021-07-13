@@ -234,47 +234,10 @@ public class Board {
 
 
     public void makeMove(Move move){
-
-
-        prevBoardArray = new Piece[64];
-        for (int i = 0; i < 64; i++){
-            if (boardArray[i] != null){
-                if (boardArray[i] instanceof King){
-                    prevBoardArray[i] = new King((King) boardArray[i]);
-                }
-                else if (boardArray[i] instanceof Queen){
-                    prevBoardArray[i] = new Queen((Queen) boardArray[i]);
-                }
-
-                else if (boardArray[i] instanceof Rook){
-                    prevBoardArray[i] = new Rook((Rook) boardArray[i]);
-                }
-
-                else if (boardArray[i] instanceof Bishop){
-                    prevBoardArray[i] = new Bishop((Bishop) boardArray[i]);
-                }
-
-                else if (boardArray[i] instanceof Knight){
-                    prevBoardArray[i] = new Knight((Knight) boardArray[i]);
-                }
-
-                else if (boardArray[i] instanceof Pawn){
-                    prevBoardArray[i] = new Pawn((Pawn) boardArray[i]);
-                }
-
-
-            }
-        }
-        prevPreviousMoveStartSquare = previousMoveStartSquare;
-        prevPreviousMoveTargetSquare = previousMoveTargetSquare;
-        prevSelectedSquare = selectedSquare;
-        prevEnPassantSquare = enPassantSquare;
-
+        saveBoardState();
 
         int startSquare = move.getStartSquare();
         int targetSquare = move.getTargetSquare();
-        System.out.println("start " + startSquare);
-        System.out.println("target " + targetSquare);
         Piece piece = boardArray[startSquare];
 
         if (boardArray[targetSquare] != null) {
@@ -398,7 +361,6 @@ public class Board {
 
         if (previousMove.isSpecialMove()){
             if (previousMove.getSpecialFlagKind().equals("p2")){
-                System.out.println(previousMove.getStartSquare());
             }
         }
 
@@ -413,7 +375,6 @@ public class Board {
         // release will cause the selected piece to be immediately unselected upon mouse release
         unselectOnRelease = false;
 
-        System.out.println(legalMoves.size());
         for (Move move : legalMoves){
             if (move.getStartSquare() == piece.getLocation()){
                 legalMoveSquaresForSelectedPiece.add(move.getTargetSquare());
@@ -574,6 +535,42 @@ public class Board {
         return eval;
     }
 
+    public void saveBoardState(){
+        prevBoardArray = new Piece[64];
+        for (int i = 0; i < 64; i++){
+            if (boardArray[i] != null){
+                if (boardArray[i] instanceof King){
+                    prevBoardArray[i] = new King((King) boardArray[i]);
+                }
+                else if (boardArray[i] instanceof Queen){
+                    prevBoardArray[i] = new Queen((Queen) boardArray[i]);
+                }
+
+                else if (boardArray[i] instanceof Rook){
+                    prevBoardArray[i] = new Rook((Rook) boardArray[i]);
+                }
+
+                else if (boardArray[i] instanceof Bishop){
+                    prevBoardArray[i] = new Bishop((Bishop) boardArray[i]);
+                }
+
+                else if (boardArray[i] instanceof Knight){
+                    prevBoardArray[i] = new Knight((Knight) boardArray[i]);
+                }
+
+                else if (boardArray[i] instanceof Pawn){
+                    prevBoardArray[i] = new Pawn((Pawn) boardArray[i]);
+                }
+
+
+            }
+        }
+        prevPreviousMoveStartSquare = previousMoveStartSquare;
+        prevPreviousMoveTargetSquare = previousMoveTargetSquare;
+        prevSelectedSquare = selectedSquare;
+        prevEnPassantSquare = enPassantSquare;
+    }
+
     public void restoreBoardState(){
         boardArray = prevBoardArray;
         enPassantSquare = prevEnPassantSquare;
@@ -620,5 +617,17 @@ public class Board {
 
     public boolean isMute(){
         return isMute;
+    }
+
+    public int getKingLocation(String kingColor){
+        for (Piece piece : boardArray){
+            if (piece != null){
+                if (piece instanceof King && piece.getColor().equals(kingColor)){
+                    return piece.getLocation();
+                }
+            }
+        }
+
+        return -1;
     }
 }

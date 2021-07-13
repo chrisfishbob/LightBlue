@@ -15,15 +15,18 @@ public class MoveGenerator {
         board.muteBoard();
         ArrayList<Move> candidateMoves= generateAllMoves(board, colorToGenerate);
         ArrayList<Move> legalMoves = new ArrayList<>();
+        int kingLocation;
 
         for (Move candidateMove : candidateMoves){
             boolean moveIsIllegal = false;
             board.makeMove(candidateMove);
+            kingLocation = board.getKingLocation(colorToGenerate);
             String opponentColor = colorToGenerate.equals("white") ? "black" : "white";
             ArrayList<Move> opponentMoves = generateAllMoves(board, opponentColor);
 
             for (Move opponentMove: opponentMoves){
-                if (opponentMove.getTargetSquare() == 60) {
+                if (opponentMove.getTargetSquare() == kingLocation) {
+
                     moveIsIllegal = true;
                     break;
                 }
@@ -34,13 +37,10 @@ public class MoveGenerator {
             }
 
             board.restoreBoardState();
-            board.printBoard();
         }
 
-
-        System.out.println("Legal move " + legalMoves.size());
-        System.out.println("Candidate move " + candidateMoves.size());
         board.unMuteBoard();
+        System.out.println(legalMoves.size());
         return legalMoves;
     }
 
