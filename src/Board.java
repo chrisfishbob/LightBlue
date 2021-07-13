@@ -295,7 +295,6 @@ public class Board {
         Piece piece = boardArray[startSquare];
 
 
-
         piece.setSelected(false);
         piece.setLocation(targetSquare);
         boardArray[targetSquare] = piece;
@@ -322,7 +321,21 @@ public class Board {
                         enPassantSquare = capturedPiece.getLocation() - 8;
                     }
                 }
+                else if (move.getSpecialFlagKind().equals("queen") ||
+                        move.getSpecialFlagKind().equals("rook") ||
+                        move.getSpecialFlagKind().equals("bishop") ||
+                        move.getSpecialFlagKind().equals("knight")){
+                    boardArray[capturedPiece.getLocation()] = capturedPiece;
+                    boardArray[targetSquare] = new Pawn(piece.getColor(), targetSquare);
+                }
             }
+        }
+
+       if (move.getSpecialFlagKind().equals("queen") ||
+               move.getSpecialFlagKind().equals("rook") ||
+               move.getSpecialFlagKind().equals("bishop") ||
+               move.getSpecialFlagKind().equals("knight")){
+            boardArray[targetSquare] = new Pawn(piece.getColor(), targetSquare);
         }
     }
 
