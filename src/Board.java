@@ -307,8 +307,22 @@ public class Board {
         enPassantSquare = nullValue;
         colorToMove = piece.getColor().equals("white") ? "white" : "black";
 
+        // If the original move captured something
         if (capturedPiece != null){
-            boardArray[startSquare] = capturedPiece;
+            if (!move.isSpecialMove()){
+                boardArray[startSquare] = capturedPiece;
+            }
+            else{
+                if (move.getSpecialFlagKind().equals("ep")){
+                    boardArray[capturedPiece.getLocation()] = capturedPiece;
+                    if (capturedPiece.getColor().equals("white")){
+                        enPassantSquare = capturedPiece.getLocation() + 8;
+                    }
+                    else{
+                        enPassantSquare = capturedPiece.getLocation() - 8;
+                    }
+                }
+            }
         }
     }
 
