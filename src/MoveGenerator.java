@@ -41,18 +41,6 @@ public class MoveGenerator {
         }
 
 
-
-
-        if (legalMoves.size() == 0){
-            if (isInCheck){
-                System.out.println("CHECKMATE");
-            }
-
-            else{
-                System.out.println("STALEMATE");
-            }
-        }
-
         board.unMuteBoard();
         return legalMoves;
     }
@@ -101,12 +89,14 @@ public class MoveGenerator {
         int numPos = 0;
 
         for (Move move : moves){
-            if (depth == 1){
-                board.printBoard();
-            }
+//            if (depth == 1){
+//                board.printBoard();
+//            }
+            BoardState boardState = board.saveBoardState();
             board.makeMove(move);
             numPos += MoveGenerationTest(board, depth - 1);
-            board.unMakeMove(move);
+//            board.unMakeMove(move);
+            board.restoreBoardState(boardState);
         }
 
 //        board.unMuteBoard();

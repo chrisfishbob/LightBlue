@@ -240,7 +240,6 @@ public class Board {
     public void makeMove(Move move){
 //        System.out.println("Before making move: ");
 //        printBoard();
-        saveBoardState();
         int startSquare = move.getStartSquare();
         int targetSquare = move.getTargetSquare();
         Piece piece = boardArray[startSquare];
@@ -491,7 +490,7 @@ public class Board {
     }
 
 
-    public void saveBoardState(){
+    public BoardState saveBoardState(){
         prevBoardArray = new Piece[64];
         for (int i = 0; i < 64; i++){
             if (boardArray[i] != null){
@@ -521,20 +520,23 @@ public class Board {
 
             }
         }
-        prevPreviousMoveStartSquare = previousMoveStartSquare;
-        prevPreviousMoveTargetSquare = previousMoveTargetSquare;
-        prevSelectedSquare = selectedSquare;
-        prevEnPassantSquare = enPassantSquare;
-        prevColorToMove = colorToMove;
+
+        return new BoardState(prevBoardArray,
+                previousMoveStartSquare,
+                previousMoveTargetSquare,
+                selectedSquare,
+                enPassantSquare,
+                colorToMove);
+
     }
 
-    public void restoreBoardState(){
-        boardArray = prevBoardArray;
-        enPassantSquare = prevEnPassantSquare;
-        previousMoveTargetSquare = prevPreviousMoveTargetSquare;
-        previousMoveStartSquare = prevPreviousMoveTargetSquare;
-        selectedSquare = prevSelectedSquare;
-        colorToMove = prevColorToMove;
+    public void restoreBoardState(BoardState boardState){
+        boardArray = boardState.getBoardArray();
+        enPassantSquare = boardState.getPrevEnPassantSquare();
+        previousMoveTargetSquare = boardState.getPrevPreviousMoveTargetSquare();
+        previousMoveStartSquare = boardState.getPrevPreviousMoveStartSquare();
+        selectedSquare = boardState.getPrevSelectedSquare();
+        colorToMove = boardState.getPrevColorToMove();
     }
 
     public void changeColorToMove(){
@@ -673,7 +675,7 @@ public class Board {
         bruhCapturedPiece = null;
         bruhEnPassantSquare = nullValue;
 
-//        System.out.println("After unmaking move: ");
-//        printBoard();
+//
+
     }
 }
