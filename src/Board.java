@@ -25,6 +25,8 @@ public class Board {
     private int prevSelectedSquare = nullValue;
     private int prevEnPassantSquare = nullValue;
 
+    private int bruhEnPassantSquare = nullValue;
+    private Piece bruhCapturedPiece;
     private final int windowWidth;
     private final int windowHeight;
     private final int squareSize;
@@ -58,6 +60,7 @@ public class Board {
         targetedPieceBG = main.loadImage("outline.png");
         loadFromFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
         legalMoves = moveGenerator.generateLegalMoves(this, colorToMove);
+        System.out.println(moveGenerator.MoveGenerationTest(this, 5));
     }
 
 
@@ -235,10 +238,14 @@ public class Board {
 
 
     public void makeMove(Move move){
+//        System.out.println("Before making move: ");
+//        printBoard();
         saveBoardState();
         int startSquare = move.getStartSquare();
         int targetSquare = move.getTargetSquare();
         Piece piece = boardArray[startSquare];
+        bruhEnPassantSquare = enPassantSquare;
+        bruhCapturedPiece = capturedPiece;
 
         if (boardArray[targetSquare] != null) {
             capturedPiece = boardArray[targetSquare];
@@ -246,6 +253,7 @@ public class Board {
         else{
             capturedPiece = null;
         }
+
 
         previousMove = move;
         piece.setSelected(false);
@@ -271,7 +279,11 @@ public class Board {
             // When a pawn moves by two spaces, mark the enPassantSquare
             String flag = move.getSpecialFlagKind();
             if (flag.equals("p2")){
+
+
+
                 enPassantSquare = startSquare + (targetSquare - startSquare) / 2;
+
             }
             else if (flag.equals("ep")){
                 if (piece.getColor().equals("white")){
@@ -303,6 +315,8 @@ public class Board {
         }
 
         soundProcessor.processSound(move, this);
+//        System.out.println("After making move: ");
+//        printBoard();
     }
 
 
@@ -425,6 +439,7 @@ public class Board {
         }
     }
 
+
     public void resetBoard(){
         // This method resets the boardArray to its initial stage
         loadFromFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
@@ -455,6 +470,7 @@ public class Board {
         }
     }
 
+
     public double getEvaluation(){
         double eval = 0;
 
@@ -473,6 +489,7 @@ public class Board {
 
         return eval;
     }
+
 
     public void saveBoardState(){
         prevBoardArray = new Piece[64];
@@ -592,12 +609,15 @@ public class Board {
 
 
     public void unMakeMove(Move move){
+//        System.out.println("Before unmaking Move");
+//        printBoard();
         int targetSquare = move.getStartSquare();
         int startSquare = move.getTargetSquare();
+
         Piece piece = boardArray[startSquare];
-
-
-
+        if (piece == null){
+            printBoard();
+        }
         piece.setSelected(false);
         piece.setLocation(targetSquare);
         boardArray[targetSquare] = piece;
@@ -609,10 +629,13 @@ public class Board {
         enPassantSquare = nullValue;
         colorToMove = piece.getColor().equals("white") ? "white" : "black";
 
+
+
         // If the original move captured something
         if (capturedPiece != null){
             if (!move.isSpecialMove()){
                 boardArray[startSquare] = capturedPiece;
+                capturedPiece = null;
             }
             else{
                 if (move.getSpecialFlagKind().equals("ep")){
@@ -623,6 +646,7 @@ public class Board {
                     else{
                         enPassantSquare = capturedPiece.getLocation() - 8;
                     }
+                    capturedPiece = null;
                 }
                 else if (move.getSpecialFlagKind().equals("queen") ||
                         move.getSpecialFlagKind().equals("rook") ||
@@ -643,10 +667,13 @@ public class Board {
             }
         }
 
-        if (previousMove.isSpecialMove()){
-            if (previousMove.getSpecialFlagKind().equals("p2")){
-            }
-        }
 
+        enPassantSquare = bruhEnPassantSquare;
+        capturedPiece = bruhCapturedPiece;
+        bruhCapturedPiece = null;
+        bruhEnPassantSquare = nullValue;
+
+//        System.out.println("After unmaking move: ");
+//        printBoard();
     }
 }

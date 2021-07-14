@@ -37,7 +37,7 @@ public class MoveGenerator {
                 legalMoves.add(candidateMove);
             }
 
-            board.restoreBoardState();
+            board.unMakeMove(candidateMove);
         }
 
 
@@ -88,6 +88,30 @@ public class MoveGenerator {
         }
 
         return allMoves;
+    }
+
+
+    public int MoveGenerationTest(Board board, int depth){
+        if (depth == 0){
+            return 1;
+        }
+
+        ArrayList<Move> moves = generateLegalMoves(board, board.getColorToMove());
+        board.muteBoard();
+        int numPos = 0;
+
+        for (Move move : moves){
+            if (depth == 1){
+                board.printBoard();
+            }
+            board.makeMove(move);
+            numPos += MoveGenerationTest(board, depth - 1);
+            board.unMakeMove(move);
+        }
+
+//        board.unMuteBoard();
+
+        return numPos;
     }
 
 

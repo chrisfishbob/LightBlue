@@ -17,6 +17,10 @@ public class Move {
         this.specialFlagKind = specialFlagKind;
     }
 
+    public String toString(){
+        return "Start: " + startSquare + "  Target: " + targetSquare;
+    }
+
 
     public int getStartSquare() {
         return startSquare;
