@@ -17,7 +17,7 @@ public class MoveGenerator {
         ArrayList<Move> candidateMoves= generateAllMoves(board, colorToGenerate);
         ArrayList<Move> legalMoves = new ArrayList<>();
         int kingLocation;
-        boolean isInCheck = board.isInCheck(colorToGenerate);
+//        boolean isInCheck = board.isInCheck(colorToGenerate);
 
         for (Move candidateMove : candidateMoves){
             BoardState boardState = board.saveBoardState();
