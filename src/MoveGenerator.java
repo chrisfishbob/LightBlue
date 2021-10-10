@@ -11,6 +11,7 @@ public class MoveGenerator {
         preGenerateKnightMoves();
         PrecomputeMoveData();
     }
+
     public ArrayList<Move> generateLegalMoves(Board board, String colorToGenerate){
         board.muteBoard();
         ArrayList<Move> candidateMoves= generateAllMoves(board, colorToGenerate);
@@ -19,6 +20,7 @@ public class MoveGenerator {
         boolean isInCheck = board.isInCheck(colorToGenerate);
 
         for (Move candidateMove : candidateMoves){
+            BoardState boardState = board.saveBoardState();
             boolean moveIsIllegal = false;
             board.makeMove(candidateMove);
             kingLocation = board.getKingLocation(colorToGenerate);
@@ -37,7 +39,7 @@ public class MoveGenerator {
                 legalMoves.add(candidateMove);
             }
 
-            board.unMakeMove(candidateMove);
+            board.restoreBoardState(boardState);
         }
 
 

@@ -60,7 +60,7 @@ public class Board {
         targetedPieceBG = main.loadImage("outline.png");
         loadFromFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
         legalMoves = moveGenerator.generateLegalMoves(this, colorToMove);
-        System.out.println(moveGenerator.MoveGenerationTest(this, 5));
+
     }
 
 
@@ -450,6 +450,7 @@ public class Board {
         previousMoveStartSquare = nullValue;
         previousMoveTargetSquare = nullValue;
         legalMoveSquaresForSelectedPiece.clear();
+        legalMoves = moveGenerator.generateLegalMoves(this, colorToMove);
     }
 
     public void verifyBoard() {
