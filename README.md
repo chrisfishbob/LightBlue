@@ -22,4 +22,6 @@ This project will be completed in five stages:
 <b>Stage 5 (ending):</b> End game and opening: A data base will be used from grandmaster games so that the engine will play book openings up until a certain point. The end game portion seeks to 
          modify and improve upon the existing evaluation function to better execute endgame strategies.
          
+Project on back-burner with few commits during school session (gotta get on that systems programming grind), regular progress will resume during break!
+         
          
