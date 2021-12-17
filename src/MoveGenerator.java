@@ -42,8 +42,8 @@ public class MoveGenerator {
             board.restoreBoardState(boardState);
         }
 
-
         board.unMuteBoard();
+
         return legalMoves;
     }
 

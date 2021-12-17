@@ -448,6 +448,7 @@ public class Board {
         pieceAlreadySelected = false;
         unselectOnRelease = false;
         previousMoveStartSquare = nullValue;
+        enPassantSquare = nullValue;
         previousMoveTargetSquare = nullValue;
         legalMoveSquaresForSelectedPiece.clear();
         legalMoves = moveGenerator.generateLegalMoves(this, colorToMove);
