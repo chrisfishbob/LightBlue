@@ -16,11 +16,6 @@ This project will be completed in five stages:
 <b>Stage 3 (Done-ish):</b> Searching algorithm- At this point, the searching algorithm will be developedsing min-max with alpha-beta pruning. The evaluation of the position will be focused purely
          on material advantage only at this stage
          
-<b>Stage 4 (Cancelled):</b> Improving evaluation: This stage will see the improvement of the evaluation function. Rules and checks will be put in place such that the engine has a better grasp 
-         of concepts such as activity, king safety and pawn structure.
-         
-<b>Stage 5 (Cancelled):</b> End game and opening: A data base will be used from grandmaster games so that the engine will play book openings up until a certain point. The end game portion seeks to 
-         modify and improve upon the existing evaluation function to better execute endgame strategies.
          
 Project on back-burner with few commits during school session (gotta get on that systems programming grind), regular progress will resume during break!
          
