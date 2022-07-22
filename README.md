@@ -3,7 +3,7 @@
 LightBlue is an independent chess engine with a built-in GUI. This project uses Java for all aspects of the engine, utilizing the Processing library for
 the graphical user interface. 
 
-This project will be completed in five stages:
+This project will be completed in these stages:
 
 <b>Stage 1 (completed):</b> Initial setup- During this stage, the backbones of this project will be set up. Most of the graphical aspects will be completed here. Some of the features
          that will be completed in this stage includes but are not limited to: "board graphical representation, piece graphical representation, board array representation 
