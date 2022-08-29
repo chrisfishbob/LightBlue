@@ -16,9 +16,7 @@ This project will be completed in these stages:
 <b>Stage 3:</b> Searching algorithm- At this point, the searching algorithm will be developedsing min-max with alpha-beta pruning. The evaluation of the position will be focused purely
          on material advantage only at this stage
          
-         
-Project on back-burner with few commits during school session (gotta get on that systems programming grind), regular progress will resume during break!
-         
 
-(This project will receive no further commits)
+
+(This project will receive no further commits, moving on to bigger and better things!)
          
