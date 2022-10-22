@@ -1,5 +1,7 @@
 # LightBlue
 
+![alt text](https://user-images.githubusercontent.com/56414801/197311485-cc12c815-b695-46b7-87bf-4c9fe11017b9.png)
+
 LightBlue is an independent chess engine with a built-in GUI. This project uses Java for all aspects of the engine, utilizing the Processing library for
 the graphical user interface. 
 
@@ -20,3 +22,5 @@ This project will be completed in these stages:
 
 (This project will receive no further commits, moving on to bigger and better things!)
          
+         https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.extremetech.com%2Fextreme%2F196554-a-new-computer-chess-champion-is-crowned-and-the-continued-demise-of-human-grandmasters&psig=AOvVaw0zRbkAwHCrU5HVnmqqWUQa&ust=1666490158693000&source=images&cd=vfe&ved=0CAwQjRxqFwoTCJjguuHd8voCFQAAAAAdAAAAABAI![image]
+
