@@ -29,6 +29,8 @@ This project will be completed in these stages:
          
 
 
-(This project will receive no commits. There was more stuff planned for LightBlue, but I want to move to a faster language and go for UCI compatibility instead! Getting the UI to render consistently across different machines with Processing is a nightmare (at least on the version that I used),
+(This project will receive no further commits. There was more stuff planned for LightBlue, but I want to move to a faster language and go for UCI compatibility instead! Getting the UI to render consistently across different machines with Processing is a nightmare (at least on the version that I used)
+
+There will be another version of LightBlue coming in the near future, probably will be written in C++ or Go. Stay tuned!
 
 
