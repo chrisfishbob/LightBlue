@@ -31,5 +31,5 @@ This project will be completed in these stages:
 (This project is being replaced and will receive no further commits. There was more stuff planned for LightBlue, but I want to move to a compiled language and go for UCI compatibility instead! Getting the UI to to compile and run across different machines with Processing is a nightmare (at least on the version that I used)
 
 
-There will be another version of LightBlue written in Go coming in the near future!
+There will be another version of LightBlue written in Go coming in the near future! Hopefully by Fall 2023
 
