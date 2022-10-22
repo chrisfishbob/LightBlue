@@ -24,7 +24,7 @@ This project will be completed in these stages:
          such as castling and en passant will be implemented here. This will likely be the longest and most difficult stage, as any slight imperfections made here will ruin render
          the searching algorithm useless.
         
-<b>Stage 3:</b> Searching algorithm- At this point, the searching algorithm will be developedsing min-max with alpha-beta pruning. The evaluation of the position will be focused purely
+<b>Stage 3:</b> Searching algorithm- At this point, the searching algorithm will be developed using min-max with alpha-beta pruning. The evaluation of the position will be focused purely
          on material advantage only at this stage
          
 
