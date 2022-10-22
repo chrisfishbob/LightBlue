@@ -2,9 +2,18 @@
 
 ![alt text](https://user-images.githubusercontent.com/56414801/197311485-cc12c815-b695-46b7-87bf-4c9fe11017b9.png)
 
+
+## What is this?
 LightBlue is an independent chess engine with a built-in GUI. This project uses Java for all aspects of the engine, utilizing the Processing library for
 the graphical user interface. 
 
+
+## How to run this?
+Run LightBlue.jar!
+(Note: This engine uses Processing for its UI and sometimes this causes issues in different machines. I would recommend recompiling the project if that is the case. For my next engine, we will scrap the UI and go for a UCI compatible engine instead.)
+
+
+## How was this developed
 This project will be completed in these stages:
 
 <b>Stage 1:</b> Initial setup- During this stage, the backbones of this project will be set up. Most of the graphical aspects will be completed here. Some of the features
@@ -20,7 +29,6 @@ This project will be completed in these stages:
          
 
 
-(This project will receive no further commits, moving on to bigger and better things!)
-         
-         https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.extremetech.com%2Fextreme%2F196554-a-new-computer-chess-champion-is-crowned-and-the-continued-demise-of-human-grandmasters&psig=AOvVaw0zRbkAwHCrU5HVnmqqWUQa&ust=1666490158693000&source=images&cd=vfe&ved=0CAwQjRxqFwoTCJjguuHd8voCFQAAAAAdAAAAABAI![image]
+(This project will receive no commits. There was more stuff planned for LightBlue, but I want to move to a faster language and go for UCI compatibility instead! Getting the UI to render consistently across different machines with Processing is a nightmare (at least on the version that I used),
+
 
